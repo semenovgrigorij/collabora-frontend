@@ -1,0 +1,253 @@
+h1 {
+    font-family: var(--second-family);
+    font-weight: 500;
+    font-size: clamp(20px, 4vw, 50px);
+    line-height: 110%;
+    text-align: center;
+    color: var(--violet);
+}
+h1 span {
+    color: var(--text-dark);
+}
+h2 {
+    font-family: var(--second-family);
+    font-weight: 700;
+    font-size: clamp(10px, 3vw, 24px);
+    line-height: 140%;
+    color: var(--text-dark);
+}
+p {
+    font-family: var(--font-family);
+    font-weight: 300;
+    font-size: clamp(10px, 2.5vw, 22px);
+    line-height: 110%;
+    text-align: center;
+    color: var(--text-dark);
+}
+li {
+    font-family: var(--font-family);
+    font-weight: 300;
+    font-size: clamp(6px, 2vw, 16px);
+    line-height: 140%;
+    color: var(--dark-gray);
+}
+.spheres-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 80px auto;
+    gap: 50px;
+}
+.spheres-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.spheres-blocks {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+.spheres-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    border: 1px solid var(--light-gray);
+    border-radius: 20px;
+    padding: 14px;
+    background: var(--white);
+}
+.spheres-block-left {
+    display: flex;
+    gap: 40px;
+}
+.spheres-img img {
+    max-width: 100%;
+    width: 100%;
+}
+.spheres-text {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    padding: 18px 0;
+}
+.spheres-text ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.spheres-block-right-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--light-violet);
+    padding: clamp(6px,2vw, 17.5px);
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.arrow-card {
+    object-fit: contain;
+    display: inline-block;
+}
+.arrow-card-hover {
+    display: none;
+}
+.spheres-block:hover .spheres-block-right-link {
+    background-color: var(--light-violet);
+    border: 1px solid var(--light-violet);
+}
+.spheres-block:hover .spheres-block-right-link .arrow-card {
+    display: none;
+}
+.spheres-block:hover .spheres-block-right-link .arrow-card-hover {
+    display: inline-block;
+}
+
+@media (max-width: 769px) {
+h1 {
+    font-family: var(--second-family);
+    font-weight: 500;
+    font-size: clamp(20px, 8vw, 50px);
+    line-height: 110%;
+    text-align: center;
+    color: var(--violet);
+}
+h2 {
+    font-family: var(--second-family);
+    font-weight: 700;
+    font-size: clamp(10px, 6vw, 24px);
+    line-height: 140%;
+    color: var(--text-dark);
+}
+p {
+    display: none;
+}
+li {
+    font-size: clamp(6px, 4vw, 16px);
+}
+.spheres-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 50px auto 80px;
+    gap: 116px;
+}
+.spheres-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+.spheres-blocks {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 20px;
+}
+.arrow-card {
+    object-fit: contain;
+    display: inline-block;
+}
+.arrow-card-hover {
+    display: none;
+}
+.spheres-block:hover .spheres-block-right-link {
+    background-color: transparent;
+    border: 1px solid var(--light-violet);
+}
+.spheres-block:hover .spheres-block-right-link .arrow-card {
+    display: inline-block;
+}
+.spheres-block:hover .spheres-block-right-link .arrow-card-hover {
+    display: none;
+}
+}
+@media (max-width: 361px) {
+h1 {
+    font-size: clamp(10px, 8vw, 22px);
+}
+h2 {
+    font-size: clamp(8px, 6vw, 18px);
+}
+p {
+    display: block;
+    font-size: clamp(6px, 5vw, 16px);
+}
+li {
+    font-size: clamp(6px, 4vw, 14px);
+}
+.spheres-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 40px auto 80px;
+    gap: 20px;
+}
+.spheres-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.spheres-block {
+    display: flex;
+    justify-content: space-between;
+    gap: 0;
+    border: 1px solid var(--light-gray);
+    border-radius: 10px;
+    padding: 14px;
+    background: var(--white);
+}
+.spheres-block-left {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+.spheres-img img {
+    max-width: 98px;
+    width: 100%;
+}
+.spheres-text {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    padding: 0;
+}
+.spheres-text ul {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.spheres-block-right-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--light-violet);
+    padding: clamp(6px, 6vw, 17.5px);
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+.arrow-card {
+    object-fit: contain;
+    display: inline-block;
+}
+.arrow-card-hover {
+    display: none;
+}
+.spheres-block:hover .spheres-block-right-link {
+    background-color: transparent;
+    border: 1px solid var(--light-violet);
+}
+.spheres-block:hover .spheres-block-right-link .arrow-card {
+    display: inline-block;
+}
+.spheres-block:hover .spheres-block-right-link .arrow-card-hover {
+    display: none;
+}
+}

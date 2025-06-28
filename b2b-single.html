@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/b2b-single.css">
+    <link rel="stylesheet" href="./css/header-cabinet.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder-cabinet"></div>
+        <main>
+            <div class="main-wrapper">
+                <!-- Хлебные крошки -->
+                <section id="bread-crumbs-section">
+                    <div class="bread-crumbs-b2b">
+                        <span class="home">Головна</span>
+                        <span class="b2b-link">Майданчик B2B</span>
+                        <span class="current" id="currentPageTitle"></span>
+                    </div>
+                </section>
+
+                <!-- Заголовок страницы -->
+                <section id="single-header-section">
+                    <div class="single-header-wrapper">
+                        <div class="single-header-right">
+                            <div class="single-header-image">
+                                <img id="singleImage" src="./icons/b2b-img-1.svg" alt="Industry Logo" width="120">
+                            </div>
+                            <div class="single-header-content">
+                                <p id="singleUpdate">Останнє оновлення 25 хв. тому</p>
+                                <h1 id="singleTitle">Промисловість та переробка</h1>
+                                <p id="singleParticipants">Учасників: 4.1 тис</p>
+                            </div>
+                        </div>
+                        
+                        <a class="title-b2b-button" href="./add-request.html">
+                            Додати запит/пропозицію
+                            <span class="plus">
+                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5002 10.4999H2.00024M10.5002 10.4999H19.0002M10.5002 10.4999V18.9999M10.5002 10.4999V1.99991" stroke="#3B0A75" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel" />
+                                </svg>
+                            </span>
+                        </a>      
+                    </div>
+                </section>
+
+                <!-- Основной контент -->
+                <section id="single-content-section">
+                    <div class="single-content-wrapper">
+                    </div>
+                </section>
+            </div>
+        </main>
+        <footer>
+            <div class="footer-wrapper">
+                <p>Collabora &#169 2025. Всі права захищено</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="./js/header-cabinet.js"></script>
+    <script src="./js/breadcrumbs.js"></script>
+    <script src="./js/b2b-single.js"></script>
+</body>
+</html>

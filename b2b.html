@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/b2b.css">
+    <link rel="stylesheet" href="./css/header-cabinet.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder-cabinet"></div>
+        <main>
+            <div class="main-wrapper">
+                <section id="bread-crumbs-section">
+                    <div class="bread-crumbs-b2b">
+                        <span class="home">Головна</span>
+                        <span class="next">Майданчик B2B</span>
+                    </div>
+                </section>
+                <section id="title-b2b-section">
+                    <div class="title-b2b-wrapper">
+                        <div class="title-b2b-text">
+                            <h1>Ринковий <span>майданчик B2B</span></h1>
+                            <h2>Знаходь можливості співпраці за сферами діяльності та регіонами</h2>
+                        </div>
+                        <a class="title-b2b-button" href="./add-request.html">
+                            Додати запит/пропозицію
+                            <span class="plus">
+                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5002 10.4999H2.00024M10.5002 10.4999H19.0002M10.5002 10.4999V18.9999M10.5002 10.4999V1.99991" stroke="#3B0A75" stroke-width="2" stroke-linecap="round" stroke-linejoin="bevel" />
+                                </svg>
+                            </span>
+                        </a>           
+                    </div>
+                </section>
+                <section id="search-b2b-section">
+                    <div class="search-b2b-wrapper">
+                        <div class="search-b2b-top">
+                            <h3>Фільтрування</h3>
+                        </div>
+                        <div class="search-b2b-bottom">
+                            <div class="b2b-filters-wrapper">
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="businessTypeBtn">
+                                        <span class="filter-text">Тип бізнесу</span>
+                                        <span class="filter-count" id="businessTypeCount"></span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                            stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="businessTypeDropdown">
+                                        <div class="filter-option-checkbox" data-value="production">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="production">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Виробництво</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="trade">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="trade">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Торгівля</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="services">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="services">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Послуги</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="technology">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="technology">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Технології</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="scaleBtn">
+                                        <span class="filter-text">Галузь</span>
+                                        <span class="filter-count" id="scaleCount"></span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                            stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="scaleDropdown">
+                                        <div class="filter-option-checkbox" data-value="small">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="small">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Малий</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="medium">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="medium">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Середній</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="large">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="large">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Великий</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="geographyBtn">
+                                        <span class="filter-text">Регіон</span>
+                                        <span class="filter-count" id="geographyCount"></span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                            stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="geographyDropdown">
+                                        <div class="filter-option-checkbox" data-value="kyiv">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="kyiv">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Київ</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="lviv">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="lviv">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Львів</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="odesa">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="odesa">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Одеса</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="kharkiv">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="kharkiv">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Харків</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="dnipro">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="dnipro">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Дніпро</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="needsBtn">
+                                        <span class="filter-text">Статус</span>
+                                        <span class="filter-count" id="needsCount"></span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                            stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="needsDropdown">
+                                        <div class="filter-option-checkbox" data-value="investment">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="investment">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Пошук інвестицій</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="marketing">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="marketing">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Маркетингова співпраця</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="partnership">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="partnership">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Партнерство</span>
+                                            </label>
+                                        </div>
+                                        <div class="filter-option-checkbox" data-value="similar">
+                                            <label class="checkbox-wrapper">
+                                                <input type="checkbox" value="similar">
+                                                <span class="checkmark"></span>
+                                                <span class="checkbox-text">Схожі бізнеси</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="search-b2b-footer">
+                                <button class="clear-filters-btn" id="clearFiltersBtn">
+                                    Очистити фільтри
+                                </button>
+                                <div class="results-count" id="b2bResultsCount">Знайдено: 25 бізнесів</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="b2b-section">
+                    <div class="b2b-wrapper" id="b2bContainer">
+                        <div class="b2b-block">
+                            <div class="b2b-block-top">
+                                <div class="b2b-block-top-img">
+                                    <img src="./icons/b2b-img-1.svg" alt="b2b logo" width="120">
+                                </div>
+                                <div class="b2b-block-top-text">
+                                    <p>Останнє оновлення 25 хв. тому</p>
+                                    <h4>Промисловість та переробка</h4>
+                                    <p>Учасників: 4.1 тис</p>
+                                </div>
+                            </div>              
+                            <div class="b2b-block-bottom">
+                                <a href="#" class="b2b-block-bottom-discussions">
+                                    <img src="./icons/b2b-icon-1.svg" alt="discussions" width="23">
+                                    <p>Обговорення</p>
+                                </a>
+                                <a href="#" class="b2b-block-bottom-offers">
+                                    <img src="./icons/b2b-icon-plus.svg" alt="offers" width="23">
+                                    <p>Запропонувати</p>
+                                </a>
+                            </div>
+                        </div>              
+                        <div class="b2b-block">
+                            <div class="b2b-block-top">
+                                <div class="b2b-block-top-img">
+                                    <img src="./icons/b2b-img-2.svg" alt="b2b logo" width="120">
+                                </div>
+                                <div class="b2b-block-top-text">
+                                    <p>Останнє оновлення 25 хв. тому</p>
+                                    <h4>Будівництво, матеріали, деревопереробка</h4>
+                                    <p>Учасників: 4.1 тис</p>
+                                </div>
+                            </div>              
+                            <div class="b2b-block-bottom">
+                                <a href="#" class="b2b-block-bottom-discussions">
+                                    <img src="./icons/b2b-icon-1.svg" alt="discussions" width="23">
+                                    <p>Обговорення</p>
+                                </a>
+                                <a href="#" class="b2b-block-bottom-offers">
+                                    <img src="./icons/b2b-icon-plus.svg" alt="offers" width="23">
+                                    <p>Запропонувати</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="b2b-block">
+                            <div class="b2b-block-top">
+                                <div class="b2b-block-top-img">
+                                    <img src="./icons/b2b-img-3.svg" alt="b2b logo" width="120">
+                                </div>
+                                <div class="b2b-block-top-text">
+                                    <p>Останнє оновлення 25 хв. тому</p>
+                                    <h4>Агро і харчова промисловість</h4>
+                                    <p>Учасників: 4.1 тис</p>
+                                </div>
+                            </div>              
+                            <div class="b2b-block-bottom">
+                                <a href="#" class="b2b-block-bottom-discussions">
+                                    <img src="./icons/b2b-icon-1.svg" alt="discussions" width="23">
+                                    <p>Обговорення</p>
+                                </a>
+                                <a href="#" class="b2b-block-bottom-offers">
+                                    <img src="./icons/b2b-icon-plus.svg" alt="offers" width="23">
+                                    <p>Запропонувати</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="b2b-block">
+                            <div class="b2b-block-top">
+                                <div class="b2b-block-top-img">
+                                    <img src="./icons/b2b-img-4.svg" alt="b2b logo" width="120">
+                                </div>
+                                <div class="b2b-block-top-text">
+                                    <p>Останнє оновлення 25 хв. тому</p>
+                                    <h4>Енергетика</h4>
+                                    <p>Учасників: 4.1 тис</p>
+                                </div>
+                            </div>              
+                            <div class="b2b-block-bottom">
+                                <a href="#" class="b2b-block-bottom-discussions">
+                                    <img src="./icons/b2b-icon-1.svg" alt="discussions" width="23">
+                                    <p>Обговорення</p>
+                                </a>
+                                <a href="#" class="b2b-block-bottom-offers">
+                                    <img src="./icons/b2b-icon-plus.svg" alt="offers" width="23">
+                                    <p>Запропонувати</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="no-results" id="b2bNoResults" style="display: none;">
+                        <h3>За вашими фільтрами нічого не знайдено</h3>
+                        <p>Спробуйте змінити параметри фільтрування</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <footer>
+            <div class="footer-wrapper">
+                <p>Collabora &#169 2025. Всі права захищено</p>
+            </div>
+        </footer>
+    </div>
+    <script src="./js/header-cabinet.js"></script>
+    <script src="./js/breadcrumbs.js"></script>
+    <script src="./js/b2b.js"></script>
+</body>
+</html>

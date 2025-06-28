@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora - Rubricator</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/rubricator.css">
+    <link rel="preload" href="../components/header-en.html" as="fetch" crossorigin>
+    <link rel="preload" href="../components/footer-en.html" as="fetch" crossorigin>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder"></div>
+        <main>
+            <div class="main-wrapper">
+                <section id="title-search-section">
+                    <div class="title-search-wrapper">
+                        <div class="title-rubricator">
+                            <h1>Build partnerships that <span>change the game</span></h1>
+                            <p>Find collaboration opportunities by industry and region</p>
+                        </div>
+                        <div class="search-rubricator">
+                            <div class="search-rubricator-left">
+                                <div class="search-field-wrapper">
+                                    <input type="text" 
+                                           id="categorySearch" 
+                                           class="search-field" 
+                                           placeholder="Search industry">
+                                    <button class="search-btn" id="searchBtn">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" 
+                                                  stroke="currentColor" stroke-width="2" 
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="search-rubricator-right">
+                                <div class="filters-wrapper">
+                                    <div class="filter-dropdown">
+                                        <button class="filter-btn" id="regionBtn">
+                                            <span class="filter-text">Region</span>
+                                            <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                        <div class="filter-dropdown-content" id="regionDropdown">
+                                            <div class="filter-option" data-value="">All regions</div>
+                                            <div class="filter-option" data-value="kyiv">Kyiv</div>
+                                            <div class="filter-option" data-value="lviv">Lviv</div>
+                                            <div class="filter-option" data-value="odesa">Odesa</div>
+                                            <div class="filter-option" data-value="kharkiv">Kharkiv</div>
+                                            <div class="filter-option" data-value="dnipro">Dnipro</div>
+                                        </div>
+                                    </div>
+                                    <div class="filter-dropdown">
+                                        <button class="filter-btn" id="businessFormBtn">
+                                            <span class="filter-text">Business Form</span>
+                                            <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                        <div class="filter-dropdown-content" id="businessFormDropdown">
+                                            <div class="filter-option" data-value="">All forms</div>
+                                            <div class="filter-option" data-value="tov">LLC</div>
+                                            <div class="filter-option" data-value="fop">PE</div>
+                                            <div class="filter-option" data-value="at">JSC</div>
+                                            <div class="filter-option" data-value="pp">PP</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="categories-section">
+                    <div class="categories-wrapper">
+                        <div class="categories-header">
+                            <div class="categories-header-title">
+                                <h2>Choose category</h2>
+                                <div class="results-count" id="resultsCount">Found: 15 categories</div>
+                            </div>
+                            <div class="categories-header-paginations" id="pagination">
+                                <!-- Pagination will be generated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="categories-containers" id="categoriesContainer">
+                            <!-- Categories will be generated by JavaScript -->
+                        </div>
+                        <div class="no-results" id="noResults" style="display: none;">
+                            <h3>No results found for your search</h3>
+                            <p>Try changing your search parameters or filters</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <div id="footer-placeholder"></div>
+    </div>
+    <script src="../js/components.js"></script>
+    <script src="../js/rubricator-en.js"></script>
+</body>
+</html>

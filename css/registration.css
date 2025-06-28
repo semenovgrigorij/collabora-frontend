@@ -1,0 +1,687 @@
+h1 {
+    font-family: var(--second-family);
+    font-weight: 500;
+    font-size: 50px;
+    line-height: 110%;
+    text-align: center;
+    color: var(--violet);
+}
+h2 {
+    font-family: var(--font-family);
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 110%;
+    text-align: center;
+    color: var(--black);
+    max-width: 844px;
+    width: 100%;
+    margin: 0 auto;
+}
+h3 {
+    font-family: var(--second-family);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-dark);
+}
+p, li {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-dark);
+}
+
+/* registracion-title-section */
+.registracion-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin: 80px auto 50px;
+}
+
+/* registracion-form */
+.registracion-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    border: 1px solid var(--light-gray);
+    border-radius: 20px;
+    padding: 30px;
+    background: var(--white);
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto 148px;
+}
+.registracion-form-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.registracion-form-title-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    max-width: 365px;
+    width: 100%;
+}
+.registracion-form-title-left ul {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.registracion-form-title-left ul li {
+    display: flex;
+    align-items: center;
+    gap:10px;
+}
+.registracion-form-title-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 19px;
+    max-width: 245px;
+    width: 100%;
+}
+.registracion-form-title-right img {
+    max-width: 100%;
+}
+.registracion-form-title-right p {
+    font-size: 12px;
+    line-height: 140%;
+    text-align: center;
+    color: var(--text-dark);
+}
+.registracion-form-title-right p span {
+    color: var(--violet);
+}
+.registracion-form-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.input-grup {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+label {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    color: var(--text-dark);
+}
+.original-select {
+    display: none;
+}
+.custom-multiselect {
+    position: relative;
+}
+.multiselect-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+    border: 1px solid var(--light-gray);
+    border-radius: 6px;
+    background-color: var(--white);
+    cursor: pointer;
+    min-height: 20px;
+    transition: border-color 0.2s ease;
+}
+
+.multiselect-trigger:hover {
+    border-color: var(--violet);
+}
+
+.multiselect-trigger.open {
+    border-color: var(--violet);
+}
+
+.selected-text {
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--text-dark);
+    flex: 1;
+}
+
+.selected-text.placeholder {
+    color: var(--gray);
+}
+
+.arrow-icon {
+    width: 14px;
+    height: 8px;
+    transition: transform 0.2s ease;
+}
+
+.arrow-icon.rotated {
+    transform: rotate(180deg);
+}
+
+    /* Выпадающий список */
+.multiselect-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid var(--light-gray);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.multiselect-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.multiselect-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.multiselect-option:hover {
+    background-color: #f8f9fa;
+}
+
+.multiselect-option.disabled {
+    cursor: default;
+    color: var(--gray);
+}
+
+.multiselect-option.disabled:hover {
+    background-color: transparent;
+}
+
+/* Кастомный чекбокс */
+.option-checkbox {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--text-dark);
+    border-radius: 4px;
+    background-color: var(--white);
+    cursor: pointer;
+    position: relative;
+    margin-right: 10px;
+    transition: all 0.2s ease;
+    padding: 8px;
+}
+
+.option-checkbox:checked {
+    background-color: var(--white);
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.75 3.25L4.75 7.25L11.25 0.75' stroke='%23241A56' stroke-linecap='round' /%3E%3C/svg%3E");
+    background-size: 12px 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.option-checkbox:hover {
+    border-color: var(--violet);
+}
+.option-label {
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--text-dark);
+    cursor: pointer;
+    flex: 1;
+}
+
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.selected-tag {
+    display: flex;
+    align-items: center;
+    background-color: #e8f0fe;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: var(--text-dark);
+}
+
+.tag-remove {
+    margin-left: 6px;
+    cursor: pointer;
+    color: var(--gray);
+    font-weight: bold;
+}
+
+.tag-remove:hover {
+    color: var(--error-color);
+}
+
+/* Ошибка валидации */
+.error-message {
+    display: none;
+    font-family: var(--font-family);
+    font-size: 12px;
+    color: var(--error-color);
+    margin-top: 4px;
+    line-height: 130%;
+}
+
+.input-grup.error .multiselect-trigger {
+    border-color: var(--error-color);
+}
+
+.input-grup.error .error-message {
+    display: block;
+}
+
+@media (max-width: 480px) {
+    .selected-tags {
+        flex-direction: column;
+    }
+}
+
+ /* Контейнер для select с кастомной стрелочкой */
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+/* Кастомная стрелочка */
+.custom-arrow {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Чтобы можно было кликнуть через стрелочку */
+    transition: transform 0.2s ease;
+    width: 14px;
+    height: 8px;
+}
+
+/* Анимация стрелочки при фокусе (имитация открытия) */
+select:focus + .custom-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.select-wrapper:hover .custom-arrow {
+    opacity: 0.8;
+}
+
+.input-grup.error select {
+    border-color: var(--error-color);
+}
+
+/* Для Firefox - убираем стрелочку */
+@-moz-document url-prefix() {
+    select {
+        text-indent: 0.01px;
+        text-overflow: '';
+    }
+}
+
+/* Для IE/Edge */
+select::-ms-expand {
+    display: none;
+}
+
+input,
+textarea {
+    outline: none;
+    padding: 14px;
+    border-radius: 6px;
+    border: 1px solid var(--light-gray);
+    resize: vertical;
+    transition: border-color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    font-size: 14px;
+}
+select {
+    cursor: pointer;
+    width: 100%;
+    outline: none;
+    padding: 14px;
+    padding-right: 40px; 
+    border-radius: 6px;
+    border: 1px solid var(--light-gray);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: border-color 0.2s ease;
+    font-family: var(--font-family);
+    font-size: 14px;
+}
+input:hover,
+textarea:hover {
+    border-color: var(--violet);
+}
+.select-wrapper:hover select {
+    border-color: var(--violet);
+}
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--violet);
+}
+input:not(:placeholder-shown):not(:focus),
+textarea:not(:placeholder-shown):not(:focus) {
+    border-color: var(--turquoise);
+}
+.input-grup.error input,
+.input-grup.error textarea,
+.input-grup.error select {
+    border-color: var(--error-color) !important;
+}
+.input-grup.error input:not(:placeholder-shown),
+.input-grup.error textarea:not(:placeholder-shown),
+.input-grup.error select {
+    border-color: var(--error-color) !important;
+}
+::placeholder,
+select,
+option {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    text-align: left;
+    color: var(--gray);
+}
+select option:first-child {
+    color: var(--gray);
+}
+
+ /* ОТКЛЮЧЕНИЕ СТАНДАРТНОЙ ВАЛИДАЦИИ БРАУЗЕРА */
+
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+input::-webkit-validation-bubble,
+input::-webkit-validation-bubble-message {
+    display: none !important;
+}
+
+.file-upload-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    border: 1px dashed var(--light-gray);
+    border-radius: 6px;
+}
+
+.file-upload-text {
+    flex: 1;
+}
+
+.file-upload-placeholder {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    color: var(--black);
+    margin-bottom: 6px;
+}
+
+.file-upload-hint {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 130%;
+    color: #6e6e6e;
+}
+
+.file-upload-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.file-upload-btn {
+    padding: 9px 20px;
+    border: 1px solid var(--text-dark);
+    background-color: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 130%;
+    text-align: center;
+    color: var(--text-dark);
+    transition: background-color 0.2s;
+}
+
+.file-upload-btn:hover {
+    background-color: var(--turquoise);
+    border-color: var(--turquoise);
+}
+.file-upload-btn:active {
+    background-color: var(--dark-turquoise);
+    border-color: var(--dark-turquoise);
+    color: var(--white);
+}
+#photo {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+}
+
+/* File upload при ошибке */
+.input-grup.error .file-upload-container {
+    border: 1px dashed var(--error-color);
+    background-color: #fef2f2;
+}
+
+.selected-file {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #e8f5e8;
+    border: 1px solid #c3e6c3;
+    border-radius: 4px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-dark);
+}
+
+.input-grup-radio {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+/* Radio buttons стили */
+
+.input-grup-radio div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-grup-radio input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--light-gray);
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    margin: 0;
+    padding: 0;
+}
+
+.input-grup-radio input[type="radio"]:hover {
+    border-color: var(--dark);
+}
+
+.input-grup-radio input[type="radio"]:checked {
+    border-color: var(--dark);
+    background-color: white;
+}
+
+.input-grup-radio input[type="radio"]:checked::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--dark);
+}
+
+.input-grup-radio label {
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Стили для radio buttons при ошибке */
+.input-grup.error .input-grup-radio input[type="radio"] {
+    border-color: var(--error-color);
+}
+
+.registracion-form-submit {
+    display: flex;
+    margin: 40px auto 0;
+    max-width: 270px;
+    width: 100%;
+}
+.registracion-form-submit button {
+    display: inline-block;
+    align-items: center;
+    border-radius: 49px;
+    padding: 15px 0;
+    box-shadow: 0 0 0 0 rgba(62, 54, 127, 0.19);
+    background-color: var(--button-violet);
+    border: none;
+    width: 100%;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--white);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.registracion-form-submit button:hover {
+    background-color: var(--violet);
+}
+.registracion-form-submit button:active {
+    background-color: var(--light-violet);
+}
+.input-grup-line {
+    width: 100%;
+    border-top: 1px solid var(--light-gray);
+    margin: 16px 0 40px;
+}
+
+.checkboxes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Кастомный чекбокс */
+.checkbox-item input[type="checkbox"] {            
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--text-dark);
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    appearance: none;
+    padding: 8px;
+}
+
+.checkbox-item input[type="checkbox"]:hover {
+    border-color: var(--violet) !important;
+}
+.checkbox-item input[type="checkbox"]:checked {
+    background-color: var(--white);
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.75 3.25L4.75 7.25L11.25 0.75' stroke='%23241A56' stroke-linecap='round' /%3E%3C/svg%3E");
+    background-size: 12px 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.checkbox-item label {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    color: var(--text-dark);
+    cursor: pointer;
+    margin: 0;
+    flex: 1;
+}
+
+select.has-value:not(:focus) {
+    border-color: var(--turquoise) !important;
+}
+
+.business-form,
+.go-form,
+.expert-form {
+    display: none;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.business-form,
+.go-form,
+.expert-form {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.business-form[style*="display: block"],
+.go-form[style*="display: block"],
+.expert-form[style*="display: block"] {
+    opacity: 1;
+    transform: translateY(0);
+}  
+
+        

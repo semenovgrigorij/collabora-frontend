@@ -1,0 +1,98 @@
+h1 {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: clamp(20px, 8vw, 46px);
+    line-height: 110%;
+    text-align: center;
+    color: var(--dark);
+}
+h1 span {
+    color: var(--violet)
+}
+h2 {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 24px;
+    font-size: clamp(10px, 6vw, 24px);
+    line-height: 110%;
+    color: var(--text-dark);
+    margin-bottom: 30px;
+}
+p, li {
+    font-family: var(--second-family);
+    font-weight: 300;
+    font-size: 18px;
+    font-size: clamp(8px, 5vw, 18px);
+    line-height: 160%;
+    color: var(--text-dark);
+}
+p {
+    margin-bottom: 14px;
+}
+.privacy-policy-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 80px 0 50px;
+}
+.privacy-policy-title {
+    max-width: 740px;
+    width: 100%;
+}
+.privacy-policy-content {
+    border: 1px solid var(--light-gray);
+    border-radius: 20px;
+    padding: 40px 30px;
+    background: var(--white);
+}
+.privacy-policy-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+.privacy-policy-block:last-child {
+    margin-bottom: 0;
+}
+.privacy-policy-block ul {
+    padding-left: 30px;
+}
+.privacy-policy-block ul li {
+    list-style-type: disc;
+}
+.link-contact {
+    margin-right: auto;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 160%;
+    color: var(--text-dark);
+    border-bottom: 1px dashed var(--text-dark);
+}
+.link-contact:hover {
+    font-weight: 300;
+    color: var(--violet);
+    border-bottom: 1px dashed var(--violet);
+}
+@media (max-width: 769px) {
+    .privacy-policy-wrapper {
+        max-width: 100%;
+        padding: 50px 0 60px;
+    }
+    .privacy-policy-content {
+        padding: 30px;
+    }
+}
+@media (max-width: 361px) {
+    .privacy-policy-wrapper {
+        max-width: 100%;
+        padding: 40px 0 50px;
+        gap: 30px;
+    }
+    .privacy-policy-content {
+        padding: 20px 14px;
+    }
+}

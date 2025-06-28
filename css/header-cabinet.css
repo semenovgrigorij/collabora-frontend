@@ -1,0 +1,61 @@
+
+        
+        /* Стили для блока пользователя в header */
+        .header-user-block {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px 12px 11px;
+            background-color: var(--background-gray);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .header-user-block:hover {
+            transform: translateY(-1px);
+        }
+
+        .header-user-avatar {
+            width: 31px;
+            height: 31px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            margin-right: 10px;
+            background-color: var(--background-gray);
+        }
+
+        .header-user-info {
+            display: flex;
+            flex-direction: column;
+            margin-right: 50px;
+        }
+
+        .header-user-name {
+            font-family: var(--font-family);
+            font-weight: 400;
+            font-size: 16px;
+            text-align: right;
+            color: var(--black);
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .header-user-status {
+            font-family: var(--font-family);
+            font-weight: 400;
+            font-size: 10px;
+            color: rgba(0, 0, 0, 0.4);
+        }
+        .arrow-cabinet {
+            vertical-align: middle;
+            max-width: 100%;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }

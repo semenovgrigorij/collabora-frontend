@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora - Industry</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/rubricator.css">
+    <link rel="stylesheet" href="../css/branch.css">
+    <link rel="preload" href="../components/header-en.html" as="fetch" crossorigin>
+    <link rel="preload" href="../components/footer-en.html" as="fetch" crossorigin>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder"></div>
+        <main>
+            <div class="main-wrapper">
+                <section id="title-branch-section">
+                    <div class="title-branch-wrapper">
+                        <div class="title-branch">
+                            <img id="branchIcon" src="../icons/branch-icon.svg" alt="branch icon" width="108">
+                            <h1 id="branchTitle">Manufacturing</h1>
+                            <p id="branchDescription">Businesses engaged in agricultural crop cultivation</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="search-branch-section">
+                    <div class="search-branch-wrapper">
+                        <div class="search-branch-top">
+                            <h2>Filtering</h2>
+                        </div>
+                        <div class="search-branch-bottom">
+                            <div class="branch-filters-wrapper">
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="businessTypeBtn">
+                                        <span class="filter-text">Business Type</span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="businessTypeDropdown">
+                                        <div class="filter-option" data-value="">All types</div>
+                                        <div class="filter-option" data-value="production">Production</div>
+                                        <div class="filter-option" data-value="trade">Trade</div>
+                                        <div class="filter-option" data-value="services">Services</div>
+                                        <div class="filter-option" data-value="technology">Technology</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="scaleBtn">
+                                        <span class="filter-text">Scale</span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="scaleDropdown">
+                                        <div class="filter-option" data-value="">All scales</div>
+                                        <div class="filter-option" data-value="small">Small</div>
+                                        <div class="filter-option" data-value="medium">Medium</div>
+                                        <div class="filter-option" data-value="large">Large</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="geographyBtn">
+                                        <span class="filter-text">Geography</span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="geographyDropdown">
+                                        <div class="filter-option" data-value="">All Ukraine</div>
+                                        <div class="filter-option" data-value="kyiv">Kyiv</div>
+                                        <div class="filter-option" data-value="lviv">Lviv</div>
+                                        <div class="filter-option" data-value="odesa">Odesa</div>
+                                        <div class="filter-option" data-value="kharkiv">Kharkiv</div>
+                                        <div class="filter-option" data-value="dnipro">Dnipro</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-dropdown">
+                                    <button class="filter-btn" id="needsBtn">
+                                        <span class="filter-text">Needs</span>
+                                        <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="filter-dropdown-content" id="needsDropdown">
+                                        <div class="filter-option" data-value="">All needs</div>
+                                        <div class="filter-option" data-value="investment">Investment search</div>
+                                        <div class="filter-option" data-value="marketing">Marketing cooperation</div>
+                                        <div class="filter-option" data-value="partnership">Partnership</div>
+                                        <div class="filter-option" data-value="similar">Similar businesses</div>
+                                    </div>
+                                </div>
+                                
+                                <button class="clear-filters-btn" id="clearFiltersBtn">
+                                    Clear filters
+                                </button>
+                            </div>
+                            <div class="results-count" id="branchResultsCount">Found: 25 businesses</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="branch-section">
+                    <div class="branch-wrapper" id="branchContainer">
+                        <!-- Businesses will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="branch-pagination" id="branchPagination">
+                        <!-- Pagination will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="no-results" id="branchNoResults" style="display: none;">
+                        <h3>No results found for your filters</h3>
+                        <p>Try changing your filter parameters</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <div id="footer-placeholder"></div>
+    </div>
+    <script src="../js/components.js"></script>
+    <script src="../js/branch-en.js"></script>
+</body>
+</html>

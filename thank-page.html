@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/registration.css">
+    <link rel="preload" href="./components/header.html" as="fetch" crossorigin>
+    <link rel="preload" href="./components/footer.html" as="fetch" crossorigin>
+    <style>
+        h1 {
+            font-family: var(--second-family);
+            font-weight: 500;
+            font-size: clamp(16px, 12vw, 40px);
+            line-height: 110%;
+            text-align: center;
+            color: var(--violet);
+            margin-bottom: 18px;
+        }
+        p {
+            font-family: var(--font-family);
+            font-weight: 300;
+            font-size: 16px;
+            font-size: clamp(8px, 6vw, 16px);
+            line-height: 140%;
+            text-align: center;
+            color: var(--text-dark);
+            max-width: 470px;
+            width: 100%;
+        }
+        .gratitude-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 568px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 40px;
+            background: var(--white);
+            margin: 80px auto 130px;
+        }
+        .gratitude-wrapper img {
+            max-width: 100%;
+            margin-bottom: 38px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder"></div>
+        <main>
+            <div class="main-wrapper">
+                <section class="gratitude-section">
+                    <div class="gratitude-wrapper">
+                        <img src="./icons/gratitude-icon.svg" alt="gratitude" width="194">
+                        <h1>Дякуємо! </h1>
+                        <p>Ваш профіль буде опрацьовано та активовано
+                        адміністратором Collabora найближчим часом.</p>
+                    </div>
+                </section>
+            </div>
+            </main>
+        <div id="footer-placeholder"></div>
+    </div>
+    <script src="./js/components.js"></script>
+    <script src="./js/thank-page.js"></script>
+</body>
+</html>

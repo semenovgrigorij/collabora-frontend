@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редагування профілю - Collabora</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/header-cabinet.css">
+    <link rel="stylesheet" href="./css/edit-profile.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder-cabinet"></div>
+        <main>      
+            <a href="cabinet.html" class="back-btn">
+                <svg width="14" height="19" viewBox="0 0 14 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 1L3 9.5L11 18" stroke="#3b2f77" stroke-linecap="round" />
+                </svg>
+                Мій кабінет
+            </a>
+            <div class="editing-wrapper">
+            <section id="editing-title-section">
+                <div class="editing-title">
+                    <h1>Редагування профілю</h1>
+                    <p>Внесіть зміни та збережіть профіль</p>
+                </div>
+            </section>
+            <section id="editing-form">
+                <form class="editing-form-wrapper" id="editForm" method="POST" enctype="multipart/form-data" novalidate>
+                    <div id="successMessage" class="global-success-message">
+                        Профіль успішно оновлено!
+                    </div>
+                    <h2>Контактна особа</h2>
+                    <div class="input-grup">
+                                <label for="editName">Повна назва організації / Ім'я</label>
+                                <input 
+                                    type="text" 
+                                    id="editName" 
+                                    name="name" 
+                                    placeholder="Введіть повну назву або ім'я" 
+                                    required
+                                >
+                        <div class="error-message">Поле має бути заповнене</div>
+                    </div>
+                    <div class="input-grup">
+                        <label for="editEmail">Email</label>
+                        <input 
+                            type="email" 
+                            id="editEmail" 
+                            name="email" 
+                            placeholder="Основна електронна адреса для зв'язку" 
+                            required
+                        >
+                        <div class="error-message">Введіть коректний email</div>
+                    </div>
+                    <div class="input-grup">
+                        <label for="editPhone">Номер телефону</label>
+                        <input 
+                            type="tel" 
+                            id="editPhone" 
+                            name="phone" 
+                            placeholder="Для оперативного зв'язку" 
+                            required
+                        >
+                        <div class="error-message">Поле має бути заповнене</div>
+                    </div>
+                    <div class="input-grup">
+                        <label for="short-description">Короткий опис діяльності / професії</label>
+                        <textarea 
+                            id="short-description" 
+                            name="short-description" 
+                            placeholder="Опишіть вашу діяльність (до 300 символів)"
+                            required
+                        ></textarea>
+                        <div class="error-message">Поле має бути заповнене</div>
+                    </div>
+                    <div id="file" class="input-grup">
+                        <label for="photo">Логотип або фото профілю</label>
+                        <div class="file-upload-container">
+                            <div class="file-upload-text">
+                                <div class="file-upload-placeholder">Завантажте файл</div>
+                                <div class="file-upload-hint">Вага має бути не більше 4мб</div>
+                            </div>
+                            <div class="file-upload-button">
+                                <button type="button" class="file-upload-btn" onclick="document.getElementById('photo').click()">
+                                    Обрати файл
+                                </button>
+                                <input
+                                    type="file"
+                                    id="photo"
+                                    name="photo"
+                                    accept="image/*,.svg,.png"
+                                    required
+                                onchange="handleFileSelect(this)"
+                                >
+                            </div>
+                        </div>
+                        <div id="selectedFile" class="selected-file" style="display: none;"></div>
+                        <div class="error-message">Поле має бути заповнене</div>
+                    </div>
+                    <div class="input-grup">
+                                <label for="link">Посилання на сайт / соціальні мережі (якщо є)</label>
+                                <textarea 
+                                    id="link" 
+                                    name="link" 
+                                    placeholder="Вкажіть, де можна більше дізнатись про ваш бізнес"
+                                ></textarea>
+                            </div>
+                    <!-- Секция смены пароля -->
+                    <div class="form-section">
+                        <div class="password-section-toggle" id="passwordToggle">
+                            <div class="toggle-text">Змінити пароль</div>
+                            <svg class="toggle-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+
+                        <div class="password-fields" id="passwordFields">
+                            <div class="form-section-title">
+                                <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                <h2 style="margin-bottom: 0; padding-bottom: 0;">Зміна пароля</h2>
+                            </div>
+                
+                            <!-- Старый пароль -->
+                            <div class="input-grup" id="oldPasswordGroup">
+                                <label for="oldPassword">Старий пароль</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="oldPassword" name="oldPassword" placeholder="Введіть ваш поточний пароль">
+                                    <button type="button" class="password-toggle" onclick="togglePassword('oldPassword')">
+                                        <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <!-- Новый пароль -->
+                            <div class="input-grup" id="newPasswordGroup">
+                                <label for="newPassword">Новий пароль</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="newPassword" name="newPassword" placeholder="Введіть новий пароль">
+                                    <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
+                                        <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                    
+                                <!-- Индикатор силы пароля -->
+                                <div class="password-strength" id="passwordStrength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill" id="strengthFill"></div>
+                                    </div>
+                                    <div class="strength-text" id="strengthText">Введіть пароль</div>
+                                </div>
+
+                                <!-- Требования к паролю -->
+                                <div class="password-requirements">
+                                    <div class="requirement" id="req-length">
+                                        <span class="requirement-icon">✓</span>
+                                        <span class="requirement-text">Мінімум 8 символів</span>
+                                    </div>
+                                <div class="requirement" id="req-uppercase">
+                                    <span class="requirement-icon">✓</span>
+                                    <span class="requirement-text">Одна велика літера</span>
+                                </div>
+                                <div class="requirement" id="req-lowercase">
+                                    <span class="requirement-icon">✓</span>
+                                    <span class="requirement-text">Одна мала літера</span>
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <span class="requirement-icon">✓</span>
+                                    <span class="requirement-text">Одна цифра</span>
+                                </div>
+                                <div class="requirement" id="req-special">
+                                    <span class="requirement-icon">✓</span>
+                                    <span class="requirement-text">Один спеціальний символ</span>
+                                </div>
+                            </div>
+                    
+                            <div class="error-message">Пароль не відповідає вимогам</div>
+                            <div class="success-message">Пароль відповідає всім вимогам</div>
+                        </div>
+
+                        <!-- Подтверждение пароля -->
+                        <div class="input-grup" id="confirmPasswordGroup">
+                            <label for="confirmPassword">Повторіть новий пароль</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Повторіть новий пароль">
+                                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                    <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="error-message">Паролі не співпадають</div>
+                            <div class="success-message">Паролі співпадають</div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="save-btn">Зберегти зміни</button>
+                        <button type="button" class="cancel-btn" onclick="cancelEdit()">Скасувати</button>
+                    </div> 
+                </form>
+            </section>
+            </div>
+        </main>
+        <footer>
+            <div class="footer-wrapper">
+                <p>Collabora &#169 2025. Всі права захищено</p>
+            </div>
+        </footer>
+    </div>
+    <script src="./js/header-cabinet.js"></script>
+    <script src="./js/edit-profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,766 @@
+h1 {
+    font-family: var(--second-family);
+    font-weight: 500;
+    font-size: 50px;
+    line-height: 110%;
+    text-align: center;
+    color: var(--text-dark);
+}
+h2 {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--white);
+}
+h3 {
+    font-family: var(--second-family);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 120%;
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+}
+h4 {
+    font-family: var(--second-family);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 110%;
+    text-align: center;
+    color: var(--dark);
+}
+h5 {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    color: var(--text-dark);
+}
+p {
+    font-family: var(--font-family);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 150%;
+    color: var(--text-dark);
+    text-align: left;
+}
+
+.title-branch-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+    text-align: center;
+}
+
+
+/* Фильтры на странице branch */
+.search-branch-wrapper {
+    background: var(--dark);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 30px;
+}
+
+.search-branch-top {
+    margin-bottom: 24px;
+}
+
+.search-branch-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.branch-filters-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 30px;
+    grid-row-gap: 0px;
+}
+
+/* Используем те же стили фильтров, что и на rubricator */
+.filter-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--white);
+    cursor: pointer;
+    min-width: 150px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.filter-arrow {
+    transition: transform 0.3s ease;
+}
+
+.filter-btn.active .filter-arrow {
+    transform: rotate(180deg);
+}
+
+.filter-dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 8px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+}
+
+.filter-dropdown.active .filter-dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+ .filter-option {
+    padding: 12px 16px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+.search-branch-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+/* Кнопка очистки фильтров */
+.clear-filters-btn {
+    padding: 16px 24px;
+    border: 2px solid var(--light-violet);
+    border-radius: 50px;
+    background: transparent;
+    font-family: var(--font-family);
+    font-size: 16px;
+    color: var(--light-violet);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: auto;
+}
+
+.clear-filters-btn:hover {
+    background: var(--light-violet);
+    color: var(--white);
+}
+
+/* Счетчик результатов */
+.results-count {
+    font-family: var(--font-family);
+    font-size: 16px;
+    color: var(--gray);
+    text-align: left;
+}
+
+/* Пагинация для branch */
+.branch-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.branch-pagination-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    border-radius: 25px;
+    border: 1px solid var(--light-gray);
+    background: var(--white);
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.branch-pagination-block:hover {
+    background: var(--light-gray);
+}
+
+.branch-pagination-block.active {
+    background: var(--dark);
+    border-color: var(--dark);
+    color: var(--white);
+}
+
+.branch-pagination-block.dots {
+    cursor: default;
+    border: none;
+    background: transparent;
+}
+
+.branch-pagination-block.dots:hover {
+    background: transparent;
+}
+
+/* Счетчик выбранных фильтров */
+.filter-count {
+    background: var(--turquoise);
+    color: var(--dark-turquoise);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 18px;
+    text-align: center;
+    margin-left: 4px;
+    display: none;
+}
+
+.filter-count.visible {
+    display: inline-block;
+}
+
+/* Чекбоксы в фильтрах */
+.filter-option-checkbox {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.filter-option-checkbox:hover {
+    background: var(--light-gray);
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--text-dark);
+    user-select: none;
+}
+
+/* Скрываем стандартный чекбокс */
+.checkbox-wrapper input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Кастомный чекбокс */
+.checkmark {
+    position: relative;
+    height: 18px;
+    width: 18px;
+    background-color: var(--white);
+    border: 2px solid var(--light-gray);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* При наведении */
+.checkbox-wrapper:hover .checkmark {
+    border-color: var(--turquoise);
+}
+
+/* Когда чекбокс отмечен */
+.checkbox-wrapper input:checked + .checkmark {
+    background-color: var(--turquoise);
+    border-color: var(--turquoise);
+}
+
+/* Создаем галочку */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid var(--dark-turquoise);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Показываем галочку когда чекбокс отмечен */
+.checkbox-wrapper input:checked + .checkmark:after {
+    display: block;
+    animation: checkmark 0.2s ease-in-out;
+}
+
+/* Текст чекбокса */
+.checkbox-text {
+    color: var(--text-dark);
+    transition: color 0.2s ease;
+}
+
+.checkbox-wrapper input:checked ~ .checkbox-text {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Анимация появления галочки */
+@keyframes checkmark {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 8px;
+    }
+}
+
+/* Стили для активного фильтра с выбранными значениями */
+/* .filter-btn.has-selections {
+    background: var(--turquoise);
+    color: var(--dark-turquoise);
+    border: 2px solid var(--turquoise);
+} */
+
+.filter-btn.has-selections:hover {
+    background: var(--dark-turquoise);
+    color: var(--white);
+}
+
+/* Адаптивность для чекбоксов */
+@media (max-width: 768px) {
+    .checkbox-wrapper {
+        font-size: 16px;
+        gap: 12px;
+    }
+    
+    .checkmark {
+        height: 20px;
+        width: 20px;
+    }
+    
+    .checkmark:after {
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+    }
+    
+    .filter-option-checkbox {
+        padding: 12px 16px;
+    }
+}
+
+/* Адаптивность для фильтров */
+@media (max-width: 1024px) {
+    .branch-filters-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        grid-column-gap: 20px;
+        grid-row-gap: 30px;
+    }
+    .filter-btn {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-branch-wrapper {
+        padding: 20px;
+    }
+    
+    .branch-filters-wrapper {
+        gap: 12px;
+    }
+    
+    .filter-btn {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+    
+    .branch-pagination {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .branch-pagination-block {
+        min-width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    .clear-filters-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .branch-filters-wrapper {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        grid-column-gap: 0px;
+        grid-row-gap: 20px;
+    }
+    .clear-filters-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+.branch-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.branch-block {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--light-gray);
+    border-radius: 20px;
+    background: var(--white);
+    min-height: 269px;
+    height: 100%;
+}
+.branch-block-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--light-gray);
+}
+.branch-block-navigation-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 13px;
+}
+.need-link  {
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 12px 18px;
+    gap: 8px;
+    background: var(--background-gray);
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 143%;
+    text-align: center;
+    color: var(--text-dark);
+}
+.need-link img {
+    max-width: 100%;
+}
+.branch-block-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px;
+    gap: 40px;
+}
+.branch-logo {
+    display: flex;
+}
+.branch-logo img {
+    max-width: 100%;
+}
+.branch-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 690px;
+    width: 100%;
+}
+.branch-contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border: 1px solid var(--dark);
+    border-radius: 49px;
+    padding: 10px 24px;
+    box-shadow: 0 0 0 0 rgba(62, 54, 127, 0.19);
+    margin-right: auto;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    text-align: right;
+    color: var(--dark);
+    background-color: transparent;
+    transition: background-color 0.3s;
+}
+.branch-contact-btn:hover {
+    box-shadow: 0 0 0 0 rgba(62, 54, 127, 0.19);
+    background-color: var(--dark);
+    border: 1px solid var(--dark);
+    color: var(--white);
+}
+.branch-contact-btn:hover svg path {
+    stroke :white;
+}
+
+/* blog-section */
+
+.blog-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 120px;
+}
+.blog-title {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 56px;
+}
+.blog-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 0px;
+    margin-bottom: 40px;
+}
+.blog-block {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--light-gray);
+    border-radius: 20px;
+    padding: 18px;
+    background: var(--white);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    opacity: 0;
+    animation: fadeInPost 0.5s ease forwards;
+}
+.blog-block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.blog-block:nth-child(1) { animation-delay: 0.1s; }
+.blog-block:nth-child(2) { animation-delay: 0.2s; }
+.blog-block:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInPost {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.blog-block img {
+    max-width: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+.blog-block h5 {
+    margin-bottom: 14px;
+}
+.blog-block p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 120%;
+    color: #acacac;
+}
+/* CSS стили для пагинации блога */
+
+.blog-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Кнопки пагинации */
+.blog-pagination-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    border-radius: 50px;
+    border: 1px solid var(--light-gray, #e5e5e5);
+    background: var(--white);
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    text-align: center;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    text-decoration: none;
+}
+
+.blog-pagination-block:hover {
+    background: var(--light-gray);
+    border-color: var(--dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blog-pagination-block.active {
+    background: var(--dark);
+    border-color: var(--dark);
+    color: var(--white);
+}
+
+.blog-pagination-block.active:hover {
+    background: var(--dark, #2d2356);
+    border-color: var(--dark, #2d2356);
+    transform: translateY(-1px);
+}
+
+/* Многоточие */
+.blog-pagination-block.dots {
+    cursor: default;
+    border: none;
+    background: transparent;
+    pointer-events: none;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    text-align: center;
+    color: var(--text-dark);
+}
+
+.blog-pagination-block.dots:hover {
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.blog-container.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Сообщение об отсутствии постов */
+.no-posts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray, #666);
+    font-family: var(--font-family, Arial, sans-serif);
+    font-size: 16px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1024px) {
+    
+    .blog-pagination {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .blog-pagination-block {
+        min-width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 769px) {
+    .blog-container {
+        grid-template-columns: 1fr;
+        grid-row-gap: 15px;
+    }
+    
+    .blog-title {
+        margin-bottom: 40px;
+    }
+    
+    .blog-block img {
+        width: 100%;
+    }
+    .blog-pagination {
+        margin-top: 30px;
+    }
+    
+    .blog-pagination-block {
+        min-width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .blog-pagination-separator {
+        margin: 0 2px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-wrapper {
+        padding: 0 10px;
+    }
+    
+    .blog-title h4 {
+        font-size: 24px;
+        text-align: center;
+    }
+    
+    .blog-block {
+        border-radius: 10px;
+        padding: 14px;
+    }
+    
+    .blog-block h5 {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    
+    .blog-pagination {
+        margin-top: 20px;
+        gap: 4px;
+    }
+    
+    .blog-pagination-block {
+        min-width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+}
+
+/* Темная тема (если используется) */
+@media (prefers-color-scheme: dark) {
+    .blog-pagination-block {
+        background: var(--dark-bg, #2a2a2a);
+        border-color: var(--dark-border, #444);
+        color: var(--dark-text, #fff);
+    }
+    
+    .blog-pagination-block:hover {
+        background: var(--dark-hover, #3a3a3a);
+    }
+    
+    .no-posts {
+        color: var(--dark-text-secondary, #aaa);
+    }
+}

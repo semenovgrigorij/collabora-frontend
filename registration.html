@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/registration.css">
+    <link rel="preload" href="./components/header.html" as="fetch" crossorigin>
+    <link rel="preload" href="./components/footer.html" as="fetch" crossorigin>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder"></div>
+        <main>
+            <div class="main-wrapper">
+                <section id="registracion-title-section">
+                    <div class="registracion-title-wrapper">
+                        <h1>Реєстрація на платформі Collabora</h1>
+                        <h2>Створіть свій профіль, щоб розпочати пошук партнерів, взаємодію та колаборацію.</h2>
+                    </div>
+                </section>
+                <section id="registracion-form">
+                    <div class="registracion-form-container">
+                        <div class="registracion-form-title">
+                            <div class="registracion-form-title-left">
+                                <h3>Інструкції до подання форми</h3>
+                                <ul>
+                                    <li>
+                                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="1" y="0.793701" width="26" height="26" rx="13" stroke="#241A56" stroke-linecap="round" />
+                                        <path d="M7.68054 14.1658L12.1377 18.6229L21.052 9.70862" stroke="#241A56" stroke-linecap="round" /></svg>
+                                        Перевірте правильність введених даних
+                                    </li>
+                                    <li>
+                                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="1" y="0.793701" width="26" height="26" rx="13" stroke="#241A56" stroke-linecap="round" />
+                                        <path d="M7.68054 14.1658L12.1377 18.6229L21.052 9.70862" stroke="#241A56" stroke-linecap="round" /></svg>
+                                        Після заповнення натисніть кнопку “Зареєструватися”.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="registracion-form-title-right">
+                                <img src="./icons/form-icon.svg" alt="Icon" width="108">
+                                <p>Далі система проведе вас через короткий
+                                    процес AI-матчингу і <span>запропонує
+                                    релевантні варіанти співпраці.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <form class="registracion-form-wrapper" id="registration-form" method="POST" enctype="multipart/form-data" novalidate>
+                            <div class="input-grup">
+                                <label for="user-type">Тип користувача</label>
+                                <div class="select-wrapper">
+                                    <select id="user-type" name="user-type" required>
+                                        <option value="">Виберіть, як ви хочете використовувати платформу</option>
+                                        <option value="business">Бізнес</option>
+                                        <option value="organization">ГО/ініціативна група/громада/волонтери</option>
+                                        <option value="expert">Експерт</option>
+                                        <option value="other">Інше</option>
+                                    </select>
+                                    <svg class="custom-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label for="name">Повна назва організації / Ім'я</label>
+                                <input 
+                                    type="text" 
+                                    id="name" 
+                                    name="name" 
+                                    placeholder="Введіть повну назву або ім'я" 
+                                    required
+                                >
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label for="email">Email</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    placeholder="Основна електронна адреса для зв'язку" 
+                                    required
+                                >
+                                <div class="error-message">Введіть коректний email</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label for="phone">Номер телефону</label>
+                                <input 
+                                    type="tel" 
+                                    id="phone" 
+                                    name="phone" 
+                                    placeholder="Для оперативного зв'язку" 
+                                    required
+                                >
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup" id="country-group">
+                                <label for="country-region">Країна / регіон</label>
+                                <select id="country-region" name="country_region[]" multiple required class="original-select">
+                                    <option value="">Оберіть країну або регіон зі списку</option>
+                                    <option value="ukraine">Україна</option>
+                                    <option value="poland">Польща</option>
+                                    <option value="germany">Німеччина</option>
+                                    <option value="usa">США</option>
+                                    <option value="canada">Канада</option>
+                                    <option value="uk">Великобританія</option>
+                                    <option value="france">Франція</option>
+                                    <option value="italy">Італія</option>
+                                    <option value="spain">Іспанія</option>
+                                    <option value="netherlands">Нідерланди</option>
+                                    <option value="czech">Чехія</option>
+                                    <option value="other">Інше</option>
+                                </select>
+
+                                <div class="custom-multiselect" id="custom-country-select">
+                                    <div class="multiselect-trigger" id="multiselect-trigger">
+                                        <div class="selected-container">
+                                            <div class="selected-tags" id="selected-tags"></div>
+                                            <div class="selected-text placeholder" id="selected-text">
+                                                Оберіть країну або регіон зі списку
+                                            </div>
+                                        </div>
+                                        <svg class="arrow-icon" id="arrow-icon" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
+                                        </svg>
+                                    </div>
+
+                                    <div class="multiselect-dropdown" id="multiselect-dropdown">
+                                        <div class="multiselect-option disabled">
+                                            <span class="option-label">Оберіть одну або кілька країн:</span>
+                                        </div>
+                                        <div class="multiselect-option" data-value="ukraine">
+                                            <input type="checkbox" class="option-checkbox" id="opt-ukraine">
+                                            <label class="option-label" for="opt-ukraine">Україна</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="poland">
+                                            <input type="checkbox" class="option-checkbox" id="opt-poland">
+                                            <label class="option-label" for="opt-poland">Польща</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="germany">
+                                            <input type="checkbox" class="option-checkbox" id="opt-germany">
+                                            <label class="option-label" for="opt-germany">Німеччина</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="usa">
+                                            <input type="checkbox" class="option-checkbox" id="opt-usa">
+                                            <label class="option-label" for="opt-usa">США</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="canada">
+                                            <input type="checkbox" class="option-checkbox" id="opt-canada">
+                                            <label class="option-label" for="opt-canada">Канада</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="uk">
+                                            <input type="checkbox" class="option-checkbox" id="opt-uk">
+                                            <label class="option-label" for="opt-uk">Великобританія</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="france">
+                                            <input type="checkbox" class="option-checkbox" id="opt-france">
+                                            <label class="option-label" for="opt-france">Франція</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="italy">
+                                            <input type="checkbox" class="option-checkbox" id="opt-italy">
+                                            <label class="option-label" for="opt-italy">Італія</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="spain">
+                                            <input type="checkbox" class="option-checkbox" id="opt-spain">
+                                            <label class="option-label" for="opt-spain">Іспанія</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="netherlands">
+                                            <input type="checkbox" class="option-checkbox" id="opt-netherlands">
+                                            <label class="option-label" for="opt-netherlands">Нідерланди</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="czech">
+                                            <input type="checkbox" class="option-checkbox" id="opt-czech">
+                                            <label class="option-label" for="opt-czech">Чехія</label>
+                                        </div>
+                                        <div class="multiselect-option" data-value="other">
+                                            <input type="checkbox" class="option-checkbox" id="opt-other">
+                                            <label class="option-label" for="opt-other">Інше</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label for="short-description">Короткий опис діяльності / професії</label>
+                                <textarea 
+                                    id="short-description" 
+                                    name="short-description" 
+                                    placeholder="Опишіть вашу діяльність (до 300 символів)"
+                                    required
+                                ></textarea>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label for="link">Посилання на сайт / соціальні мережі (якщо є)</label>
+                                <textarea 
+                                    id="link" 
+                                    name="link" 
+                                    placeholder="Вкажіть, де можна більше дізнатись про ваш бізнес"
+                                ></textarea>
+                            </div>
+
+                            <div id="file" class="input-grup">
+                                <label for="photo">Логотип або фото профілю</label>
+
+                                <div class="file-upload-container">
+                                    <div class="file-upload-text">
+                                        <div class="file-upload-placeholder">Завантажте файл</div>
+                                        <div class="file-upload-hint">Вага має бути не більше 4мб</div>
+                                    </div>
+
+                                    <div class="file-upload-button">
+                                        <button type="button" class="file-upload-btn" onclick="document.getElementById('photo').click()">
+                                            Обрати файл
+                                        </button>
+                                        <input
+                                            type="file"
+                                            id="photo"
+                                            name="photo"
+                                            accept="image/*,.svg,.png"
+                                            required
+                                        onchange="handleFileSelect(this)"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div id="selectedFile" class="selected-file" style="display: none;"></div>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup-line"></div>
+
+                            <div class="business-form">
+                                <div class="input-grup">
+                                    <label for="legal-form">Юридична форма</label>
+                                    <div class="select-wrapper">
+                                        <select id="legal-form" name="legal-form" required>
+                                            <option value="">Оберіть юридичну форму</option>
+                                            <option value="ip">Індивідуальний підприємець (ІП)</option>
+                                            <option value="tov">Товариство з обмеженою відповідальністю (ТОВ)</option>
+                                            <option value="at">Акціонерне товариство (АТ)</option>
+                                            <option value="full">Повне товариство</option>
+                                            <option value="сommander">Командитне товариство</option>
+                                            <option value="cooperative">Кооператив</option>
+                                            <option value="branch">Філія та представництво</option>
+                                            <option value="other">Інше</option>
+                                        </select>
+                                        <svg class="custom-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
+                                        </svg>
+                                    </div>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="business-size">Розмір бізнесу</label>
+                                    <div class="select-wrapper">
+                                        <select id="business-size" name="business-size" required>
+                                            <option value="">Оберіть розмір бізнесу</option>
+                                            <option value="мicro">Микробизнес</option>
+                                            <option value="small">Малый бизнес</option>
+                                            <option value="average">Средний бизнес</option>
+                                            <option value="large">Крупный бизнес</option>
+                                        </select>
+                                        <svg class="custom-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
+                                        </svg>
+                                    </div>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="services">Продукти / Послуги (коротко)</label>
+                                    <textarea 
+                                        id="services" 
+                                        name="services" 
+                                        placeholder="Опишіть, чим займаєтесь або що виготовляєте"
+                                        required 
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="need">Які ваші потреби на платформі?</label>
+                                    <textarea 
+                                        id="need" 
+                                        name="need" 
+                                        placeholder="Опишіть, що ви хочете отримати від роботи на Collabora"
+                                        required 
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label>
+                                        Досвід колаборацій
+                                    </label>
+                                    <div class="input-grup-radio">
+                                        <div>
+                                            <input type="radio" id="experience-yes" name="experience" value="yes" required>
+                                            <label for="experience-yes">Було</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="experience-no" name="experience" value="no" required>
+                                            <label for="experience-no">Не було</label>
+                                        </div>
+                                    </div>   
+                                    <div class="error-message">Поле має бути заповнене</div>                       
+                                </div>
+                            </div>
+                            <div class="go-form">
+                                <div class="input-grup">
+                                    <label for="work-directions">Основні напрямки роботи</label>
+        
+                                    <div class="checkboxes-container">
+                                        <!-- Первая строка -->
+                                        <div class="checkbox-row">
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="humanitarian" name="work_directions[]" value="humanitarian" required>
+                                                <label for="humanitarian">Гуманітарна допомога</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="education" name="work_directions[]" value="education"required>
+                                                <label for="education">Освіта</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="culture" name="work_directions[]" value="culture"required>
+                                                <label for="culture">Культура</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="ecology" name="work_directions[]" value="ecology"required>
+                                                <label for="ecology">Екологія</label>
+                                            </div>
+                                        </div>
+            
+                                        <!-- Вторая строка -->
+                                        <div class="checkbox-row">
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="infrastructure" name="work_directions[]" value="infrastructure" required>
+                                                <label for="infrastructure">Інфраструктура / відновлення</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="support" name="work_directions[]" value="support" required>
+                                                <label for="support">Підтримка ВПО / ветеранів</label>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <textarea
+                                        name="other_directions"
+                                        placeholder="Або вкажіть інше"
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="geography">Географія покриття (місто / область / кілька регіонів)</label>
+                                    <input 
+                                        type="text" 
+                                        id="geography" 
+                                        name="geography" 
+                                        placeholder="Вкажіть географію покриття" 
+                                        required
+                                    >
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="projects">Приклади реалізованих проєктів (коротко)</label>
+                                    <textarea 
+                                        id="projects" 
+                                        name="projects" 
+                                        placeholder="Опишіть приклади реалізованих проєктів"
+                                        required
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="cooperation">Запити на співпрацю</label>
+                                    <textarea 
+                                        id="cooperation" 
+                                        name="cooperation" 
+                                        placeholder="Напишіть, яку співпрацю потребуєте"
+                                        required
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label>
+                                        Готовність до колаборацій з бізнесом / експертами:
+                                    </label>
+                                    <div class="input-grup-radio">
+                                        <div>
+                                            <input type="radio" id="readiness-yes" name="readiness" value="yes" required>
+                                            <label for="readiness-yes">Так</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="readiness-no" name="readiness" value="no" required>
+                                            <label for="readiness-no">Ні</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="readiness-conditional" name="readiness" value="conditional" required>
+                                            <label for="readiness-conditional">За умов</label>
+                                        </div>
+                                    </div>   
+                                    <div class="error-message">Поле має бути заповнене</div>                       
+                                </div>
+                            </div>
+                            <div class="expert-form">
+                                <div class="input-grup">
+                                    <label for="specialization">Спеціалізація</label>
+                                    <div class="select-wrapper">
+                                        <select id="specialization" name="specialization" required>
+                                            <option value="">Оберіть вашу спеціалізацію</option>
+                                            <option value="production">Виробнича</option>
+                                            <option value="trading">Торгова</option>
+                                            <option value="service">Сервісна</option>
+                                            <option value="financial">Фінансова</option>
+                                            <option value="informational">Інформаційна</option>
+                                            <option value="other">Інше</option>
+                                        </select>
+                                        <svg class="custom-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
+                                        </svg>
+                                    </div>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="experience">Опишіть ваш досвід</label>
+                                    <textarea 
+                                        id="experience" 
+                                    name="experience" 
+                                        placeholder="Досвід роботи (років, приклади клієнтів або послуг)"
+                                        required 
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup">
+                                    <label for="work-directions">Оберіть формати співпраці</label>
+                                    <div class="checkboxes-container">
+                                        <div class="checkbox-row">
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="consultations" name="cooperation[]" value="consultations">
+                                                <label for="consultations">Консультації</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="mentoring" name="cooperation[]" value="mentoring">
+                                                <label for="mentoring">Менторство</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="project" name="cooperation[]" value="project">
+                                                <label for="project">Проєктна участь</label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="online-offline" name="cooperation[]" value="online-offline">
+                                                <label for="online-offline">Онлайн / Офлайн</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                                <div class="input-grup" style="margin-bottom: 0;">
+                                    <label for="expectation">Очікування від Collabora</label>
+                                    <textarea 
+                                        id="expectation"
+                                        name="expectation" 
+                                        placeholder="Опишіть ваші очікування від співпраці з Collabora"\
+                                        required 
+                                    ></textarea>
+                                    <div class="error-message">Поле має бути заповнене</div>
+                                </div>
+
+                            </div>
+                            <div class="input-grup">
+                                <label>Чи згодні ви з <a style="font-family: var(--font-family); font-weight: 400; font-size: 14px; line-height: 143%;
+                                    color: var(--text-dark); border-bottom: 1px dashed var(--button-violet);
+                                    padding-bottom: 2px;" href="./privacy-policy.html">
+                                    умовами користування платформою</a>? 
+                                </label>
+                                <div class="input-grup-radio">
+                                    <div>
+                                        <input type="radio" id="terms-yes" name="terms-of-use" value="yes" required>
+                                        <label for="terms-yes">Так</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="terms-no" name="terms-of-use" value="no" required>
+                                        <label for="terms-no">Ні</label>
+                                    </div>
+                                </div>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label>
+                                    Чи погоджуєтесь на публікацію частини профілю у відкритому пошуку партнерів?
+                                </label>
+                                <div class="input-grup-radio">
+                                    <div>
+                                        <input type="radio" id="consent-yes" name="consent-to-publications" value="yes" required>
+                                        <label for="consent-yes">Так</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="consent-no" name="consent-to-publications" value="no" required>
+                                        <label for="consent-no">Ні</label>
+                                    </div>
+                                </div>
+                                <div class="error-message">Поле має бути заповнене</div>
+                            </div>
+
+                            <div class="input-grup">
+                                <label for="comments">Коментар</label>
+                                <textarea 
+                                    id="comments" 
+                                    name="comments" 
+                                    placeholder="Напишіть додатковий коментар за потреби"
+                                ></textarea>
+                            </div>
+
+                            <div class="registracion-form-submit">
+                                <button type="submit">Зареєструватися</button>
+                            </div>
+                        </form>        
+                    </div>
+                </section>
+            </div>
+        </main>
+        <div id="footer-placeholder"></div>
+    </div>
+    <script src="./js/components.js"></script>
+    <script src="./js/registration.js"></script>
+    
+</body>
+</html>
