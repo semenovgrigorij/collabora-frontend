@@ -27,8 +27,7 @@ class ComponentManager {
         
         console.log(`🌐 Определен язык: ${isEnglishPage ? 'EN' : 'UA'}, путь: ${currentPath}`);
         
-        // Выбираем правильные компоненты в зависимости от языка
-        // Для английских страниц используем относительный путь к корневой папке
+        // ИСПРАВЛЕНО: Правильные пути для компонентов
         this.components = {
             header: isEnglishPage ? '../components/header-en.html' : './components/header.html',
             footer: isEnglishPage ? '../components/footer-en.html' : './components/footer.html'
@@ -221,7 +220,7 @@ class ComponentManager {
         console.log('✅ Языковой селектор инициализирован');
     }
 
-    // Определение соответствующей страницы на другом языке
+    // ИСПРАВЛЕНО: Определение соответствующей страницы на другом языке
     getCorrespondingPageUrl(currentPath, targetLang) {
         // Получаем имя текущей страницы
         let currentPage = currentPath.split('/').pop() || 'home.html';
@@ -256,16 +255,21 @@ class ComponentManager {
         
         let targetUrl;
         
+        // ИСПРАВЛЕНО: Правильные пути для GitHub Pages
+        const basePath = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' 
+            : '/collabora-frontend';
+        
         if (targetLang === 'EN') {
             // Переход на английскую версию
             targetUrl = `${basePath}/en/${targetPage}`;
         } else if (targetLang === 'UA') {
             // Переход на украинскую версию
             if (targetPage === 'home.html') {
-                // Главная страница - переходим в корень
-                targetUrl = '/';
+                // Главная страница - переходим в корень проекта
+                targetUrl = `${basePath}/home.html`;
             } else {
-                // Остальные страницы - относительный путь
+                // Остальные страницы
                 targetUrl = `${basePath}/${targetPage}`;
             }
         } else {
