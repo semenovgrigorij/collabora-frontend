@@ -247,7 +247,8 @@ class ComponentManager {
             'thank-page.html': 'thank-page.html',
             'b2b.html': 'b2b.html',
             'sphere-of-possibilities.html': 'sphere-of-possibilities.html',
-            'mission.html': 'mission.html'
+            'mission.html': 'mission.html',
+            'social-initiatives.html': 'social-initiatives.html'
         };
         
         // Если текущая страница не найдена в карте, используем home.html
@@ -257,15 +258,15 @@ class ComponentManager {
         
         if (targetLang === 'EN') {
             // Переход на английскую версию
-            targetUrl = `./en/${targetPage}`;
+            targetUrl = `${basePath}/en/${targetPage}`;
         } else if (targetLang === 'UA') {
             // Переход на украинскую версию
-            if (targetPage === './home.html') {
+            if (targetPage === 'home.html') {
                 // Главная страница - переходим в корень
                 targetUrl = '/';
             } else {
                 // Остальные страницы - относительный путь
-                targetUrl = `./${targetPage}`;
+                targetUrl = `${basePath}/${targetPage}`;
             }
         } else {
             targetUrl = currentPath; // Возвращаем текущий путь, если что-то пошло не так
