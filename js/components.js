@@ -257,15 +257,15 @@ class ComponentManager {
         
         if (targetLang === 'EN') {
             // Переход на английскую версию
-            targetUrl = `/en/${targetPage}`;
+            targetUrl = `./en/${targetPage}`;
         } else if (targetLang === 'UA') {
             // Переход на украинскую версию
-            if (targetPage === 'home.html') {
+            if (targetPage === './home.html') {
                 // Главная страница - переходим в корень
                 targetUrl = '/';
             } else {
                 // Остальные страницы - относительный путь
-                targetUrl = `/${targetPage}`;
+                targetUrl = `./${targetPage}`;
             }
         } else {
             targetUrl = currentPath; // Возвращаем текущий путь, если что-то пошло не так
