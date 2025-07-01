@@ -247,7 +247,13 @@ class ComponentManager {
             'b2b.html': 'b2b.html',
             'sphere-of-possibilities.html': 'sphere-of-possibilities.html',
             'mission.html': 'mission.html',
-            'social-initiatives.html': 'social-initiatives.html'
+            'social-initiatives.html': 'social-initiatives.html',
+            'add-request.html': 'add-request.html',
+            'b2b-single.html': 'b2b-single.html',
+            'branch.html': 'branch.html',
+            'cabinet.html': 'cabinet.html',
+            'edit-profile.html': 'edit-profile.html',
+            'offer.html': 'offer.html'
         };
         
         // Если текущая страница не найдена в карте, используем home.html
