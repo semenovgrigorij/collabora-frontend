@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collabora</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/authorization.css">
+    <link rel="preload" href="../components/header-en.html" as="fetch" crossorigin>
+    <link rel="preload" href="../components/footer-en.html" as="fetch" crossorigin>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="header-placeholder"></div>
+        
+        <main>
+            <div class="main-wrapper">
+                <section id="login-form">
+                    <div class="login-form-container">
+                        <div class="authorization-title">
+                            <h1>Log in</h1>
+                            <h2>to start using Collabora</h2>
+                        </div>
+                        <div class="login-form-wrapper">
+                            <form id="authorization-form" method="POST">
+                                <div class="input-grup-email">
+                                    <label for="email">Your email</label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email" 
+                                        placeholder="Enter your email" 
+                                        required
+                                    >
+                                </div>
+
+                                <div class="input-grup-password">
+                                    <label for="password">Your password</label>
+                                    <input 
+                                        type="password" 
+                                        id="password" 
+                                        name="password" 
+                                        placeholder="Enter your password" 
+                                        required
+                                    >
+                                    <img class="open-eye" src="../icons/icon-open-eye.svg" alt="eye" width="18">
+                                </div>
+
+                                <div class="forgot-password">
+                                    <a href="../password-recovery.html" id="forgot-password-link">Forgot password?</a>
+                                </div>
+
+                                <div class="login-form-submit">
+                                    <button type="submit">Log in</button>
+                                </div>
+
+                                <div class="register-link">
+                                    <span>Don’t have an account?</span>
+                                    <a href="../registration.html" id="register-link">Sign up</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <div id="footer-placeholder"></div>
+    </div>
+    
+    <script src="../js/components.js"></script>
+    <script src="../js/authorization.js"></script>
+</body>
+</html>
