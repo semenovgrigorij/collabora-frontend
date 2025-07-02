@@ -115,9 +115,96 @@ function setupHeaderUserInfo() {
 
 class OfferPage {
     constructor() {
+        // Определяем текущий язык
+        this.currentLang = this.detectLanguage();
+        
         this.currentOffer = null;
         this.popupOverlay = null;
+
+        // Тексты для разных языков
+        this.texts = {
+            uk: {
+                complaintTitle: 'Скарга',
+                complaintDescription: 'Надішліть скаргу та модерація перевірить пропозицію/потребу на наявність порушення',
+                complaintPlaceholder: 'Опишіть суть скарги на пропозицію/потребу',
+                complaintSubmit: 'Надіслати',
+                complaintSuccess: 'Скаргу надіслано! Вона буде розглянута найближчим часом.',
+                
+                respondTitle: 'Відгукнутись',
+                respondDescription: 'Залиште ваше повідомлення та контакти для зв\'язку з Вами',
+                respondCommentLabel: 'Коментар до відгуку',
+                respondCommentPlaceholder: 'Опишіть чим ви можете домогти або запропонуйте іншу співпрацю',
+                respondContactLabel: 'Контакти для зв\'язку',
+                respondContactPlaceholder: 'Наприклад, контактна особа, e-mail, номер телефону',
+                respondSubmit: 'Надіслати',
+                respondSuccess: 'Відгук надіслано! Автор отримає ваше повідомлення.',
+                
+                validationCommentRequired: 'Будь ласка, введіть коментар',
+                validationContactRequired: 'Будь ласка, вкажіть контактні дані',
+                validationComplaintRequired: 'Будь ласка, введіть текст скарги',
+                
+                closeButton: 'Закрити',
+                
+                published: 'Опубліковано',
+                categoryLabel: 'Категорія'
+            },
+            en: {
+                complaintTitle: 'Complaint',
+                complaintDescription: 'Send a complaint and moderation will check the offer/need for violations',
+                complaintPlaceholder: 'Describe the essence of the complaint about the offer/need',
+                complaintSubmit: 'Send',
+                complaintSuccess: 'Complaint sent! It will be reviewed soon.',
+                
+                respondTitle: 'Respond',
+                respondDescription: 'Leave your message and contacts for communication with you',
+                respondCommentLabel: 'Comment to response',
+                respondCommentPlaceholder: 'Describe how you can help or suggest other cooperation',
+                respondContactLabel: 'Contact information',
+                respondContactPlaceholder: 'For example, contact person, e-mail, phone number',
+                respondSubmit: 'Send',
+                respondSuccess: 'Response sent! The author will receive your message.',
+                
+                validationCommentRequired: 'Please enter a comment',
+                validationContactRequired: 'Please provide contact information',
+                validationComplaintRequired: 'Please enter complaint text',
+                
+                closeButton: 'Close',
+                
+                published: 'Published',
+                categoryLabel: 'Category'
+            }
+        };
+
         this.init();
+    }
+
+    // Определение текущего языка
+    detectLanguage() {
+        const path = window.location.pathname;
+        const langMatch = path.match(/\/(en|uk)\//);
+        return langMatch ? langMatch[1] : 'uk';
+    }
+
+    // Получение локализованного текста
+    getText(key) {
+        return this.texts[this.currentLang]?.[key] || this.texts.uk[key] || key;
+    }
+
+    // Получение локализованного пути
+    getLocalizedPath(path) {
+        if (path.startsWith('./')) {
+            return this.currentLang === 'en' ? '../' + path.substring(2) : path;
+        }
+        return path;
+    }
+
+    // Получение локализованного URL
+    getLocalizedUrl(url) {
+        if (url.startsWith('./')) {
+            const baseUrl = url.substring(2);
+            return this.currentLang === 'en' ? `../en/${baseUrl}` : `./${baseUrl}`;
+        }
+        return url;
     }
 
     init() {
@@ -172,7 +259,7 @@ class OfferPage {
                 id: 123,
                 name: "HRYHORII",
                 company: "ТОВ «Агропак-Сервіс»",
-                avatar: "./icons/user-avatar-default.svg",
+                avatar: this.getLocalizedPath("./icons/user-avatar-default.svg"),
                 isOnline: true,
                 isVerified: true
             }
@@ -194,33 +281,36 @@ class OfferPage {
     }
 
     // Обновление хлебных крошек
-updateBreadcrumbs() {
-    setTimeout(() => {
-        if (window.breadcrumbsManager) {
-            const b2bData = sessionStorage.getItem('currentB2BItem');
-            let b2bTitle = 'Категорія';
-            
-            if (b2bData) {
-                try {
-                    const parsedData = JSON.parse(b2bData);
-                    b2bTitle = parsedData.title || 'Категорія';
-                } catch (error) {
-                    console.warn('Ошибка при парсинге данных B2B:', error);
+    updateBreadcrumbs() {
+        setTimeout(() => {
+            if (window.breadcrumbsManager) {
+                const b2bData = sessionStorage.getItem('currentB2BItem');
+                let b2bTitle = this.getText('categoryLabel');
+                
+                if (b2bData) {
+                    try {
+                        const parsedData = JSON.parse(b2bData);
+                        b2bTitle = parsedData.title || this.getText('categoryLabel');
+                    } catch (error) {
+                        console.warn('Ошибка при парсинге данных B2B:', error);
+                    }
                 }
-            }
 
-            const truncatedTitle = this.truncateTitle(this.currentOffer.title, 50);
-            
-            // Используем новый метод
-            window.breadcrumbsManager.buildBreadcrumbs([
-                { title: b2bTitle, href: './b2b-single.html' },
-                { title: truncatedTitle, href: null }
-            ]);
-            
-            console.log('Хлебные крошки обновлены для offer.html');
-        }
-    }, 100);
-}
+                const truncatedTitle = this.truncateTitle(this.currentOffer.title, 50);
+                
+                // Формируем URL с учетом языка
+                const b2bUrl = this.getLocalizedUrl('./b2b-single.html');
+                
+                // Используем новый метод
+                window.breadcrumbsManager.buildBreadcrumbs([
+                    { title: b2bTitle, href: b2bUrl },
+                    { title: truncatedTitle, href: null }
+                ]);
+                
+                console.log('Хлебные крошки обновлены для offer.html');
+            }
+        }, 100);
+    }
 
     // Обрезка длинного заголовка
     truncateTitle(title, maxLength) {
@@ -244,7 +334,8 @@ updateBreadcrumbs() {
         }
 
         if (elements.publishDate) {
-            elements.publishDate.textContent = `Опубліковано ${this.currentOffer.publishDate}`;
+            const publishedText = this.getText('published');
+            elements.publishDate.textContent = `${publishedText} ${this.currentOffer.publishDate}`;
         }
 
         if (elements.category) {
@@ -352,12 +443,17 @@ updateBreadcrumbs() {
     showComplaintModal() {
         this.hideComplaintPopup();
         
-        const modal = this.createModal('complaint', 'Скарга', `
+        const complaintTitle = this.getText('complaintTitle');
+        const complaintDescription = this.getText('complaintDescription');
+        const complaintPlaceholder = this.getText('complaintPlaceholder');
+        const complaintSubmit = this.getText('complaintSubmit');
+        
+        const modal = this.createModal('complaint', complaintTitle, `
             <div class="modal-content">
-                <p>Надішліть скаргу та модерація перевірить пропозицію/потребу на наявність порушення</p>
+                <p>${complaintDescription}</p>
                 <textarea 
                     id="complaintText" 
-                    placeholder="Опишіть суть скарги на пропозицію/потребу"
+                    placeholder="${complaintPlaceholder}"
                     rows="5"
                     maxlength="500"
                 ></textarea>
@@ -365,7 +461,7 @@ updateBreadcrumbs() {
                     <span id="charCount">0</span>/500
                 </div>
                 <div class="modal-buttons">
-                    <button class="modal-btn primary" onclick="window.offerPage.submitComplaint()">Надіслати</button>
+                    <button class="modal-btn primary" onclick="window.offerPage.submitComplaint()">${complaintSubmit}</button>
                 </div>
             </div>
         `);
@@ -396,14 +492,22 @@ updateBreadcrumbs() {
 
     // Показ модального окна ответа
     showRespondModal() {
-        const modal = this.createModal('respond', 'Відгукнутись', `
+        const respondTitle = this.getText('respondTitle');
+        const respondDescription = this.getText('respondDescription');
+        const respondCommentLabel = this.getText('respondCommentLabel');
+        const respondCommentPlaceholder = this.getText('respondCommentPlaceholder');
+        const respondContactLabel = this.getText('respondContactLabel');
+        const respondContactPlaceholder = this.getText('respondContactPlaceholder');
+        const respondSubmit = this.getText('respondSubmit');
+        
+        const modal = this.createModal('respond', respondTitle, `
             <div class="modal-content">
-                <p>Залиште ваше повідомлення та контакти для зв’язку з Вами</p>
+                <p>${respondDescription}</p>
                 <div class="form-group">
-                    <label for="respondComment">Коментар до відгуку</label>
+                    <label for="respondComment">${respondCommentLabel}</label>
                     <textarea 
                         id="respondComment" 
-                        placeholder="Опишіть чим ви можете домогти або запропонуйте іншу співпрацю"
+                        placeholder="${respondCommentPlaceholder}"
                         rows="4"
                         maxlength="1000"
                         required
@@ -414,10 +518,10 @@ updateBreadcrumbs() {
                 </div>
                 
                 <div class="form-group">
-                    <label for="respondContact">Контакти для зв'язку</label>
+                    <label for="respondContact">${respondContactLabel}</label>
                     <textarea 
                         id="respondContact" 
-                        placeholder="Наприклад, контактна особа, e-mail, номер телефону"
+                        placeholder="${respondContactPlaceholder}"
                         rows="3"
                         maxlength="300"
                         required
@@ -428,7 +532,7 @@ updateBreadcrumbs() {
                 </div>
                 
                 <div class="modal-buttons">
-                    <button class="modal-btn primary" onclick="window.offerPage.submitResponse()">Надіслати</button>
+                    <button class="modal-btn primary" onclick="window.offerPage.submitResponse()">${respondSubmit}</button>
                 </div>
             </div>
         `);
@@ -473,12 +577,14 @@ updateBreadcrumbs() {
 
     // Создание модального окна
     createModal(type, title, content) {
+        const closeButton = this.getText('closeButton');
+        
         const modal = document.createElement('div');
         modal.className = `modal modal-${type}`;
         modal.innerHTML = `
             <div class="modal-header">
                 <h3>${title}</h3>
-                <button class="modal-close" onclick="window.offerPage.closeModal()">
+                <button class="modal-close" onclick="window.offerPage.closeModal()" aria-label="${closeButton}">
                     <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1L25 25M1 25L25 1" stroke="#241A56" />
                     </svg>
@@ -497,6 +603,14 @@ updateBreadcrumbs() {
 
         // Отключаем скроллинг
         disableScroll();
+
+        // Фокус на первый интерактивный элемент
+        setTimeout(() => {
+            const firstInput = modal.querySelector('textarea, input, button');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 100);
     }
 
     // Закрытие модального окна
@@ -514,8 +628,10 @@ updateBreadcrumbs() {
     // Отправка жалобы
     submitComplaint() {
         const textarea = document.getElementById('complaintText');
+        const validationMessage = this.getText('validationComplaintRequired');
+        
         if (!textarea || !textarea.value.trim()) {
-            alert('Будь ласка, введіть текст скарги');
+            alert(validationMessage);
             return;
         }
 
@@ -523,14 +639,16 @@ updateBreadcrumbs() {
             offerId: this.currentOffer.id,
             authorId: this.currentOffer.author.id,
             complaintText: textarea.value.trim(),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            language: this.currentLang
         };
 
         console.log('Отправка жалобы:', complaintData);
 
         // В реальном проекте здесь будет API запрос
         // Пока что имитируем успешную отправку
-        this.showSuccessMessage('Скаргу надіслано! Вона буде розглянута найближчим часом.');
+        const successMessage = this.getText('complaintSuccess');
+        this.showSuccessMessage(successMessage);
         this.closeModal();
     }
 
@@ -538,14 +656,16 @@ updateBreadcrumbs() {
     submitResponse() {
         const commentTextarea = document.getElementById('respondComment');
         const contactTextarea = document.getElementById('respondContact');
+        const validationCommentRequired = this.getText('validationCommentRequired');
+        const validationContactRequired = this.getText('validationContactRequired');
         
         if (!commentTextarea || !commentTextarea.value.trim()) {
-            alert('Будь ласка, введіть коментар');
+            alert(validationCommentRequired);
             return;
         }
         
         if (!contactTextarea || !contactTextarea.value.trim()) {
-            alert('Будь ласка, вкажіть контактні дані');
+            alert(validationContactRequired);
             return;
         }
 
@@ -554,14 +674,16 @@ updateBreadcrumbs() {
             authorId: this.currentOffer.author.id,
             comment: commentTextarea.value.trim(),
             contact: contactTextarea.value.trim(),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            language: this.currentLang
         };
 
         console.log('Отправка отклика:', responseData);
 
         // В реальном проекте здесь будет API запрос
         // Пока что имитируем успешную отправку
-        this.showSuccessMessage('Відгук надіслано! Автор отримає ваше повідомлення.');
+        const successMessage = this.getText('respondSuccess');
+        this.showSuccessMessage(successMessage);
         this.closeModal();
     }
 
@@ -591,6 +713,25 @@ updateBreadcrumbs() {
     // Публичные методы
     getCurrentOffer() {
         return this.currentOffer;
+    }
+
+    // Получение состояния для отладки
+    getState() {
+        return {
+            currentOffer: this.currentOffer,
+            language: this.currentLang,
+            isModalOpen: this.popupOverlay ? this.popupOverlay.classList.contains('active') : false
+        };
+    }
+
+    // Переключение языка (для случаев динамической смены языка)
+    setLanguage(lang) {
+        if (this.texts[lang]) {
+            this.currentLang = lang;
+            // Обновляем контент с новым языком
+            this.updateOfferContent();
+            this.updateBreadcrumbs();
+        }
     }
 }
 

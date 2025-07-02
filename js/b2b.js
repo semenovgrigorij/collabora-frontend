@@ -1,13 +1,170 @@
-// b2b.js - Функциональность B2B страницы
+// b2b.js - многоязычная функциональность B2B страницы
+
+// Определение текущего языка
+function getCurrentLanguage() {
+    const currentPath = window.location.pathname;
+    const isEnglishPage = currentPath.includes('/en/');
+    return isEnglishPage ? 'en' : 'uk';
+}
+
+// Получение пути к странице с учетом языка
+function getLocalizedPath(pageName) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        return `./${pageName}`;
+    } else {
+        return `./${pageName}`;
+    }
+}
+
+// Получение пути к ресурсам с учетом языка
+function getResourcePath(resourcePath) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        return `../${resourcePath}`;
+    } else {
+        return `./${resourcePath}`;
+    }
+}
+
+// Локализованные тексты
+function getLocalizedText(key) {
+    const currentLang = getCurrentLanguage();
+    
+    const texts = {
+        uk: {
+            // Названия отраслей
+            'industry-production': 'Промисловість та переробка',
+            'industry-construction': 'Будівництво, матеріали, деревопереробка',
+            'industry-agro': 'Агро і харчова промисловість',
+            'industry-energy': 'Енергетика',
+            'industry-it': 'IT та телекомунікації',
+            'industry-finance': 'Фінанси та банкінг',
+            'industry-retail': 'Роздрібна торгівля',
+            'industry-logistics': 'Логістика та транспорт',
+            
+            // Типы бизнеса
+            'production': 'Виробництво',
+            'trade': 'Торгівля',
+            'services': 'Послуги',
+            'technology': 'Технології',
+            
+            // Масштаб
+            'small': 'Малий',
+            'medium': 'Середній',
+            'large': 'Великий',
+            
+            // Регионы
+            'kyiv': 'Київ',
+            'lviv': 'Львів',
+            'odesa': 'Одеса',
+            'kharkiv': 'Харків',
+            'dnipro': 'Дніпро',
+            
+            // Статусы
+            'investment': 'Пошук інвестицій',
+            'marketing': 'Маркетингова співпраця',
+            'partnership': 'Партнерство',
+            'similar': 'Схожі бізнеси',
+            
+            // Интерфейс
+            'lastUpdate': 'Останнє оновлення',
+            'ago': 'тому',
+            'participants': 'Учасників:',
+            'discussions': 'Обговорення',
+            'suggest': 'Запропонувати',
+            'noResults': 'За вашими фільтрами нічого не знайдено',
+            'changeFilters': 'Спробуйте змінити параметри фільтрування',
+            'clearFilters': 'Очистити фільтри',
+            'found': 'Знайдено:',
+            'shown': 'Показано:',
+            'from': 'з',
+            'business': 'бізнес',
+            'businesses': 'бізнеси',
+            'businessesMany': 'бізнесів',
+            'nothingFound': 'Нічого не знайдено',
+            
+            // Единицы времени
+            'min': 'хв.',
+            'hour': 'год.',
+            'hours': 'год.',
+            'day': 'дн.',
+            'days': 'дн.'
+        },
+        en: {
+            // Названия отраслей
+            'industry-production': 'Industry and Processing',
+            'industry-construction': 'Construction, Materials, Woodworking',
+            'industry-agro': 'Agriculture and Food Industry',
+            'industry-energy': 'Energy',
+            'industry-it': 'IT and Telecommunications',
+            'industry-finance': 'Finance and Banking',
+            'industry-retail': 'Retail',
+            'industry-logistics': 'Logistics and Transport',
+            
+            // Типы бизнеса
+            'production': 'Production',
+            'trade': 'Trade',
+            'services': 'Services',
+            'technology': 'Technology',
+            
+            // Масштаб
+            'small': 'Small',
+            'medium': 'Medium',
+            'large': 'Large',
+            
+            // Регионы
+            'kyiv': 'Kyiv',
+            'lviv': 'Lviv',
+            'odesa': 'Odesa',
+            'kharkiv': 'Kharkiv',
+            'dnipro': 'Dnipro',
+            
+            // Статусы
+            'investment': 'Seeking Investment',
+            'marketing': 'Marketing Collaboration',
+            'partnership': 'Partnership',
+            'similar': 'Similar Businesses',
+            
+            // Интерфейс
+            'lastUpdate': 'Last update',
+            'ago': 'ago',
+            'participants': 'Participants:',
+            'discussions': 'Discussions',
+            'suggest': 'Suggest',
+            'noResults': 'No results found for your filters',
+            'changeFilters': 'Try changing filter parameters',
+            'clearFilters': 'Clear filters',
+            'found': 'Found:',
+            'shown': 'Shown:',
+            'from': 'of',
+            'business': 'business',
+            'businesses': 'businesses',
+            'businessesMany': 'businesses',
+            'nothingFound': 'Nothing found',
+            
+            // Единицы времени
+            'min': 'min',
+            'hour': 'hour',
+            'hours': 'hours',
+            'day': 'day',
+            'days': 'days'
+        }
+    };
+    
+    return texts[currentLang][key] || texts['uk'][key];
+}
 
 // Мок-данные для B2B блоков (имитация базы данных)
 const b2bDatabase = [
     {
         id: 1,
-        title: "Промисловість та переробка",
+        titleKey: 'industry-production',
         lastUpdate: "25 хв. тому",
         participants: "4.1 тис",
-        image: "./icons/b2b-img-1.svg",
+        image: "icons/b2b-img-1.svg",
         businessType: ["production"],
         scale: ["large"],
         region: ["kyiv", "kharkiv"],
@@ -16,10 +173,10 @@ const b2bDatabase = [
     },
     {
         id: 2,
-        title: "Будівництво, матеріали, деревопереробка",
+        titleKey: 'industry-construction',
         lastUpdate: "1 год. тому",
         participants: "3.2 тис",
-        image: "./icons/b2b-img-2.svg",
+        image: "icons/b2b-img-2.svg",
         businessType: ["production", "trade"],
         scale: ["medium", "large"],
         region: ["kyiv", "lviv"],
@@ -28,10 +185,10 @@ const b2bDatabase = [
     },
     {
         id: 3,
-        title: "Агро і харчова промисловість",
+        titleKey: 'industry-agro',
         lastUpdate: "2 год. тому",
         participants: "2.8 тис",
-        image: "./icons/b2b-img-3.svg",
+        image: "icons/b2b-img-3.svg",
         businessType: ["production"],
         scale: ["small", "medium"],
         region: ["kyiv", "odesa", "dnipro"],
@@ -40,10 +197,10 @@ const b2bDatabase = [
     },
     {
         id: 4,
-        title: "Енергетика",
+        titleKey: 'industry-energy',
         lastUpdate: "3 год. тому",
         participants: "1.9 тис",
-        image: "./icons/b2b-img-4.svg",
+        image: "icons/b2b-img-4.svg",
         businessType: ["technology", "services"],
         scale: ["large"],
         region: ["kyiv", "kharkiv", "dnipro"],
@@ -52,10 +209,10 @@ const b2bDatabase = [
     },
     {
         id: 5,
-        title: "IT та телекомунікації",
+        titleKey: 'industry-it',
         lastUpdate: "4 год. тому",
         participants: "5.5 тис",
-        image: "./icons/b2b-img-5.svg",
+        image: "icons/b2b-img-5.svg",
         businessType: ["technology", "services"],
         scale: ["small", "medium"],
         region: ["kyiv", "lviv", "kharkiv"],
@@ -64,10 +221,10 @@ const b2bDatabase = [
     },
     {
         id: 6,
-        title: "Фінанси та банкінг",
+        titleKey: 'industry-finance',
         lastUpdate: "5 год. тому",
         participants: "2.1 тис",
-        image: "./icons/b2b-img-6.svg",
+        image: "icons/b2b-img-6.svg",
         businessType: ["services"],
         scale: ["large"],
         region: ["kyiv"],
@@ -76,10 +233,10 @@ const b2bDatabase = [
     },
     {
         id: 7,
-        title: "Роздрібна торгівля",
+        titleKey: 'industry-retail',
         lastUpdate: "6 год. тому",
         participants: "3.7 тис",
-        image: "./icons/b2b-img-7.svg",
+        image: "icons/b2b-img-7.svg",
         businessType: ["trade"],
         scale: ["small", "medium"],
         region: ["kyiv", "lviv", "odesa"],
@@ -88,10 +245,10 @@ const b2bDatabase = [
     },
     {
         id: 8,
-        title: "Логістика та транспорт",
+        titleKey: 'industry-logistics',
         lastUpdate: "7 год. тому",
         participants: "1.6 тис",
-        image: "./icons/b2b-img-8.svg",
+        image: "icons/b2b-img-8.svg",
         businessType: ["services"],
         scale: ["medium"],
         region: ["kyiv", "odesa", "dnipro"],
@@ -102,6 +259,7 @@ const b2bDatabase = [
 
 class B2BPage {
     constructor() {
+        this.currentLang = getCurrentLanguage();
         this.filters = {
             businessType: [],
             scale: [],
@@ -113,13 +271,74 @@ class B2BPage {
     }
 
     init() {
+        this.localizeInterface();
         this.setupFilters();
         this.setupClearButton();
-        this.setupBlockClickHandlers(); // Устанавливаем обработчики один раз
+        this.setupBlockClickHandlers();
         this.renderB2BBlocks();
         this.updateResultsCount();
         
         console.log('B2B страница инициализирована');
+    }
+
+    // Локализация интерфейса
+    localizeInterface() {
+        // Локализуем кнопку очистки фильтров
+        const clearButton = document.getElementById('clearFiltersBtn');
+        if (clearButton) {
+            clearButton.textContent = getLocalizedText('clearFilters');
+        }
+
+        // Локализуем сообщение "Нет результатов"
+        const noResults = document.getElementById('b2bNoResults');
+        if (noResults) {
+            const title = noResults.querySelector('h3');
+            const description = noResults.querySelector('p');
+            if (title) title.textContent = getLocalizedText('noResults');
+            if (description) description.textContent = getLocalizedText('changeFilters');
+        }
+
+        // Локализуем опции фильтров
+        this.localizeFilterOptions();
+    }
+
+    // Локализация опций фильтров
+    localizeFilterOptions() {
+        // Типы бизнеса
+        const businessTypeOptions = document.querySelectorAll('#businessTypeDropdown .checkbox-text');
+        const businessTypes = ['production', 'trade', 'services', 'technology'];
+        businessTypeOptions.forEach((option, index) => {
+            if (businessTypes[index]) {
+                option.textContent = getLocalizedText(businessTypes[index]);
+            }
+        });
+
+        // Масштаб
+        const scaleOptions = document.querySelectorAll('#scaleDropdown .checkbox-text');
+        const scales = ['small', 'medium', 'large'];
+        scaleOptions.forEach((option, index) => {
+            if (scales[index]) {
+                option.textContent = getLocalizedText(scales[index]);
+            }
+        });
+
+        // Регионы
+        const geographyOptions = document.querySelectorAll('#geographyDropdown .checkbox-text');
+        const regions = ['kyiv', 'lviv', 'odesa', 'kharkiv', 'dnipro'];
+        geographyOptions.forEach((option, index) => {
+            if (regions[index]) {
+                option.textContent = getLocalizedText(regions[index]);
+            }
+        });
+
+        // Статусы
+        const needsOptions = document.querySelectorAll('#needsDropdown .checkbox-text');
+        const statuses = ['investment', 'marketing', 'partnership', 'similar'];
+        needsOptions.forEach((option, index) => {
+            if (statuses[index]) {
+                option.textContent = getLocalizedText(statuses[index]);
+            }
+        });
     }
 
     // Настройка фильтров
@@ -310,26 +529,36 @@ class B2BPage {
 
     // Создание HTML для B2B блока
     createB2BBlockHTML(item) {
+        const imagePath = getResourcePath(item.image);
+        const discussionsIconPath = getResourcePath('icons/b2b-icon-1.svg');
+        const offersIconPath = getResourcePath('icons/b2b-icon-plus.svg');
+        
+        const title = getLocalizedText(item.titleKey);
+        const lastUpdateText = getLocalizedText('lastUpdate');
+        const participantsText = getLocalizedText('participants');
+        const discussionsText = getLocalizedText('discussions');
+        const suggestText = getLocalizedText('suggest');
+        
         return `
             <div class="b2b-block" data-id="${item.id}" style="cursor: pointer;">
                 <div class="b2b-block-top">
                     <div class="b2b-block-top-img">
-                        <img src="${item.image}" alt="b2b logo" width="120">
+                        <img src="${imagePath}" alt="b2b logo" width="120">
                     </div>
                     <div class="b2b-block-top-text">
-                        <p>Останнє оновлення ${item.lastUpdate}</p>
-                        <h4>${item.title}</h4>
-                        <p>Учасників: ${item.participants}</p>
+                        <p>${lastUpdateText} ${item.lastUpdate}</p>
+                        <h4>${title}</h4>
+                        <p>${participantsText} ${item.participants}</p>
                     </div>
                 </div>              
                 <div class="b2b-block-bottom">
                     <a href="#" class="b2b-block-bottom-discussions" onclick="event.stopPropagation();">
-                        <img src="./icons/b2b-icon-1.svg" alt="discussions" width="23">
-                        <p>Обговорення</p>
+                        <img src="${discussionsIconPath}" alt="discussions" width="23">
+                        <p>${discussionsText}</p>
                     </a>
                     <a href="#" class="b2b-block-bottom-offers" onclick="event.stopPropagation();">
-                        <img src="./icons/b2b-icon-plus.svg" alt="offers" width="23">
-                        <p>Запропонувати</p>
+                        <img src="${offersIconPath}" alt="offers" width="23">
+                        <p>${suggestText}</p>
                     </a>
                 </div>
             </div>
@@ -387,23 +616,26 @@ class B2BPage {
     // Переход на страницу сингла
     navigateToSinglePage(blockData) {
         // Создаем слаг из названия для URL
-        const slug = this.createSlug(blockData.title);
-        const singlePageUrl = `./b2b-single.html?id=${blockData.id}&slug=${slug}`;
+        const title = getLocalizedText(blockData.titleKey);
+        const slug = this.createSlug(title);
+        const singlePageUrl = getLocalizedPath(`b2b-single.html?id=${blockData.id}&slug=${slug}`);
         
-        console.log(`Переход на страницу: ${blockData.title}`);
+        console.log(`Переход на страницу: ${title}`);
         console.log(`URL: ${singlePageUrl}`);
         
         // Сохраняем данные в sessionStorage для использования на странице сингла
-        sessionStorage.setItem('currentB2BItem', JSON.stringify(blockData));
+        sessionStorage.setItem('currentB2BItem', JSON.stringify({
+            ...blockData,
+            localizedTitle: title
+        }));
         
         // Проверяем, существует ли файл b2b-single.html
-        // В разработке можно закомментировать следующие строки и раскомментировать alert
         try {
             window.location.href = singlePageUrl;
         } catch (error) {
             console.error('Ошибка при переходе:', error);
-            // Пока что показываем alert с информацией, если страница не существует
-            alert(`Переход на страницу: "${blockData.title}"\nURL: ${singlePageUrl}\n\nСтраница b2b-single.html еще не создана.`);
+            // Показываем alert с информацией, если страница не существует
+            alert(`Переход на страницу: "${title}"\nURL: ${singlePageUrl}\n\nСтраница b2b-single.html еще не создана.`);
         }
     }
 
@@ -434,20 +666,26 @@ class B2BPage {
             const displayCount = Math.min(count, 4);
             
             if (count === 0) {
-                resultsElement.textContent = 'Нічого не знайдено';
+                resultsElement.textContent = getLocalizedText('nothingFound');
             } else if (count <= 4) {
-                resultsElement.textContent = `Знайдено: ${count} ${this.getBusinessWord(count)}`;
+                resultsElement.textContent = `${getLocalizedText('found')} ${count} ${this.getBusinessWord(count)}`;
             } else {
-                resultsElement.textContent = `Показано: ${displayCount} з ${count} ${this.getBusinessWord(count)}`;
+                resultsElement.textContent = `${getLocalizedText('shown')} ${displayCount} ${getLocalizedText('from')} ${count} ${this.getBusinessWord(count)}`;
             }
         }
     }
 
     // Склонение слова "бизнес"
     getBusinessWord(count) {
-        if (count === 1) return 'бізнес';
-        if (count >= 2 && count <= 4) return 'бізнеси';
-        return 'бізнесів';
+        const currentLang = getCurrentLanguage();
+        
+        if (currentLang === 'en') {
+            return count === 1 ? getLocalizedText('business') : getLocalizedText('businesses');
+        } else {
+            if (count === 1) return getLocalizedText('business');
+            if (count >= 2 && count <= 4) return getLocalizedText('businesses');
+            return getLocalizedText('businessesMany');
+        }
     }
 
     // Публичные методы для внешнего использования

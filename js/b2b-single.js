@@ -1,8 +1,67 @@
-// b2b-single.js - Функциональность страницы B2B сингла
+// b2b-single.js - Функциональность страницы B2B сингла с поддержкой многоязычности
+
+// Определение текущего языка
+function getCurrentLanguage() {
+    const currentPath = window.location.pathname;
+    const isEnglishPage = currentPath.includes('/en/');
+    return isEnglishPage ? 'en' : 'uk';
+}
+
+// Получение пути к странице с учетом языка
+function getLocalizedPath(pageName) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        return `./en/${pageName}`;
+    } else {
+        return `./${pageName}`;
+    }
+}
+
+// Локализованные тексты
+function getLocalizedText(key) {
+    const currentLang = getCurrentLanguage();
+    
+    const texts = {
+        uk: {
+            pageInitialized: 'B2B сингл страница инициализирована',
+            functionalityLoaded: 'B2B сингл функциональность загружена',
+            dataNotFound: 'Данные B2B элемента не найдены',
+            clickByArrow: 'Клик по стрелке - пропускаем',
+            clickByOffer: 'Клик по предложению с ID:',
+            offerDataFound: 'Данные предложения найдены:',
+            offerDataNotFound: 'Данные предложения не найдены для ID:',
+            goToOfferPage: 'Переход на страницу предложения:',
+            collaborationProposal: 'Предложение сотрудничества для:',
+            initialRequest: 'Начальный запрос для:',
+            lastUpdate: 'Останнє оновлення',
+            participants: 'Учасників:',
+            b2bPlatform: 'Майданчик B2B'
+        },
+        en: {
+            pageInitialized: 'B2B single page initialized',
+            functionalityLoaded: 'B2B single functionality loaded',
+            dataNotFound: 'B2B item data not found',
+            clickByArrow: 'Click on arrow - skipping',
+            clickByOffer: 'Click on offer with ID:',
+            offerDataFound: 'Offer data found:',
+            offerDataNotFound: 'Offer data not found for ID:',
+            goToOfferPage: 'Navigate to offer page:',
+            collaborationProposal: 'Collaboration proposal for:',
+            initialRequest: 'Initial request for:',
+            lastUpdate: 'Last update',
+            participants: 'Participants:',
+            b2bPlatform: 'B2B Platform'
+        }
+    };
+    
+    return texts[currentLang][key] || texts['uk'][key];
+}
 
 class B2BSinglePage {
     constructor() {
         this.currentItem = null;
+        this.currentLang = getCurrentLanguage();
         this.init();
     }
 
@@ -11,7 +70,7 @@ class B2BSinglePage {
         this.setupActionButtons();
         this.renderPageContent();
         
-        console.log('B2B сингл страница инициализирована');
+        console.log(getLocalizedText('pageInitialized'));
     }
 
     // Загрузка данных элемента
@@ -35,8 +94,8 @@ class B2BSinglePage {
 
         // Если данных все еще нет, перенаправляем обратно
         if (!this.currentItem) {
-            console.warn('Данные B2B элемента не найдены');
-            window.location.href = './b2b.html';
+            console.warn(getLocalizedText('dataNotFound'));
+            window.location.href = getLocalizedPath('b2b.html');
             return;
         }
     }
@@ -46,68 +105,78 @@ class B2BSinglePage {
         const mockData = {
             1: {
                 id: 1,
-                title: "Промисловість та переробка",
-                lastUpdate: "25 хв. тому",
+                title: this.currentLang === 'en' ? "Industry and Processing" : "Промисловість та переробка",
+                lastUpdate: this.currentLang === 'en' ? "25 min. ago" : "25 хв. тому",
                 participants: "4.1 тис",
                 image: "./icons/b2b-img-1.svg",
                 businessType: ["production"],
                 scale: ["large"],
                 region: ["kyiv", "kharkiv"],
                 status: ["partnership"],
-                directions: ["Металургія", "Хімічна промисловість", "Машинобудування", "Переробка сировини"],
-                regionNames: ["Київ", "Харків"]
+                directions: this.currentLang === 'en' 
+                    ? ["Metallurgy", "Chemical Industry", "Mechanical Engineering", "Raw Material Processing"]
+                    : ["Металургія", "Хімічна промисловість", "Машинобудування", "Переробка сировини"],
+                regionNames: this.currentLang === 'en' ? ["Kyiv", "Kharkiv"] : ["Київ", "Харків"]
             },
             2: {
                 id: 2,
-                title: "Будівництво, матеріали, деревопереробка",
-                lastUpdate: "1 год. тому",
+                title: this.currentLang === 'en' ? "Construction, Materials, Woodworking" : "Будівництво, матеріали, деревопереробка",
+                lastUpdate: this.currentLang === 'en' ? "1 hour ago" : "1 год. тому",
                 participants: "3.2 тис",
                 image: "./icons/b2b-img-2.svg",
                 businessType: ["production", "trade"],
                 scale: ["medium", "large"],
                 region: ["kyiv", "lviv"],
                 status: ["investment", "partnership"],
-                directions: ["Будівельні матеріали", "Деревообробка", "Проектування", "Будівництво"],
-                regionNames: ["Київ", "Львів"]
+                directions: this.currentLang === 'en' 
+                    ? ["Building Materials", "Woodworking", "Design", "Construction"]
+                    : ["Будівельні матеріали", "Деревообробка", "Проектування", "Будівництво"],
+                regionNames: this.currentLang === 'en' ? ["Kyiv", "Lviv"] : ["Київ", "Львів"]
             },
             3: {
                 id: 3,
-                title: "Агро і харчова промисловість",
-                lastUpdate: "2 год. тому",
+                title: this.currentLang === 'en' ? "Agriculture and Food Industry" : "Агро і харчова промисловість",
+                lastUpdate: this.currentLang === 'en' ? "2 hours ago" : "2 год. тому",
                 participants: "2.8 тис",
                 image: "./icons/b2b-img-3.svg",
                 businessType: ["production"],
                 scale: ["small", "medium"],
                 region: ["kyiv", "odesa", "dnipro"],
                 status: ["marketing", "similar"],
-                directions: ["Сільське господарство", "Харчова промисловість", "Органічне виробництво", "Переробка"],
-                regionNames: ["Київ", "Одеса", "Дніпро"]
+                directions: this.currentLang === 'en' 
+                    ? ["Agriculture", "Food Industry", "Organic Production", "Processing"]
+                    : ["Сільське господарство", "Харчова промисловість", "Органічне виробництво", "Переробка"],
+                regionNames: this.currentLang === 'en' ? ["Kyiv", "Odesa", "Dnipro"] : ["Київ", "Одеса", "Дніпро"]
             },
             4: {
                 id: 4,
-                title: "Енергетика",
-                lastUpdate: "3 год. тому",
+                title: this.currentLang === 'en' ? "Energy" : "Енергетика",
+                lastUpdate: this.currentLang === 'en' ? "3 hours ago" : "3 год. тому",
                 participants: "1.9 тис",
                 image: "./icons/b2b-img-4.svg",
                 businessType: ["technology", "services"],
                 scale: ["large"],
                 region: ["kyiv", "kharkiv", "dnipro"],
                 status: ["investment"],
-                directions: ["Відновлювана енергетика", "Енергоефективність", "Енергетичне обладнання", "Альтернативні джерела"],
-                regionNames: ["Київ", "Харків", "Дніпро"]
+                directions: this.currentLang === 'en' 
+                    ? ["Renewable Energy", "Energy Efficiency", "Energy Equipment", "Alternative Sources"]
+                    : ["Відновлювана енергетика", "Енергоефективність", "Енергетичне обладнання", "Альтернативні джерела"],
+                regionNames: this.currentLang === 'en' ? ["Kyiv", "Kharkiv", "Dnipro"] : ["Київ", "Харків", "Дніпро"]
             },
             5: {
                 id: 5,
-                title: "IT та телекомунікації",
-                lastUpdate: "4 год. тому",
+                title: this.currentLang === 'en' ? "IT and Telecommunications" : "IT та телекомунікації",
+                lastUpdate: this.currentLang === 'en' ? "4 hours ago" : "4 год. тому",
                 participants: "5.5 тис",
                 image: "./icons/b2b-img-5.svg",
                 businessType: ["technology", "services"],
                 scale: ["small", "medium"],
                 region: ["kyiv", "lviv", "kharkiv"],
                 status: ["partnership", "marketing"],
-                directions: ["Розробка ПЗ", "Телекомунікації", "Кібербезпека", "Штучний інтелект"],
-                regionNames: ["Київ", "Львів", "Харків"]
+                directions: this.currentLang === 'en' 
+                    ? ["Software Development", "Telecommunications", "Cybersecurity", "Artificial Intelligence"]
+                    : ["Розробка ПЗ", "Телекомунікації", "Кібербезпека", "Штучний інтелект"],
+                regionNames: this.currentLang === 'en' ? ["Kyiv", "Lviv", "Kharkiv"] : ["Київ", "Львів", "Харків"]
             }
         };
 
@@ -170,11 +239,11 @@ class B2BSinglePage {
         }
 
         if (elements.singleUpdate) {
-            elements.singleUpdate.textContent = `Останнє оновлення ${this.currentItem.lastUpdate}`;
+            elements.singleUpdate.textContent = `${getLocalizedText('lastUpdate')} ${this.currentItem.lastUpdate}`;
         }
 
         if (elements.singleParticipants) {
-            elements.singleParticipants.textContent = `Учасників: ${this.currentItem.participants}`;
+            elements.singleParticipants.textContent = `${getLocalizedText('participants')} ${this.currentItem.participants}`;
         }
     }
 
@@ -191,100 +260,67 @@ class B2BSinglePage {
 
     // Мок-данные предложений
     getMockOffers() {
-        // Возвращаем разные предложения в зависимости от категории
+        // Возвращаем разные предложения в зависимости от категории и языка
         const categoryOffers = {
-            1: [ // Промисловість та переробка
+            1: [ // Промисловість та переробка / Industry and Processing
                 {
                     id: 1,
-                    title: "Пропоную послуги фасування сипучих продуктів",
-                    description: "Надаємо послуги фасування сипучих матеріалів у пакування від 100 г до 10 кг. Працюємо з харчовими та нехарчовими продуктами. Виробничий цех відповідає вимогам HACCP. Індивідуальний підхід до кожного партнера.",
+                    title: this.currentLang === 'en' 
+                        ? "Bulk product packaging services" 
+                        : "Пропоную послуги фасування сипучих продуктів",
+                    description: this.currentLang === 'en'
+                        ? "We provide bulk material packaging services in packages from 100g to 10kg. We work with food and non-food products. Production facility meets HACCP requirements. Individual approach to each partner."
+                        : "Надаємо послуги фасування сипучих матеріалів у пакування від 100 г до 10 кг. Працюємо з харчовими та нехарчовими продуктами. Виробничий цех відповідає вимогам HACCP. Індивідуальний підхід до кожного партнера.",
                     author: {
-                        name: "Дмитро",
-                        company: "ТОВ «Агропак-Сервіс»",
+                        name: this.currentLang === 'en' ? "Dmytro" : "Дмитро",
+                        company: this.currentLang === 'en' ? "Agropack-Service LLC" : "ТОВ «Агропак-Сервіс»",
                         avatar: "./icons/single-logo.svg",
                         isVerified: true
                     },
-                    region: "Львівська область",
+                    region: this.currentLang === 'en' ? "Lviv region" : "Львівська область",
                     publishDate: "18.05.2025",
-                    category: "Шукаю партнера",
-                    industry: "Пакування"
+                    category: this.currentLang === 'en' ? "Looking for partner" : "Шукаю партнера",
+                    industry: this.currentLang === 'en' ? "Packaging" : "Пакування"
                 },
                 {
                     id: 2,
-                    title: "Металообробка та виготовлення деталей",
-                    description: "Професійна металообробка на сучасному обладнанні. Виготовляємо деталі за кресленнями замовника. Точність до 0.1 мм. Терміни виконання від 3 днів.",
+                    title: this.currentLang === 'en' 
+                        ? "Metalworking and parts manufacturing" 
+                        : "Металообробка та виготовлення деталей",
+                    description: this.currentLang === 'en'
+                        ? "Professional metalworking on modern equipment. We manufacture parts according to customer drawings. Accuracy up to 0.1 mm. Execution time from 3 days."
+                        : "Професійна металообробка на сучасному обладнанні. Виготовляємо деталі за кресленнями замовника. Точність до 0.1 мм. Терміни виконання від 3 днів.",
                     author: {
-                        name: "Олександр",
-                        company: "Металпром",
+                        name: this.currentLang === 'en' ? "Oleksandr" : "Олександр",
+                        company: this.currentLang === 'en' ? "Metalprom" : "Металпром",
                         avatar: "./icons/single-logo.svg",
                         isVerified: true
                     },
-                    region: "Харківська область",
+                    region: this.currentLang === 'en' ? "Kharkiv region" : "Харківська область",
                     publishDate: "17.05.2025",
-                    category: "Пропоную послуги",
-                    industry: "Металообробка"
-                },
-                {
-                    id: 3,
-                    title: "Шукаю постачальника металу для виготовлення каркасів",
-                    description: "Шукаємо надійного постачальника чорного та нержавіючого металу для виготовлення каркасних конструкцій. Обсяги – до 10 тонн щомісяця.",
-                    author: {
-                        name: "Іван",
-                        company: "БудКонструкції",
-                        avatar: "./icons/single-logo.svg",
-                        isVerified: true
-                    },
-                    region: "Дніпропетровська область",
-                    publishDate: "16.05.2025",
-                    category: "Шукаю постачальника",
-                    industry: "Металургія"
-                },
-                {
-                    id: 4,
-                    title: "Послуги з термообробки металу",
-                    description: "Надаємо послуги термообробки металевих виробів. Загартування, відпуск, нормалізація. Сучасне обладнання та контроль якості.",
-                    author: {
-                        name: "Петро",
-                        company: "ТермоТех",
-                        avatar: "./icons/single-logo.svg",
-                        isVerified: false
-                    },
-                    region: "Київська область",
-                    publishDate: "15.05.2025",
-                    category: "Пропоню послуги",
-                    industry: "Металообробка"
+                    category: this.currentLang === 'en' ? "Offering services" : "Пропоную послуги",
+                    industry: this.currentLang === 'en' ? "Metalworking" : "Металообробка"
                 }
             ],
-            2: [ // Будівництво, матеріали, деревопереробка
+            2: [ // Будівництво, матеріали, деревопереробка / Construction, Materials, Woodworking
                 {
                     id: 5,
-                    title: "Виготовлення меблів з натурального дерева",
-                    description: "Індивідуальне виготовлення меблів з масиву дуба, ясена, сосни. Повний цикл від проектування до встановлення. Гарантія 5 років.",
+                    title: this.currentLang === 'en' 
+                        ? "Natural wood furniture manufacturing" 
+                        : "Виготовлення меблів з натурального дерева",
+                    description: this.currentLang === 'en'
+                        ? "Individual furniture manufacturing from oak, ash, pine solid wood. Full cycle from design to installation. 5-year warranty."
+                        : "Індивідуальне виготовлення меблів з масиву дуба, ясена, сосни. Повний цикл від проектування до встановлення. Гарантія 5 років.",
                     author: {
-                        name: "Михайло",
-                        company: "Деревяний дім",
+                        name: this.currentLang === 'en' ? "Mykhailo" : "Михайло",
+                        company: this.currentLang === 'en' ? "Wooden House" : "Деревяний дім",
                         avatar: "./icons/single-logo.svg",
                         isVerified: true
                     },
-                    region: "Львівська область",
+                    region: this.currentLang === 'en' ? "Lviv region" : "Львівська область",
                     publishDate: "18.05.2025",
-                    category: "Пропоную послуги",
-                    industry: "Деревообробка"
-                },
-                {
-                    id: 6,
-                    title: "Пошук підрядника для будівництва складу",
-                    description: "Шукаємо підрядника для будівництва складського комплексу площею 2000 м². Потрібен повний цикл робіт від фундаменту до здачі під ключ.",
-                    author: {
-                        name: "Андрій",
-                        company: "Логістик Центр",
-                        avatar: "./icons/single-logo.svg",
-                        isVerified: true
-                    },
-                    region: "Київська область",
-                    publishDate: "17.05.2025",
-                    category: "Шукаю підрядника",
-                    industry: "Будівництво"
+                    category: this.currentLang === 'en' ? "Offering services" : "Пропоную послуги",
+                    industry: this.currentLang === 'en' ? "Woodworking" : "Деревообробка"
                 }
             ]
         };
@@ -295,6 +331,8 @@ class B2BSinglePage {
 
     // Создание HTML для предложения
     createOfferHTML(offer) {
+        const publishedText = this.currentLang === 'en' ? 'Published' : 'Опубліковано';
+        
         return `
             <div class="single-content-block" data-offer-id="${offer.id}" style="cursor: pointer;">
                 <div class="single-content-block-top">
@@ -316,7 +354,7 @@ class B2BSinglePage {
                 <div class="single-content-block-middle">
                     <img src="./icons/single-marker.svg" alt="Marker" width="20">
                     <p>${offer.region}</p>
-                    <p>Опубліковано ${offer.publishDate}</p>
+                    <p>${publishedText} ${offer.publishDate}</p>
                 </div>
                 <div class="single-content-block-bottom">
                     <h3>${offer.title}</h3>
@@ -337,20 +375,20 @@ class B2BSinglePage {
 
             // Проверяем, что клик не по ссылке-стрелке
             if (e.target.closest('.single-content-block-arrow')) {
-                console.log('Клик по стрелке - пропускаем');
+                console.log(getLocalizedText('clickByArrow'));
                 return;
             }
 
             const offerId = offerBlock.getAttribute('data-offer-id');
-            console.log('Клик по предложению с ID:', offerId);
+            console.log(getLocalizedText('clickByOffer'), offerId);
             
             const offerData = this.getMockOffers().find(offer => offer.id == offerId);
             
             if (offerData) {
-                console.log('Данные предложения найдены:', offerData);
+                console.log(getLocalizedText('offerDataFound'), offerData);
                 this.navigateToOfferPage(offerData);
             } else {
-                console.error('Данные предложения не найдены для ID:', offerId);
+                console.error(getLocalizedText('offerDataNotFound'), offerId);
             }
         });
     }
@@ -379,16 +417,17 @@ class B2BSinglePage {
         // Сохраняем данные в sessionStorage
         sessionStorage.setItem('currentOffer', JSON.stringify(expandedOfferData));
         
-        console.log(`Переход на страницу предложения: ${offerData.title}`);
+        console.log(`${getLocalizedText('goToOfferPage')}: ${offerData.title}`);
         
-        // Переходим на страницу предложения
-        window.location.href = './offer.html';
+        // Переходим на страницу предложения с учетом языка
+        window.location.href = getLocalizedPath('offer.html');
     }
 
     // Получение полного описания для конкретного предложения
     getFullDescription(offerId) {
         const descriptions = {
-            1: `Компанія ТОВ «Агропак-Сервіс» пропонує послуги з фасування сипучих матеріалів у споживчу упаковку. Надаємо повний цикл робіт — від прийому сировини до нанесення етикеток і формування готових партій для реалізації. Наші потужності дозволяють фасувати продукти в пакети, мішки або дойпаки об'ємом від 100 грамів до 10 кілограмів.
+            uk: {
+                1: `Компанія ТОВ «Агропак-Сервіс» пропонує послуги з фасування сипучих матеріалів у споживчу упаковку. Надаємо повний цикл робіт — від прийому сировини до нанесення етикеток і формування готових партій для реалізації. Наші потужності дозволяють фасувати продукти в пакети, мішки або дойпаки об'ємом від 100 грамів до 10 кілограмів.
 
 Ми працюємо з різними видами продукції:
 • харчові: крупи, спеції, цукор, сіль, борошно
@@ -403,7 +442,7 @@ class B2BSinglePage {
 • короткі терміни виконання замовлення
 • допомога з логістикою`,
 
-            2: `Компанія «Металпром» спеціалізується на високоточній металообробці та виготовленні деталей за індивідуальними кресленнями. Використовуємо сучасне обладнання з ЧПУ для забезпечення максимальної точності.
+                2: `Компанія «Металпром» спеціалізується на високоточній металообробці та виготовленні деталей за індивідуальними кресленнями. Використовуємо сучасне обладнання з ЧПУ для забезпечення максимальної точності.
 
 Наші послуги:
 • токарні роботи (точність до 0.1 мм)
@@ -413,17 +452,7 @@ class B2BSinglePage {
 
 Ми працюємо з різними видами металів: сталь, алюміній, латунь, бронза. Можливе виготовлення як одиничних деталей, так і серійного виробництва. Контроль якості на всіх етапах виробництва.`,
 
-            3: `Наша компанія «БудКонструкції» займається виготовленням металевих каркасних конструкцій для промислових об'єктів. Шукаємо надійного постачальника чорного та нержавіючого металу з можливістю регулярних поставок.
-
-Наші вимоги:
-• якісний метал згідно з ДСТУ
-• стабільні обсяги поставок до 10 тонн щомісяця
-• конкурентні ціни
-• можливість доставки до наших виробничих потужностей
-
-Готові до довгострокової співпраці з перевіреними постачальниками. Маємо досвід роботи з великими обсягами та готові обговорити взаємовигідні умови співпраці.`,
-
-            5: `Майстерня «Деревяний дім» спеціалізується на виготовленні ексклюзивних меблів з натурального дерева. Ми працюємо виключно з якісною деревиною, дотримуючись традиційних технологій та сучасних стандартів.
+                5: `Майстерня «Деревяний дім» спеціалізується на виготовленні ексклюзивних меблів з натурального дерева. Ми працюємо виключно з якісною деревиною, дотримуючись традиційних технологій та сучасних стандартів.
 
 Наші послуги:
 • індивідуальне проектування меблів
@@ -432,25 +461,62 @@ class B2BSinglePage {
 • обробка екологічними лаками та маслами
 
 Кожен виріб виготовляється вручну досвідченими майстрами. Гарантуємо високу якість, довговічність та унікальність кожного виробу. Повний цикл від ескізу до встановлення.`
+            },
+            en: {
+                1: `Agropack-Service LLC offers bulk material packaging services for consumer packaging. We provide a full cycle of work - from raw material reception to labeling and formation of finished batches for sale. Our facilities allow packaging products in bags, sacks or doy-packs with volumes from 100 grams to 10 kilograms.
+
+We work with various types of products:
+• food products: cereals, spices, sugar, salt, flour
+• technical: mineral mixtures, construction additives
+• pet products: compound feeds, feed additives, sawdust
+
+Workshops are equipped in accordance with HACCP requirements, quality certificates are available. Each stage is controlled - from weighing to hermetic sealing.
+
+Additional features:
+• logo or barcode application
+• marking according to customer requirements
+• short order execution time
+• logistics assistance`,
+
+                2: `Metalprom company specializes in high-precision metalworking and manufacturing of parts according to individual drawings. We use modern CNC equipment to ensure maximum accuracy.
+
+Our services:
+• turning work (accuracy up to 0.1 mm)
+• milling work
+• drilling and reaming holes
+• surface grinding
+
+We work with various types of metals: steel, aluminum, brass, bronze. It is possible to manufacture both individual parts and serial production. Quality control at all stages of production.`,
+
+                5: `Wooden House workshop specializes in manufacturing exclusive furniture from natural wood. We work exclusively with quality wood, following traditional technologies and modern standards.
+
+Our services:
+• individual furniture design
+• manufacturing from oak, ash, pine solid wood
+• antique furniture restoration
+• treatment with eco-friendly varnishes and oils
+
+Each product is handmade by experienced craftsmen. We guarantee high quality, durability and uniqueness of each product. Full cycle from sketch to installation.`
+            }
         };
         
-        return descriptions[offerId] || descriptions[1]; // Fallback на перше описання
+        return descriptions[this.currentLang][offerId] || descriptions[this.currentLang][1]; // Fallback на первое описание
     }
 
     // Обработка предложения сотрудничества
     handleCollaborationProposal() {
-        console.log('Предложение сотрудничества для:', this.currentItem.title);
+        console.log(getLocalizedText('collaborationProposal'), this.currentItem.title);
         
-        // В реальном проекте здесь будет переход на форму add-request.html
-        window.location.href = './add-request.html';
+        // В реальном проекте здесь будет переход на форму add-request.html с учетом языка
+        window.location.href = getLocalizedPath('add-request.html');
     }
 
     // Обработка начального запроса
     handleInitialRequest() {
-        console.log('Начальный запрос для:', this.currentItem.title);
+        console.log(getLocalizedText('initialRequest'), this.currentItem.title);
         
-        // В реальном проекте здесь будет переход на форму add-request.html
-        window.location.href = './add-request.html';
+        // В реальном проекте здесь будет переход на форму add-request.html с учетом языка
+        window.location.href = getLocalizedPath('add-request.html');
     }
 
     // Публичные методы
@@ -462,7 +528,7 @@ class B2BSinglePage {
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     window.b2bSinglePage = new B2BSinglePage();
-    console.log('B2B сингл функциональность загружена');
+    console.log(getLocalizedText('functionalityLoaded'));
 });
 
 // Экспорт для использования в других скриптах

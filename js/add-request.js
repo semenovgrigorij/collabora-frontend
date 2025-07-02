@@ -1,7 +1,58 @@
-// add-request.js - Функциональность страницы создания запроса
+// add-request.js - многоязычная функциональность страницы создания запроса
+
+// Определение текущего языка
+function getCurrentLanguage() {
+    const currentPath = window.location.pathname;
+    const isEnglishPage = currentPath.includes('/en/');
+    return isEnglishPage ? 'en' : 'uk';
+}
+
+// Получение пути к странице с учетом языка
+function getLocalizedPath(pageName) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        return `./en/${pageName}`;
+    } else {
+        return `./${pageName}`;
+    }
+}
+
+// Локализованные тексты
+function getLocalizedText(key) {
+    const currentLang = getCurrentLanguage();
+    
+    const texts = {
+        uk: {
+            selectCountry: 'Оберіть країну або регіон зі списку',
+            requestCreatedSuccess: 'Запит успішно створено!',
+            requestWillBeReviewed: 'Ваш запит буде розглянуто найближчим часом.',
+            requestSaveError: 'Помилка збереження запиту. Спробуйте ще раз.',
+            pageInitialized: 'Сторінка створення запиту ініціалізована',
+            functionalityLoaded: 'Функціональність сторінки створення запиту завантажена',
+            enterUrl: 'Введіть URL:',
+            enterImageUrl: 'Введіть URL зображення:',
+            requestData: 'Дані запиту:'
+        },
+        en: {
+            selectCountry: 'Select country or region from the list',
+            requestCreatedSuccess: 'Request successfully created!',
+            requestWillBeReviewed: 'Your request will be reviewed shortly.',
+            requestSaveError: 'Error saving request. Please try again.',
+            pageInitialized: 'Add request page initialized',
+            functionalityLoaded: 'Add request page functionality loaded',
+            enterUrl: 'Enter URL:',
+            enterImageUrl: 'Enter image URL:',
+            requestData: 'Request data:'
+        }
+    };
+    
+    return texts[currentLang][key] || texts['uk'][key];
+}
 
 class AddRequestPage {
     constructor() {
+        this.currentLang = getCurrentLanguage();
         this.countryMultiSelect = null;
         this.richTextEditor = null;
         this.init();
@@ -12,7 +63,7 @@ class AddRequestPage {
         this.setupCountryMultiSelect();
         this.setupRichTextEditor();
         this.setupFormValidation();
-        console.log('Страница создания запроса инициализирована');
+        console.log(getLocalizedText('pageInitialized'));
     }
 
     // Настройка основной формы
@@ -26,11 +77,15 @@ class AddRequestPage {
         }
     }
 
-    // Настройка мультиселекта стран (переиспользуем класс из registration.js)
+    // Настройка мультиселекта стран (используем класс из custom-multiselect.js)
     setupCountryMultiSelect() {
         if (document.getElementById('custom-country-select')) {
-            // Используем тот же класс CustomMultiSelect из registration.js
-            this.countryMultiSelect = new CustomMultiSelect('custom-country-select');
+            // Проверяем, что класс CustomMultiSelect доступен
+            if (typeof CustomMultiSelect !== 'undefined') {
+                this.countryMultiSelect = new CustomMultiSelect('custom-country-select');
+            } else {
+                console.warn('CustomMultiSelect class not found. Make sure custom-multiselect.js is loaded.');
+            }
         }
     }
 
@@ -144,8 +199,9 @@ class AddRequestPage {
         // Добавляем метаданные
         requestData.createdAt = new Date().toISOString();
         requestData.id = 'request_' + Date.now();
+        requestData.language = this.currentLang;
 
-        console.log('Данные запроса:', requestData);
+        console.log(getLocalizedText('requestData'), requestData);
 
         // В реальном проекте здесь будет отправка на сервер
         // Пока что сохраняем в localStorage и показываем уведомление
@@ -174,7 +230,7 @@ class AddRequestPage {
             
         } catch (error) {
             console.error('Ошибка сохранения запроса:', error);
-            alert('Помилка збереження запиту. Спробуйте ще раз.');
+            alert(getLocalizedText('requestSaveError'));
         }
     }
 
@@ -188,18 +244,85 @@ class AddRequestPage {
                     <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <div>
-                    <h4>Запит успішно створено!</h4>
-                    <p>Ваш запит буде розглянуто найближчим часом.</p>
+                    <h4>${getLocalizedText('requestCreatedSuccess')}</h4>
+                    <p>${getLocalizedText('requestWillBeReviewed')}</p>
                 </div>
             </div>
         `;
         
+        // Добавляем стили для уведомления
+        this.addNotificationStyles();
         document.body.appendChild(notification);
         
         // Убираем уведомление через 3 секунды
         setTimeout(() => {
             notification.remove();
         }, 3000);
+    }
+
+    // Добавление стилей для уведомлений
+    addNotificationStyles() {
+        const styleId = 'add-request-notification-styles';
+        if (document.getElementById(styleId)) return;
+
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+            .success-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                border: 1px solid #10B981;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .notification-content h4 {
+                margin: 0 0 4px 0;
+                color: #10B981;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            
+            .notification-content p {
+                margin: 0;
+                color: #666;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .success-notification {
+                    left: 20px;
+                    right: 20px;
+                    max-width: none;
+                }
+            }
+        `;
+        
+        document.head.appendChild(style);
     }
 
     // Сброс формы
@@ -223,12 +346,13 @@ class AddRequestPage {
     }
 }
 
-// Класс для Rich Text Editor
+// Класс для Rich Text Editor с локализацией
 class RichTextEditor {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.content = this.container.querySelector('.editor-content');
         this.hiddenInput = this.container.querySelector('textarea[name="detailed-info"]');
+        this.currentLang = getCurrentLanguage();
         this.init();
     }
 
@@ -276,17 +400,17 @@ class RichTextEditor {
         });
     }
 
-    // Выполнение команд редактирования
+    // Выполнение команд редактирования с локализацией
     executeCommand(command, value = null) {
         this.content.focus();
         
         if (command === 'createLink') {
-            const url = prompt('Введіть URL:');
+            const url = prompt(getLocalizedText('enterUrl'));
             if (url) {
                 document.execCommand(command, false, url);
             }
         } else if (command === 'insertImage') {
-            const url = prompt('Введіть URL зображення:');
+            const url = prompt(getLocalizedText('enterImageUrl'));
             if (url) {
                 document.execCommand(command, false, url);
             }
@@ -319,22 +443,9 @@ class RichTextEditor {
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     window.addRequestPage = new AddRequestPage();
-    console.log('Функциональность страницы создания запроса загружена');
+    console.log(getLocalizedText('functionalityLoaded'));
 });
 
-// Экспорт для использования в других скриптах
+// Экспорт для использования в других скриптов
 window.AddRequestPage = AddRequestPage;
-window.RichTextEditor = RichTextEditor;addEventListener('DOMContentLoaded', function() {
-    window.addRequestPage = new AddRequestPage();
-    console.log('Функциональность страницы создания запроса загружена');
-});
-
-// Экспорт для использования в других скриптах
-window.AddRequestPage = AddRequestPage;
-window.RichTextEditor = RichTextEditor;addEventListener('DOMContentLoaded', function() {
-    window.addRequestPage = new AddRequestPage();
-    console.log('Функциональность страницы создания запроса загружена');
-});
-
-// Экспорт для использования в других скриптах
-window.AddRequestPage = AddRequestPage;
+window.RichTextEditor = RichTextEditor;

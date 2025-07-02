@@ -1,118 +1,117 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collabora</title>
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/header-cabinet.css">
-    <link rel="stylesheet" href="./css/add-request.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header-cabinet.css">
+    <link rel="stylesheet" href="../css/add-request.css">
+    <link rel="preload" href="../components/header-en.html" as="fetch" crossorigin>
+    <link rel="preload" href="../components/footer-en.html" as="fetch" crossorigin>
 </head>
 <body>
     <div class="wrapper">
         <div id="header-placeholder-cabinet"></div>
+        
         <main>
             <div class="main-wrapper">
                 <!-- Хлебные крошки -->
                 <section id="bread-crumbs-section">
                     <div class="bread-crumbs-b2b">
-                        <span class="home">Головна</span>
-                        <span class="b2b-link">Майданчик B2B</span>
-                        <span class="current">Створення пропозиції/потреби</span>
+                        <!-- Хлебные крошки будут созданы динамически через JavaScript -->
                     </div>
                 </section>
                 <section id="title-request-section">
                     <div class="title-request-wrapper">
-                        <h1>Додати запит/пропозицію</h1>
-                        <h2>Заповніть форму для створення власної пропозиції
-                        або потреби на майданчику B2B від Collabora</h2>
+                        <h1>Post Request/Offer</h1>
+                        <h2>Create your business proposal or need on Collabora's B2B marketplace</h2>
                     </div>
                 </section>
-                
-<section id="add-request-form-section">
+                <section id="add-request-form-section">
     <div class="add-request-form-container">
         <div class="add-request-form-title">
-            <h3>Основна інформація</h3>
+            <h3>Basic Information</h3>
         </div>
         
         <form class="add-request-form-wrapper" id="add-request-form" method="POST" novalidate>
             <!-- 1. Заголовок пропозиції/потреби -->
             <div class="input-grup">
-                <label for="request-title">Заголовок пропозиції/потреби</label>
+                <label for="request-title">Proposal/Request Title</label>
                 <input 
                     type="text" 
                     id="request-title" 
                     name="request-title" 
-                    placeholder="Введіть заголовок" 
+                    placeholder="Enter title" 
                     required
                 >
-                <div class="error-message">Поле має бути заповнене</div>
+                <div class="error-message">This field is required</div>
             </div>
 
             <!-- 2. Категорія -->
             <div class="input-grup">
-                <label for="category">Категорія</label>
+                <label for="category">Category</label>
                 <div class="select-wrapper">
                     <select id="category" name="category" required>
-                        <option value="">Оберіть категорію</option>
-                        <option value="offer">Пропозиція</option>
-                        <option value="need">Потреба</option>
-                        <option value="partnership">Партнерство</option>
-                        <option value="investment">Інвестиції</option>
-                        <option value="collaboration">Колаборація</option>
+                        <option value="">Select category</option>
+                        <option value="offer">Offer</option>
+                        <option value="need">Request</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="investment">Investment</option>
+                        <option value="collaboration">Collaboration</option>
                     </select>
                     <svg class="custom-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
                     </svg>
                 </div>
-                <div class="error-message">Поле має бути заповнене</div>
+                <div class="error-message">This field is required</div>
             </div>
 
             <!-- 3. Галузь -->
             <div class="input-grup">
-                <label for="industry">Галузь</label>
+                <label for="industry">Industry</label>
                 <div class="select-wrapper">
                     <select id="industry" name="industry" required>
-                        <option value="">Оберіть галузь</option>
-                        <option value="production">Виробництво</option>
-                        <option value="trade">Торгівля</option>
-                        <option value="services">Послуги</option>
-                        <option value="technology">Технології</option>
-                        <option value="construction">Будівництво</option>
-                        <option value="agriculture">Сільське господарство</option>
-                        <option value="energy">Енергетика</option>
-                        <option value="finance">Фінанси</option>
-                        <option value="healthcare">Охорона здоров'я</option>
-                        <option value="education">Освіта</option>
-                        <option value="transport">Транспорт і логістика</option>
-                        <option value="media">Медіа та реклама</option>
-                        <option value="tourism">Туризм</option>
-                        <option value="other">Інше</option>
+                        <option value="">Select industry</option>
+                        <option value="production">Manufacturing</option>
+                        <option value="trade">Trade</option>
+                        <option value="services">Services</option>
+                        <option value="technology">Technology</option>
+                        <option value="construction">Construction</option>
+                        <option value="agriculture">Agriculture</option>
+                        <option value="energy">Energy</option>
+                        <option value="finance">Finance</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="transport">Transport & Logistics</option>
+                        <option value="media">Media & Advertising</option>
+                        <option value="tourism">Tourism</option>
+                        <option value="other">Other</option>
                     </select>
                     <svg class="custom-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1L7 7L13 1" stroke="#241A56" stroke-linecap="round" />
                     </svg>
                 </div>
-                <div class="error-message">Поле має бути заповнене</div>
+                <div class="error-message">This field is required</div>
             </div>
 
             <!-- 4. Країна / регіон (ваш существующий компонент) -->
             <div class="input-grup" id="country-group">
-                <label for="country-region">Країна / регіон</label>
+                <label for="country-region">Country/Region</label>
                 <select id="country-region" name="country_region[]" multiple required class="original-select">
-                    <option value="">Оберіть країну або регіон зі списку</option>
-                    <option value="ukraine">Україна</option>
-                    <option value="poland">Польща</option>
-                    <option value="germany">Німеччина</option>
-                    <option value="usa">США</option>
-                    <option value="canada">Канада</option>
-                    <option value="uk">Великобританія</option>
-                    <option value="france">Франція</option>
-                    <option value="italy">Італія</option>
-                    <option value="spain">Іспанія</option>
-                    <option value="netherlands">Нідерланди</option>
-                    <option value="czech">Чехія</option>
-                    <option value="other">Інше</option>
+                    <option value="">Select country or region from the list</option>
+                    <option value="ukraine">Ukraine</option>
+                    <option value="poland">Poland</option>
+                    <option value="germany">Germany</option>
+                    <option value="usa">USA</option>
+                    <option value="canada">Canada</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="france">France</option>
+                    <option value="italy">Italy</option>
+                    <option value="spain">Spain</option>
+                    <option value="netherlands">Netherlands</option>
+                    <option value="czech">Czech Republic</option>
+                    <option value="other">Other</option>
                 </select>
 
                 <div class="custom-multiselect" id="custom-country-select">
@@ -120,7 +119,7 @@
                         <div class="selected-container">
                             <div class="selected-tags" id="selected-tags"></div>
                             <div class="selected-text placeholder" id="selected-text">
-                                Оберіть країну або регіон зі списку
+                                Select country or region from the list
                             </div>
                         </div>
                         <svg class="arrow-icon" id="arrow-icon" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,74 +129,74 @@
 
                     <div class="multiselect-dropdown" id="multiselect-dropdown">
                         <div class="multiselect-option disabled">
-                            <span class="option-label">Оберіть одну або кілька країн:</span>
+                            <span class="option-label">Country selection (multiple possible):</span>
                         </div>
                         <div class="multiselect-option" data-value="ukraine">
                             <input type="checkbox" class="option-checkbox" id="opt-ukraine">
-                            <label class="option-label" for="opt-ukraine">Україна</label>
+                            <label class="option-label" for="opt-ukraine">Ukraine</label>
                         </div>
                         <div class="multiselect-option" data-value="poland">
                             <input type="checkbox" class="option-checkbox" id="opt-poland">
-                            <label class="option-label" for="opt-poland">Польща</label>
+                            <label class="option-label" for="opt-poland">Poland</label>
                         </div>
                         <div class="multiselect-option" data-value="germany">
                             <input type="checkbox" class="option-checkbox" id="opt-germany">
-                            <label class="option-label" for="opt-germany">Німеччина</label>
+                            <label class="option-label" for="opt-germany">Germany</label>
                         </div>
                         <div class="multiselect-option" data-value="usa">
                             <input type="checkbox" class="option-checkbox" id="opt-usa">
-                            <label class="option-label" for="opt-usa">США</label>
+                            <label class="option-label" for="opt-usa">USA</label>
                         </div>
                         <div class="multiselect-option" data-value="canada">
                             <input type="checkbox" class="option-checkbox" id="opt-canada">
-                            <label class="option-label" for="opt-canada">Канада</label>
+                            <label class="option-label" for="opt-canada">Canada</label>
                         </div>
                         <div class="multiselect-option" data-value="uk">
                             <input type="checkbox" class="option-checkbox" id="opt-uk">
-                            <label class="option-label" for="opt-uk">Великобританія</label>
+                            <label class="option-label" for="opt-uk">United Kingdom</label>
                         </div>
                         <div class="multiselect-option" data-value="france">
                             <input type="checkbox" class="option-checkbox" id="opt-france">
-                            <label class="option-label" for="opt-france">Франція</label>
+                            <label class="option-label" for="opt-france">France</label>
                         </div>
                         <div class="multiselect-option" data-value="italy">
                             <input type="checkbox" class="option-checkbox" id="opt-italy">
-                            <label class="option-label" for="opt-italy">Італія</label>
+                            <label class="option-label" for="opt-italy">Italy</label>
                         </div>
                         <div class="multiselect-option" data-value="spain">
                             <input type="checkbox" class="option-checkbox" id="opt-spain">
-                            <label class="option-label" for="opt-spain">Іспанія</label>
+                            <label class="option-label" for="opt-spain">Spain</label>
                         </div>
                         <div class="multiselect-option" data-value="netherlands">
                             <input type="checkbox" class="option-checkbox" id="opt-netherlands">
-                            <label class="option-label" for="opt-netherlands">Нідерланди</label>
+                            <label class="option-label" for="opt-netherlands">Netherlands</label>
                         </div>
                         <div class="multiselect-option" data-value="czech">
                             <input type="checkbox" class="option-checkbox" id="opt-czech">
-                            <label class="option-label" for="opt-czech">Чехія</label>
+                            <label class="option-label" for="opt-czech">Czech Republic</label>
                         </div>
                         <div class="multiselect-option" data-value="other">
                             <input type="checkbox" class="option-checkbox" id="opt-other">
-                            <label class="option-label" for="opt-other">Інше</label>
+                            <label class="option-label" for="opt-other">Other</label>
                         </div>
                     </div>
                 </div>
-                <div class="error-message">Поле має бути заповнене</div>
+                <div class="error-message">This field is required</div>
             </div>
 
             <!-- 5. Детальна інформація (Rich Text Editor) -->
             <div class="input-grup">
-                <label for="detailed-info">Детальна інформація</label>
+                <label for="detailed-info">Detailed Information</label>
                 <div class="rich-text-editor" id="rich-text-editor">
                     <!-- Панель инструментов -->
                     <div class="editor-toolbar">
                         <div class="toolbar-group">
-                            <button type="button" class="toolbar-btn" data-command="undo" title="Скасувати">
+                            <button type="button" class="toolbar-btn" data-command="undo" title="Cancel">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M3 8h10M8 3l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
-                            <button type="button" class="toolbar-btn" data-command="redo" title="Повторити">
+                            <button type="button" class="toolbar-btn" data-command="redo" title="Reset">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M13 8H3M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -207,34 +206,34 @@
                         <div class="toolbar-separator"></div>
                         
                         <div class="toolbar-group">
-                            <select class="toolbar-select" data-command="formatBlock" title="Стиль тексту">
+                            <select class="toolbar-select" data-command="formatBlock" title="Text Style">
                                 <option value="">Normal text</option>
-                                <option value="<h1>">Заголовок 1</option>
-                                <option value="<h2>">Заголовок 2</option>
-                                <option value="<h3>">Заголовок 3</option>
-                                <option value="<p>">Параграф</option>
+                                <option value="<h1>">Heading 1</option>
+                                <option value="<h2>">Heading 2</option>
+                                <option value="<h3>">Heading 3</option>
+                                <option value="<p>">Paragraph</option>
                             </select>
                         </div>
                         
                         <div class="toolbar-separator"></div>
                         
                         <div class="toolbar-group">
-                            <button type="button" class="toolbar-btn" data-command="bold" title="Жирний">
+                            <button type="button" class="toolbar-btn" data-command="bold" title="Bold">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M4 2h5a3 3 0 0 1 0 6H4V2zM4 8h6a3 3 0 0 1 0 6H4V8z" stroke="currentColor" stroke-width="1.5"/>
                                 </svg>
                             </button>
-                            <button type="button" class="toolbar-btn" data-command="italic" title="Курсив">
+                            <button type="button" class="toolbar-btn" data-command="italic" title="Italic">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M6 2h6M4 14h6M10 2L6 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
                             </button>
-                            <button type="button" class="toolbar-btn" data-command="underline" title="Підкреслення">
+                            <button type="button" class="toolbar-btn" data-command="underline" title="Underline">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M4 2v6a4 4 0 0 0 8 0V2M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
                             </button>
-                            <button type="button" class="toolbar-btn" data-command="strikeThrough" title="Закреслення">
+                            <button type="button" class="toolbar-btn" data-command="strikeThrough" title="Strikethrough">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M2 8h12M6 3h4a2 2 0 0 1 0 4M6 13h4a2 2 0 0 0 0-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
@@ -244,12 +243,12 @@
                         <div class="toolbar-separator"></div>
                         
                         <div class="toolbar-group">
-                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList" title="Маркований список">
+                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList" title="Bulleted List">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M6 4h8M6 8h8M6 12h8M2 4h.01M2 8h.01M2 12h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
                             </button>
-                            <button type="button" class="toolbar-btn" data-command="insertOrderedList" title="Нумерований список">
+                            <button type="button" class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M6 4h8M6 8h8M6 12h8M1 1v3M2 5v3l-1 1M2 9v1.5a1.5 1.5 0 0 1-1.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
@@ -259,12 +258,12 @@
                         <div class="toolbar-separator"></div>
                         
                         <div class="toolbar-group">
-                            <button type="button" class="toolbar-btn" data-command="createLink" title="Посилання">
+                            <button type="button" class="toolbar-btn" data-command="createLink" title="Link">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M8.5 11.5L11 9a2.828 2.828 0 0 0-4-4L4.5 7.5M7.5 4.5L5 7a2.828 2.828 0 0 0 4 4L11.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
                             </button>
-                            <button type="button" class="toolbar-btn" data-command="insertImage" title="Зображення">
+                            <button type="button" class="toolbar-btn" data-command="insertImage" title="Image">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <rect x="2" y="3" width="12" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
                                     <circle cx="5.5" cy="6.5" r="1" stroke="currentColor" stroke-width="1.5"/>
@@ -277,14 +276,14 @@
                     <!-- Область редактирования -->
                     <div class="editor-content" 
                         contenteditable="true" 
-                        data-placeholder="Опишіть детальну інформацію про вашу пропозицію або потребу..."
+                        data-placeholder="Provide detailed information about your offer or request..."
                         id="editor-content">
                     </div>
                     
                     <!-- Скрытое поле для отправки данных -->
                     <textarea name="detailed-info" id="detailed-info" style="display: none;" required></textarea>
                 </div>
-                <div class="error-message">Поле має бути заповнене</div>
+                <div class="error-message">This field is required</div>
             </div>
 
             <!-- 6. Чекбокс согласия -->
@@ -294,19 +293,19 @@
                         <input type="checkbox" id="privacy-agreement" name="privacy-agreement" required>
                         <span class="checkmark-agreement"></span>
                         <span class="checkbox-text-agreement">
-                            Я погоджуюсь з 
+                            I agree to
                             <a href="./privacy-policy.html" target="_blank" class="privacy-link">
-                                умовами політики конфіденційності Collabora
+                                Collabora's Privacy Policy terms
                             </a>
                         </span>
                     </label>
                 </div>
-                <div class="error-message">Поле має бути заповнене</div>
+                <div class="error-message">This field is required</div>
             </div>
 
             <!-- Кнопка отправки -->
             <div class="add-request-form-submit">
-                <button type="submit">Створити</button>
+                <button type="submit">Create</button>
             </div>
         </form>
     </div>
@@ -315,14 +314,14 @@
         </main>
         <footer>
             <div class="footer-wrapper">
-                <p>Collabora &#169 2025. Всі права захищено</p>
+                <p>Collabora &#169 2025. All rights reserved.</p>
             </div>
         </footer>
     </div>
-    <script src="./js/header-cabinet.js"></script>
-    <script src="./js/breadcrumbs.js"></script>
-    <script src="./js/custom-multiselect.js"></script>
-    <script src="./js/add-request.js"></script>
+    <script src="../js/header-cabinet.js"></script>
+    <script src="../js/breadcrumbs.js"></script>
+    <script src="../js/custom-multiselect.js"></script>
+    <script src="../js/add-request.js"></script>
 
 </body>
 </html>

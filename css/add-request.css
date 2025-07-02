@@ -34,9 +34,10 @@ p {}
     display: flex;
     margin-bottom: 30px;
     align-items: center;
+    gap: 11px;
 }
-.home,
-.b2b-link {
+.home a,
+.b2b-link a {
     font-family: var(--font-family);
     font-weight: 400;
     font-size: 16px;
@@ -63,10 +64,10 @@ p {}
 }
 .breadcrumb-separator {
     font-family: var(--font-family);
-font-weight: 400;
-font-size: 16px;
-line-height: 110%;
-color: var(--violet);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 110%;
+    color: var(--violet);
 }
 /* title-request-section */
 .title-request-wrapper {

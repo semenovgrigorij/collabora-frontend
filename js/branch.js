@@ -2,13 +2,16 @@
 
 class BranchManager {
     constructor() {
+        // Определяем текущий язык
+        this.currentLang = this.detectLanguage();
+        
         // Данные бизнесов (можно заменить на API)
         this.allBusinesses = [
             {
                 id: 1,
                 name: "Нова Пошта",
                 description: "Нова пошта — це українська компанія з експрес-доставки, заснована 2001 року. Її мета — забезпечувати легку доставку для кожного клієнта — у відділення, поштомат або на адресу.",
-                logo: "./img/branch-logo-1.png",
+                logo: this.getLocalizedPath("./img/branch-logo-1.png"),
                 businessType: "services",
                 scale: "large",
                 geography: "kyiv",
@@ -19,7 +22,7 @@ class BranchManager {
                 id: 2,
                 name: "АТБ",
                 description: "АТБ — провідна українська мережа супермаркетів, що пропонує якісні продукти за доступними цінами по всій країні.",
-                logo: "./img/branch-logo-2.png",
+                logo: this.getLocalizedPath("./img/branch-logo-2.png"),
                 businessType: "trade",
                 scale: "large",
                 geography: "dnipro",
@@ -30,7 +33,7 @@ class BranchManager {
                 id: 3,
                 name: "Rozetka",
                 description: "Rozetka — найбільший онлайн-ритейлер в Україні, що пропонує широкий асортимент товарів та зручну доставку.",
-                logo: "./img/branch-logo-3.png",
+                logo: this.getLocalizedPath("./img/branch-logo-3.png"),
                 businessType: "technology",
                 scale: "large",
                 geography: "kyiv",
@@ -42,7 +45,7 @@ class BranchManager {
                 id: i + 4,
                 name: `Компанія ${i + 4}`,
                 description: "Опис компанії з детальною інформацією про діяльність та можливості співпраці.",
-                logo: `./img/branch-logo-${(i % 3) + 1}.png`,
+                logo: this.getLocalizedPath(`./img/branch-logo-${(i % 3) + 1}.png`),
                 businessType: ["production", "trade", "services", "technology"][i % 4],
                 scale: ["small", "medium", "large"][i % 3],
                 geography: ["kyiv", "lviv", "odesa", "kharkiv", "dnipro"][i % 5],
@@ -71,10 +74,34 @@ class BranchManager {
         this.categoryInfo = {
             name: "Виробництво",
             description: "Бізнеси що займаються вирощенням сільськогосподарських рослин",
-            icon: "./icons/categories-icon.svg"
+            icon: this.getLocalizedPath("./icons/categories-icon.svg")
         };
 
         this.init();
+    }
+
+    // Определение текущего языка
+    detectLanguage() {
+        const path = window.location.pathname;
+        const langMatch = path.match(/\/(en|uk)\//);
+        return langMatch ? langMatch[1] : 'uk';
+    }
+
+    // Получение пути с учетом языка
+    getLocalizedPath(path) {
+        if (path.startsWith('./')) {
+            return this.currentLang === 'en' ? '../' + path.substring(2) : path;
+        }
+        return path;
+    }
+
+    // Получение локализованного URL
+    getLocalizedUrl(url) {
+        if (url.startsWith('./')) {
+            const baseUrl = url.substring(2);
+            return this.currentLang === 'en' ? `../en/${baseUrl}` : `./${baseUrl}`;
+        }
+        return url;
     }
 
     init() {
@@ -97,106 +124,106 @@ class BranchManager {
 
     // Загрузка информации о категории из URL
     loadCategoryFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoryId = urlParams.get('category');
-    const categoryName = urlParams.get('name');
-    const categoryIcon = urlParams.get('icon');
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get('category');
+        const categoryName = urlParams.get('name');
+        const categoryIcon = urlParams.get('icon');
 
-    if (categoryName) {
-        this.categoryInfo.name = decodeURIComponent(categoryName);
-    }
-
-    if (categoryIcon) {
-        this.categoryInfo.icon = `./icons/${categoryIcon}`;
-    }
-
-    if (categoryId) {
-        // Можно загрузить дополнительную информацию о категории по ID
-        console.log(`Загружена категория ID: ${categoryId}, название: ${this.categoryInfo.name}, иконка: ${this.categoryInfo.icon}`);
-    }
-
-    // Попытка загрузить из localStorage если URL параметры отсутствуют
-    if (!categoryName || !categoryIcon) {
-        try {
-            const savedData = localStorage.getItem('selectedCategory');
-            if (savedData) {
-                const categoryData = JSON.parse(savedData);
-                if (!categoryName && categoryData.categoryName) {
-                    this.categoryInfo.name = categoryData.categoryName;
-                }
-                if (!categoryIcon && categoryData.categoryIcon) {
-                    this.categoryInfo.icon = `./icons/${categoryData.categoryIcon}`;
-                }
-                console.log('Восстановлены данные из localStorage:', categoryData);
-            }
-        } catch (e) {
-            console.warn('Ошибка при восстановлении данных из localStorage:', e);
+        if (categoryName) {
+            this.categoryInfo.name = decodeURIComponent(categoryName);
         }
-    }
 
-    // Обновляем заголовок страницы
-    this.updateCategoryDisplay();
-}
+        if (categoryIcon) {
+            this.categoryInfo.icon = this.getLocalizedPath(`./icons/${categoryIcon}`);
+        }
+
+        if (categoryId) {
+            // Можно загрузить дополнительную информацию о категории по ID
+            console.log(`Загружена категория ID: ${categoryId}, название: ${this.categoryInfo.name}, иконка: ${this.categoryInfo.icon}`);
+        }
+
+        // Попытка загрузить из localStorage если URL параметры отсутствуют
+        if (!categoryName || !categoryIcon) {
+            try {
+                const savedData = localStorage.getItem('selectedCategory');
+                if (savedData) {
+                    const categoryData = JSON.parse(savedData);
+                    if (!categoryName && categoryData.categoryName) {
+                        this.categoryInfo.name = categoryData.categoryName;
+                    }
+                    if (!categoryIcon && categoryData.categoryIcon) {
+                        this.categoryInfo.icon = this.getLocalizedPath(`./icons/${categoryData.categoryIcon}`);
+                    }
+                    console.log('Восстановлены данные из localStorage:', categoryData);
+                }
+            } catch (e) {
+                console.warn('Ошибка при восстановлении данных из localStorage:', e);
+            }
+        }
+
+        // Обновляем заголовок страницы
+        this.updateCategoryDisplay();
+    }
 
     // Обновление отображения информации о категории
     updateCategoryDisplay() {
-    const titleElement = document.getElementById('branchTitle');
-    const descriptionElement = document.getElementById('branchDescription');
-    const iconElement = document.getElementById('branchIcon');
+        const titleElement = document.getElementById('branchTitle');
+        const descriptionElement = document.getElementById('branchDescription');
+        const iconElement = document.getElementById('branchIcon');
 
-    if (titleElement) {
-        titleElement.textContent = this.categoryInfo.name;
+        if (titleElement) {
+            titleElement.textContent = this.categoryInfo.name;
+        }
+
+        if (iconElement) {
+            // Обновляем иконку
+            iconElement.src = this.categoryInfo.icon;
+            iconElement.alt = `${this.categoryInfo.name} icon`;
+            
+            // Добавляем обработчик ошибки загрузки
+            iconElement.onerror = () => {
+                iconElement.src = this.getLocalizedPath('./icons/categories-icon.svg'); // Fallback иконка
+                console.warn(`Не удалось загрузить иконку: ${this.categoryInfo.icon}`);
+            };
+        }
+
+        if (descriptionElement) {
+            // Можно настроить описания для разных категорий
+            const descriptions = {
+                "Промисловість та переробка": "Бізнеси що займаються промисловим виробництвом та переробкою сировини",
+                "Будівництво, матеріали, деревопереробка": "Компанії будівельної галузі та виробництва будівельних матеріалів",
+                "Агро і харчова промисловість": "Підприємства сільського господарства та харчової промисловості",
+                "Енергетика": "Компанії енергетичного сектору та альтернативної енергетики",
+                "Логістика і транспорт": "Компанії що надають логістичні та транспортні послуги",
+                "Фінанси та бізнес послуги": "Фінансові установи та компанії бізнес-послуг",
+                "Оптова та роздрібна торгівля": "Торговельні компанії та роздрібні мережі",
+                "Легка промисловість/мода": "Підприємства легкої промисловості та модної індустрії",
+                "IT та телекомунікації": "Технологічні компанії та постачальники телекомунікаційних послуг",
+                "Здоров'я та краса": "Компанії сфери охорони здоров'я та косметології",
+                "Туризм, спорт, розваги": "Підприємства туристичної та розважальної індустрії",
+                "Освіта, наука, мистецтво": "Освітні установи та організації наукової діяльності",
+                "Медіа та реклама": "Медійні компанії та рекламні агентства",
+                "Креативна індустрія": "Підприємства креативної економіки та дизайну",
+                "Машинобудування": "Підприємства машинобудівної галузі",
+                "Хімічна промисловість": "Компанії хімічної та нафтохімічної промисловості",
+                "Текстильна промисловість": "Підприємства текстильної галузі",
+                "Металургія": "Металургійні підприємства та компанії з обробки металів",
+                "Видобувна промисловість": "Підприємства добувної промисловості",
+                "Фармацевтика": "Фармацевтичні компанії та медичні установи",
+                "Біотехнології": "Компанії біотехнологічної галузі",
+                "Нанотехнології": "Підприємства нанотехнологій",
+                "Космічні технології": "Компанії космічної галузі",
+                "Екологія та природоохорона": "Екологічні організації та природоохоронні підприємства",
+                "Інше": "Різноманітні бізнеси та підприємства інших галузей"
+            };
+            
+            descriptionElement.textContent = descriptions[this.categoryInfo.name] || 
+                `Бізнеси в галузі: ${this.categoryInfo.name}`;
+        }
+
+        // Обновляем title страницы
+        document.title = `Collabora - ${this.categoryInfo.name}`;
     }
-
-    if (iconElement) {
-        // Обновляем иконку
-        iconElement.src = this.categoryInfo.icon;
-        iconElement.alt = `${this.categoryInfo.name} icon`;
-        
-        // Добавляем обработчик ошибки загрузки
-        iconElement.onerror = function() {
-            this.src = './icons/categories-icon.svg'; // Fallback иконка
-            console.warn(`Не удалось загрузить иконку: ${this.categoryInfo.icon}`);
-        };
-    }
-
-    if (descriptionElement) {
-        // Можно настроить описания для разных категорий
-        const descriptions = {
-            "Промисловість та переробка": "Бізнеси що займаються промисловим виробництвом та переробкою сировини",
-            "Будівництво, матеріали, деревопереробка": "Компанії будівельної галузі та виробництва будівельних матеріалів",
-            "Агро і харчова промисловість": "Підприємства сільського господарства та харчової промисловості",
-            "Енергетика": "Компанії енергетичного сектору та альтернативної енергетики",
-            "Логістика і транспорт": "Компанії що надають логістичні та транспортні послуги",
-            "Фінанси та бізнес послуги": "Фінансові установи та компанії бізнес-послуг",
-            "Оптова та роздрібна торгівля": "Торговельні компанії та роздрібні мережі",
-            "Легка промисловість/мода": "Підприємства легкої промисловості та модної індустрії",
-            "IT та телекомунікації": "Технологічні компанії та постачальники телекомунікаційних послуг",
-            "Здоров'я та краса": "Компанії сфери охорони здоров'я та косметології",
-            "Туризм, спорт, розваги": "Підприємства туристичної та розважальної індустрії",
-            "Освіта, наука, мистецтво": "Освітні установи та організації наукової діяльності",
-            "Медіа та реклама": "Медійні компанії та рекламні агентства",
-            "Креативна індустрія": "Підприємства креативної економіки та дизайну",
-            "Машинобудування": "Підприємства машинобудівної галузі",
-            "Хімічна промисловість": "Компанії хімічної та нафтохімічної промисловості",
-            "Текстильна промисловість": "Підприємства текстильної галузі",
-            "Металургія": "Металургійні підприємства та компанії з обробки металів",
-            "Видобувна промисловість": "Підприємства добувної промисловості",
-            "Фармацевтика": "Фармацевтичні компанії та медичні установи",
-            "Біотехнології": "Компанії біотехнологічної галузі",
-            "Нанотехнології": "Підприємства нанотехнологій",
-            "Космічні технології": "Компанії космічної галузі",
-            "Екологія та природоохорона": "Екологічні організації та природоохоронні підприємства",
-            "Інше": "Різноманітні бізнеси та підприємства інших галузей"
-        };
-        
-        descriptionElement.textContent = descriptions[this.categoryInfo.name] || 
-            `Бізнеси в галузі: ${this.categoryInfo.name}`;
-    }
-
-    // Обновляем title страницы
-    document.title = `Collabora - ${this.categoryInfo.name}`;
-}
 
     setupEventListeners() {
         // Настройка чекбоксов для фильтров
@@ -327,199 +354,162 @@ class BranchManager {
     }
 
     renderBusinesses() {
-    const container = document.getElementById('branchContainer');
-    const noResults = document.getElementById('branchNoResults');
-    
-    if (!container) {
-        console.error('❌ Контейнер branchContainer не найден');
-        return;
-    }
-
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    const businessesToShow = this.filteredBusinesses.slice(startIndex, endIndex);
-
-    console.log(`📊 Рендер бизнесов:`);
-    console.log(`- Всего отфильтрованных: ${this.filteredBusinesses.length}`);
-    console.log(`- Страница: ${this.currentPage}, на странице: ${this.itemsPerPage}`);
-    console.log(`- Индексы: ${startIndex}-${endIndex}`);
-    console.log(`- К показу: ${businessesToShow.length}`);
-    console.log(`- Бизнесы на странице:`, businessesToShow.map(b => b.name));
-
-    if (businessesToShow.length === 0) {
-        // ИСПРАВЛЕНИЕ: Принудительная очистка и установка заглушки
-        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Нет данных для отображения</div>';
-        if (noResults) noResults.style.display = 'block';
-        console.log('❌ Нет бизнесов для отображения');
-        return;
-    }
-
-    if (noResults) noResults.style.display = 'none';
-
-    // ИСПРАВЛЕНИЕ: Принудительная очистка контейнера
-    container.innerHTML = '';
-    
-    // Создаем HTML карточек
-    const cardsHTML = businessesToShow.map(business => this.createBusinessCard(business)).join('');
-    
-    // Устанавливаем HTML
-    container.innerHTML = cardsHTML;
-
-    // ИСПРАВЛЕНИЕ: Проверяем что карточки действительно добавились
-    const addedCards = container.querySelectorAll('.branch-block');
-    console.log(`✅ Добавлено карточек в DOM: ${addedCards.length}`);
-    
-    if (addedCards.length === 0) {
-        console.error('❌ КРИТИЧЕСКАЯ ОШИБКА: Карточки не добавились в DOM!');
-        console.log('HTML для вставки:', cardsHTML.substring(0, 200) + '...');
-    }
-
-    // Добавляем обработчики событий для кнопок связи
-    container.querySelectorAll('.branch-contact-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const businessId = btn.getAttribute('data-business-id');
-            this.handleContactClick(businessId);
-        });
-    });
-
-    // Добавляем обработчики для ссылок потребностей
-    container.querySelectorAll('.need-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const need = link.getAttribute('data-need');
-            const businessId = link.closest('.branch-block').getAttribute('data-business-id');
-            this.handleNeedClick(need, businessId);
-        });
-    });
-    
-    console.log(`✅ Отрендерено ${businessesToShow.length} карточек бизнесов`);
-}
-    createBusinessCard(business) {
-    const needsIcons = {
-        'investment': './icons/branch-navigation-icon-1.svg',
-        'marketing': './icons/branch-navigation-icon-2.svg',
-        'partnership': './icons/branch-navigation-icon-3.svg',
-        'similar': './icons/branch-navigation-icon-4.svg'
-    };
-
-    const needsTexts = {
-        'investment': 'Пошук інвестицій',
-        'marketing': 'Маркетингова співпраця',
-        'partnership': 'Партнерство',
-        'similar': 'Схожі бізнеси, що можуть вас зацікавити'
-    };
-
-    // Создаем левую навигацию (всегда показываем все 3 основные потребности)
-    const leftNavigationHtml = `
-        <a href="#" class="need-link ${business.needs.includes('investment') ? 'active' : ''}" data-need="investment">
-            <img src="${needsIcons['investment']}" alt="need icon" width="20" onerror="this.style.display='none'">
-            ${needsTexts['investment']}
-        </a>
-        <a href="#" class="need-link ${business.needs.includes('marketing') ? 'active' : ''}" data-need="marketing">
-            <img src="${needsIcons['marketing']}" alt="need icon" width="20" onerror="this.style.display='none'">
-            ${needsTexts['marketing']}
-        </a>
-        <a href="#" class="need-link ${business.needs.includes('partnership') ? 'active' : ''}" data-need="partnership">
-            <img src="${needsIcons['partnership']}" alt="need icon" width="20" onerror="this.style.display='none'">
-            ${needsTexts['partnership']}
-        </a>
-    `;
-
-    // Создаем правую навигацию (всегда показываем "Схожі бізнеси")
-    const rightNavigationHtml = `
-        <a href="#" class="need-link ${business.needs.includes('similar') ? 'active' : ''}" data-need="similar">
-            <img src="${needsIcons['similar']}" alt="need icon" width="20" onerror="this.style.display='none'">
-            ${needsTexts['similar']}
-        </a>
-    `;
-
-    return `
-    <div class="branch-block" data-business-id="${business.id}">
-        <div class="branch-block-navigation">
-            <div class="branch-block-navigation-left">
-                ${leftNavigationHtml}
-            </div>
-            <div class="branch-block-navigation-right">
-                ${rightNavigationHtml}
-            </div>
-        </div>
-        <div class="branch-block-content">
-            <div class="branch-logo">
-                <img src="${business.logo}" alt="logo" width="400" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iNCIgZmlsbD0iIzY2NjY2NiIvPgo8dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkM8L3RleHQ+Cjwvc3ZnPg=='">
-            </div>
-            <div class="branch-text">
-                <h3>${business.name}</h3>
-                <p>${business.description}</p>
-                <a href="#" class="branch-contact-btn" data-business-id="${business.id}">
-                    Зв'язатись
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 14L14 1M14 1H1M14 1V14" stroke="#3B2F77" stroke-linecap="round" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </div>
-`;
-}
-
-renderPagination() {
-    const container = document.getElementById('branchPagination');
-    if (!container) return;
-
-    const totalPages = Math.ceil(this.filteredBusinesses.length / this.itemsPerPage);
-    
-    console.log(`📄 Рендер пагинации: страница ${this.currentPage} из ${totalPages}`);
-    
-    if (totalPages <= 1) {
-        container.innerHTML = '';
-        return;
-    }
-
-    let paginationHTML = '';
-
-    // Логика для пагинации БЕЗ разделителей
-    if (totalPages <= 4) {
-        // Если страниц 4 или меньше, показываем все
-        for (let page = 1; page <= totalPages; page++) {
-            paginationHTML += `
-                <div class="branch-pagination-block ${page === this.currentPage ? 'active' : ''}" 
-                     data-page="${page}">
-                    ${page}
-                </div>
-            `;
+        const container = document.getElementById('branchContainer');
+        const noResults = document.getElementById('branchNoResults');
+        
+        if (!container) {
+            console.error('❌ Контейнер branchContainer не найден');
+            return;
         }
-    } else {
-        // Если страниц больше 4
-        if (this.currentPage <= 3) {
-            // Показываем первые 3 страницы
-            for (let page = 1; page <= 3; page++) {
-                paginationHTML += `
-                    <div class="branch-pagination-block ${page === this.currentPage ? 'active' : ''}" 
-                         data-page="${page}">
-                        ${page}
-                    </div>
-                `;
-            }
-            
-            // Многоточие
-            paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
-            
-            // Последняя страница
-            paginationHTML += `
-                <div class="branch-pagination-block" data-page="${totalPages}">
-                    ${totalPages}
+
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const businessesToShow = this.filteredBusinesses.slice(startIndex, endIndex);
+
+        console.log(`📊 Рендер бизнесов:`);
+        console.log(`- Всего отфильтрованных: ${this.filteredBusinesses.length}`);
+        console.log(`- Страница: ${this.currentPage}, на странице: ${this.itemsPerPage}`);
+        console.log(`- Индексы: ${startIndex}-${endIndex}`);
+        console.log(`- К показу: ${businessesToShow.length}`);
+        console.log(`- Бизнесы на странице:`, businessesToShow.map(b => b.name));
+
+        if (businessesToShow.length === 0) {
+            // ИСПРАВЛЕНИЕ: Принудительная очистка и установка заглушки
+            container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Нет данных для отображения</div>';
+            if (noResults) noResults.style.display = 'block';
+            console.log('❌ Нет бизнесов для отображения');
+            return;
+        }
+
+        if (noResults) noResults.style.display = 'none';
+
+        // ИСПРАВЛЕНИЕ: Принудительная очистка контейнера
+        container.innerHTML = '';
+        
+        // Создаем HTML карточек
+        const cardsHTML = businessesToShow.map(business => this.createBusinessCard(business)).join('');
+        
+        // Устанавливаем HTML
+        container.innerHTML = cardsHTML;
+
+        // ИСПРАВЛЕНИЕ: Проверяем что карточки действительно добавились
+        const addedCards = container.querySelectorAll('.branch-block');
+        console.log(`✅ Добавлено карточек в DOM: ${addedCards.length}`);
+        
+        if (addedCards.length === 0) {
+            console.error('❌ КРИТИЧЕСКАЯ ОШИБКА: Карточки не добавились в DOM!');
+            console.log('HTML для вставки:', cardsHTML.substring(0, 200) + '...');
+        }
+
+        // Добавляем обработчики событий для кнопок связи
+        container.querySelectorAll('.branch-contact-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const businessId = btn.getAttribute('data-business-id');
+                this.handleContactClick(businessId);
+            });
+        });
+
+        // Добавляем обработчики для ссылок потребностей
+        container.querySelectorAll('.need-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const need = link.getAttribute('data-need');
+                const businessId = link.closest('.branch-block').getAttribute('data-business-id');
+                this.handleNeedClick(need, businessId);
+            });
+        });
+        
+        console.log(`✅ Отрендерено ${businessesToShow.length} карточек бизнесов`);
+    }
+
+    createBusinessCard(business) {
+        const needsIcons = {
+            'investment': this.getLocalizedPath('./icons/branch-navigation-icon-1.svg'),
+            'marketing': this.getLocalizedPath('./icons/branch-navigation-icon-2.svg'),
+            'partnership': this.getLocalizedPath('./icons/branch-navigation-icon-3.svg'),
+            'similar': this.getLocalizedPath('./icons/branch-navigation-icon-4.svg')
+        };
+
+        const needsTexts = {
+            'investment': 'Пошук інвестицій',
+            'marketing': 'Маркетингова співпраця',
+            'partnership': 'Партнерство',
+            'similar': 'Схожі бізнеси, що можуть вас зацікавити'
+        };
+
+        // Создаем левую навигацию (всегда показываем все 3 основные потребности)
+        const leftNavigationHtml = `
+            <a href="#" class="need-link ${business.needs.includes('investment') ? 'active' : ''}" data-need="investment">
+                <img src="${needsIcons['investment']}" alt="need icon" width="20" onerror="this.style.display='none'">
+                ${needsTexts['investment']}
+            </a>
+            <a href="#" class="need-link ${business.needs.includes('marketing') ? 'active' : ''}" data-need="marketing">
+                <img src="${needsIcons['marketing']}" alt="need icon" width="20" onerror="this.style.display='none'">
+                ${needsTexts['marketing']}
+            </a>
+            <a href="#" class="need-link ${business.needs.includes('partnership') ? 'active' : ''}" data-need="partnership">
+                <img src="${needsIcons['partnership']}" alt="need icon" width="20" onerror="this.style.display='none'">
+                ${needsTexts['partnership']}
+            </a>
+        `;
+
+        // Создаем правую навигацию (всегда показываем "Схожі бізнеси")
+        const rightNavigationHtml = `
+            <a href="#" class="need-link ${business.needs.includes('similar') ? 'active' : ''}" data-need="similar">
+                <img src="${needsIcons['similar']}" alt="need icon" width="20" onerror="this.style.display='none'">
+                ${needsTexts['similar']}
+            </a>
+        `;
+
+        return `
+        <div class="branch-block" data-business-id="${business.id}">
+            <div class="branch-block-navigation">
+                <div class="branch-block-navigation-left">
+                    ${leftNavigationHtml}
                 </div>
-            `;
-        } else if (this.currentPage >= totalPages - 2) {
-            // Показываем последние 3 страницы
-            paginationHTML += `
-                <div class="branch-pagination-block" data-page="1">1</div>
-            `;
-            
-            paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
-            
-            for (let page = totalPages - 2; page <= totalPages; page++) {
+                <div class="branch-block-navigation-right">
+                    ${rightNavigationHtml}
+                </div>
+            </div>
+            <div class="branch-block-content">
+                <div class="branch-logo">
+                    <img src="${business.logo}" alt="logo" width="400" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iNCIgZmlsbD0iIzY2NjY2NiIvPgo8dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkM8L3RleHQ+Cjwvc3ZnPg=='">
+                </div>
+                <div class="branch-text">
+                    <h3>${business.name}</h3>
+                    <p>${business.description}</p>
+                    <a href="#" class="branch-contact-btn" data-business-id="${business.id}">
+                        Зв'язатись
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 14L14 1M14 1H1M14 1V14" stroke="#3B2F77" stroke-linecap="round" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    }
+
+    renderPagination() {
+        const container = document.getElementById('branchPagination');
+        if (!container) return;
+
+        const totalPages = Math.ceil(this.filteredBusinesses.length / this.itemsPerPage);
+        
+        console.log(`📄 Рендер пагинации: страница ${this.currentPage} из ${totalPages}`);
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let paginationHTML = '';
+
+        // Логика для пагинации БЕЗ разделителей
+        if (totalPages <= 4) {
+            // Если страниц 4 или меньше, показываем все
+            for (let page = 1; page <= totalPages; page++) {
                 paginationHTML += `
                     <div class="branch-pagination-block ${page === this.currentPage ? 'active' : ''}" 
                          data-page="${page}">
@@ -528,49 +518,87 @@ renderPagination() {
                 `;
             }
         } else {
-            // Показываем текущую страницу в середине
-            paginationHTML += `
-                <div class="branch-pagination-block" data-page="1">1</div>
-            `;
-            
-            paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
-            
-            paginationHTML += `
-                <div class="branch-pagination-block active" data-page="${this.currentPage}">
-                    ${this.currentPage}
-                </div>
-            `;
-            
-            paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
-            
-            paginationHTML += `
-                <div class="branch-pagination-block" data-page="${totalPages}">
-                    ${totalPages}
-                </div>
-            `;
+            // Если страниц больше 4
+            if (this.currentPage <= 3) {
+                // Показываем первые 3 страницы
+                for (let page = 1; page <= 3; page++) {
+                    paginationHTML += `
+                        <div class="branch-pagination-block ${page === this.currentPage ? 'active' : ''}" 
+                             data-page="${page}">
+                            ${page}
+                        </div>
+                    `;
+                }
+                
+                // Многоточие
+                paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
+                
+                // Последняя страница
+                paginationHTML += `
+                    <div class="branch-pagination-block" data-page="${totalPages}">
+                        ${totalPages}
+                    </div>
+                `;
+            } else if (this.currentPage >= totalPages - 2) {
+                // Показываем последние 3 страницы
+                paginationHTML += `
+                    <div class="branch-pagination-block" data-page="1">1</div>
+                `;
+                
+                paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
+                
+                for (let page = totalPages - 2; page <= totalPages; page++) {
+                    paginationHTML += `
+                        <div class="branch-pagination-block ${page === this.currentPage ? 'active' : ''}" 
+                             data-page="${page}">
+                            ${page}
+                        </div>
+                    `;
+                }
+            } else {
+                // Показываем текущую страницу в середине
+                paginationHTML += `
+                    <div class="branch-pagination-block" data-page="1">1</div>
+                `;
+                
+                paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
+                
+                paginationHTML += `
+                    <div class="branch-pagination-block active" data-page="${this.currentPage}">
+                        ${this.currentPage}
+                    </div>
+                `;
+                
+                paginationHTML += `<div class="branch-pagination-block dots">...</div>`;
+                
+                paginationHTML += `
+                    <div class="branch-pagination-block" data-page="${totalPages}">
+                        ${totalPages}
+                    </div>
+                `;
+            }
         }
+
+        container.innerHTML = paginationHTML;
+        
+        // Добавляем обработчики событий для кнопок пагинации
+        const paginationButtons = container.querySelectorAll('.branch-pagination-block[data-page]');
+        console.log(`🔗 Добавляем обработчики для ${paginationButtons.length} кнопок пагинации`);
+        
+        paginationButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const page = parseInt(btn.getAttribute('data-page'));
+                console.log(`🔗 Клик по странице: ${page}`);
+                
+                if (page && page !== this.currentPage) {
+                    this.goToPage(page);
+                }
+            });
+        });
     }
 
-    container.innerHTML = paginationHTML;
-    
-    // Добавляем обработчики событий для кнопок пагинации
-    const paginationButtons = container.querySelectorAll('.branch-pagination-block[data-page]');
-    console.log(`🔗 Добавляем обработчики для ${paginationButtons.length} кнопок пагинации`);
-    
-    paginationButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const page = parseInt(btn.getAttribute('data-page'));
-            console.log(`🔗 Клик по странице: ${page}`);
-            
-            if (page && page !== this.currentPage) {
-                this.goToPage(page);
-            }
-        });
-    });
-    
-}
     goToPage(page) {
         const totalPages = Math.ceil(this.filteredBusinesses.length / this.itemsPerPage);
         
@@ -736,26 +764,28 @@ renderPagination() {
             totalBusinesses: this.allBusinesses.length,
             filteredBusinesses: this.filteredBusinesses.length,
             filters: { ...this.currentFilters },
-            category: this.categoryInfo
+            category: this.categoryInfo,
+            language: this.currentLang
         };
     }
 
     getDebugInfo() {
-    const container = document.getElementById('branchContainer');
-    const pagination = document.getElementById('branchPagination');
-    
-    return {
-        currentPage: this.currentPage,
-        totalPages: Math.ceil(this.filteredBusinesses.length / this.itemsPerPage),
-        totalBusinesses: this.allBusinesses.length,
-        filteredBusinesses: this.filteredBusinesses.length,
-        filters: { ...this.currentFilters },
-        domCards: container ? container.querySelectorAll('.branch-block').length : 0,
-        domPaginationButtons: pagination ? pagination.querySelectorAll('[data-page]').length : 0,
-        containerExists: !!container,
-        paginationExists: !!pagination
-    };
-}
+        const container = document.getElementById('branchContainer');
+        const pagination = document.getElementById('branchPagination');
+        
+        return {
+            currentPage: this.currentPage,
+            totalPages: Math.ceil(this.filteredBusinesses.length / this.itemsPerPage),
+            totalBusinesses: this.allBusinesses.length,
+            filteredBusinesses: this.filteredBusinesses.length,
+            filters: { ...this.currentFilters },
+            domCards: container ? container.querySelectorAll('.branch-block').length : 0,
+            domPaginationButtons: pagination ? pagination.querySelectorAll('[data-page]').length : 0,
+            containerExists: !!container,
+            paginationExists: !!pagination,
+            language: this.currentLang
+        };
+    }
 }
 
 // Инициализация при загрузке страницы

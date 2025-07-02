@@ -1,4 +1,66 @@
-//edit-profile.js - единая форма редактирования профиля и пароля
+// edit-profile.js - многоязычная версия единой формы редактирования профиля и пароля
+
+// Определение текущего языка
+function getCurrentLanguage() {
+    const currentPath = window.location.pathname;
+    const isEnglishPage = currentPath.includes('/en/');
+    return isEnglishPage ? 'en' : 'uk';
+}
+
+// Получение пути к странице с учетом языка
+function getLocalizedPath(pageName) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        return `./${pageName}`;
+    } else {
+        return `./${pageName}`;
+    }
+}
+
+// Локализованные тексты
+function getLocalizedText(key) {
+    const currentLang = getCurrentLanguage();
+    
+    const texts = {
+        uk: {
+            profileUpdated: 'Профіль успішно оновлено!',
+            profileAndPasswordUpdated: 'Профіль та пароль успішно оновлено!',
+            fixPasswordErrors: 'Будь ласка, виправте помилки в секції зміни пароля',
+            fixProfileErrors: 'Будь ласка, виправте помилки в особистій інформації',
+            profileUpdateError: 'Помилка збереження профілю',
+            profileUpdatedSuccess: 'Profile updated successfully',
+            passwordChangedSuccess: 'Password changed successfully',
+            changingPassword: 'Changing password...',
+            confirmCancelEdit: 'Ви впевнені, що хочете скасувати зміни?',
+            weakPassword: 'Слабкий пароль',
+            fairPassword: 'Задовільний пароль',
+            goodPassword: 'Хороший пароль',
+            strongPassword: 'Сильний пароль',
+            error: 'Помилка',
+            dataLoadError: 'Помилка завантаження даних для редагування'
+        },
+        en: {
+            profileUpdated: 'Profile successfully updated!',
+            profileAndPasswordUpdated: 'Profile and password successfully updated!',
+            fixPasswordErrors: 'Please fix errors in the password change section',
+            fixProfileErrors: 'Please fix errors in personal information',
+            profileUpdateError: 'Profile saving error',
+            profileUpdatedSuccess: 'Profile updated successfully',
+            passwordChangedSuccess: 'Password changed successfully',
+            changingPassword: 'Changing password...',
+            confirmCancelEdit: 'Are you sure you want to cancel changes?',
+            weakPassword: 'Weak password',
+            fairPassword: 'Fair password',
+            goodPassword: 'Good password',
+            strongPassword: 'Strong password',
+            error: 'Error',
+            dataLoadError: 'Error loading data for editing'
+        }
+    };
+    
+    return texts[currentLang][key] || texts['uk'][key];
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     loadEditData();
@@ -17,7 +79,7 @@ function loadEditData() {
     try {
         const userDataString = localStorage.getItem('userData');
         if (!userDataString) {
-            window.location.href = 'registration.html';
+            window.location.href = getLocalizedPath('registration.html');
             return;
         }
 
@@ -42,8 +104,8 @@ function loadEditData() {
         
     } catch (error) {
         console.error('Error loading edit data:', error);
-        alert('Помилка завантаження даних для редагування');
-        window.location.href = 'cabinet.html';
+        alert(getLocalizedText('dataLoadError'));
+        window.location.href = getLocalizedPath('cabinet.html');
     }
 }
 
@@ -101,13 +163,13 @@ function handleFormSubmission(form) {
         passwordValid = validatePasswordForm();
         
         if (!passwordValid) {
-            alert('Будь ласка, виправте помилки в секції зміни пароля');
+            alert(getLocalizedText('fixPasswordErrors'));
             return;
         }
     }
 
     if (!profileValid) {
-        alert('Будь ласка, виправте помилки в особистій інформації');
+        alert(getLocalizedText('fixProfileErrors'));
         return;
     }
 
@@ -151,11 +213,11 @@ function updateProfile(form) {
         // Сохраняем обновленные данные
         localStorage.setItem('userData', JSON.stringify(userData));
         
-        console.log('Profile updated successfully');
+        console.log(getLocalizedText('profileUpdatedSuccess'));
         
     } catch (error) {
         console.error('Error updating profile:', error);
-        alert('Помилка збереження профілю');
+        alert(getLocalizedText('profileUpdateError'));
         return;
     }
 }
@@ -167,13 +229,13 @@ function handlePasswordChange(form) {
     const newPassword = formData.get('newPassword');
 
     // В реальном проекте здесь будет отправка на сервер
-    console.log('Changing password...', {
+    console.log(getLocalizedText('changingPassword'), {
         oldPassword: oldPassword,
         newPassword: newPassword
     });
 
     // Имитация успешной смены пароля
-    console.log('Password changed successfully');
+    console.log(getLocalizedText('passwordChangedSuccess'));
 }
 
 // Показ сообщения об успехе и перенаправление
@@ -182,9 +244,9 @@ function showSuccessAndRedirect() {
     const successMessage = document.getElementById('successMessage');
     if (successMessage) {
         if (formState.isPasswordChangeRequested) {
-            successMessage.textContent = 'Профіль та пароль успішно оновлено!';
+            successMessage.textContent = getLocalizedText('profileAndPasswordUpdated');
         } else {
-            successMessage.textContent = 'Профіль успішно оновлено!';
+            successMessage.textContent = getLocalizedText('profileUpdated');
         }
         successMessage.style.display = 'block';
     }
@@ -196,7 +258,7 @@ function showSuccessAndRedirect() {
     
     // Перенаправляем в кабинет через 2 секунды
     setTimeout(() => {
-        window.location.href = 'cabinet.html';
+        window.location.href = getLocalizedPath('cabinet.html');
     }, 2000);
 }
 
@@ -350,16 +412,16 @@ function updatePasswordStrength(password) {
 
     if (score <= 2) {
         strengthLevel = 'strength-weak';
-        strengthMessage = 'Слабкий пароль';
+        strengthMessage = getLocalizedText('weakPassword');
     } else if (score === 3) {
         strengthLevel = 'strength-fair';
-        strengthMessage = 'Задовільний пароль';
+        strengthMessage = getLocalizedText('fairPassword');
     } else if (score === 4) {
         strengthLevel = 'strength-good';
-        strengthMessage = 'Хороший пароль';
+        strengthMessage = getLocalizedText('goodPassword');
     } else {
         strengthLevel = 'strength-strong';
-        strengthMessage = 'Сильний пароль';
+        strengthMessage = getLocalizedText('strongPassword');
     }
 
     strengthFill.classList.add(strengthLevel);
@@ -435,8 +497,8 @@ function clearPasswordFields() {
 
 // Отмена редактирования
 function cancelEdit() {
-    if (confirm('Ви впевнені, що хочете скасувати зміни?')) {
-        window.location.href = 'cabinet.html';
+    if (confirm(getLocalizedText('confirmCancelEdit'))) {
+        window.location.href = getLocalizedPath('cabinet.html');
     }
 }
 

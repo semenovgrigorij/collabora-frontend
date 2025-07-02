@@ -51,11 +51,12 @@ p {
     align-items: center;
     max-width: 1420px;
     width: 100%;
+    gap: 11px;
 }
-.home,
-.b2b-link,
-.b2b-single-link,
-.bread-crumbs-b2b .breadcrumb-category {
+.home a,
+.b2b-link a,
+.b2b-single-link a,
+.bread-crumbs-b2b .breadcrumb-category a {
     font-family: var(--font-family);
     font-weight: 400;
     font-size: 16px;

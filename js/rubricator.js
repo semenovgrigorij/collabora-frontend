@@ -1,35 +1,324 @@
-// js/rubricator.js - Функциональность рубрикатора
+// js/rubricator.js - Функциональность рубрикатора с поддержкой многоязычности
+
+// Определение текущего языка
+function getCurrentLanguage() {
+    const currentPath = window.location.pathname;
+    const isEnglishPage = currentPath.includes('/en/');
+    return isEnglishPage ? 'en' : 'uk';
+}
+
+// Получение пути к странице с учетом языка
+function getLocalizedPath(pageName) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        return `./en/${pageName}`;
+    } else {
+        return `./${pageName}`;
+    }
+}
+
+// Локализованные тексты
+function getLocalizedText(key) {
+    const currentLang = getCurrentLanguage();
+    
+    const texts = {
+        uk: {
+            selectCountry: 'Оберіть країну або регіон зі списку',
+            pageInitialized: 'Рубрикатор ініціалізований',
+            functionalityLoaded: 'Функціональність рубрикатора завантажена',
+            sphereLoaded: 'Завантажені дані про вибрану сферу:',
+            sphereFromUrl: 'Виявлено параметр сфери в URL:',
+            checkingSphere: 'Перевіряємо вибрану сферу...',
+            sphereInSession: 'Знайдена сфера в sessionStorage:',
+            sphereInUrl: 'Знайдено параметр sphere в URL:',
+            sphereNotSelected: 'Сфера не вибрана, показуємо всі категорії',
+            sphereFilterError: 'Помилка при перевірці сфери:',
+            sphereDataMissing: 'Немає даних про сферу для фільтрації',
+            applySphereFilter: 'Застосовуємо фільтр по сфері:',
+            categoryMatches: 'Категорія відповідає сфері',
+            categoriesFiltered: 'Відфільтровано категорій з',
+            titleUpdated: 'Заголовок оновлено для сфери:',
+            clearSphereFilter: 'Очищуємо фільтр по сфері',
+            categoriesFor: 'Категорії для',
+            selectedSphere: 'Вибрана сфера:',
+            sphereDescription: 'Показано категорії, релевантні для обраної сфери можливостей',
+            unknownSphere: 'Невідома сфера',
+            buildPartnership: 'Побудуй партнерство,',
+            gameChanger: 'яке змінює гру',
+            findOpportunities: 'Знаходь можливості співпраці за сферами діяльності та регіонами',
+            resultsFound: 'Знайдено:',
+            forSphere: 'для сфери',
+            category: 'категорія',
+            categories2: 'категорії',
+            categories5: 'категорій',
+            clickCategory: 'Клік по категорії:',
+            nextPage: 'Перехід на наступну сторінку пагінації',
+            lastPage: 'Це остання сторінка',
+            lastPageReached: 'Ви досягли останньої сторінки!',
+            tryChangeFilters: 'Спробуйте змінити фільтри або параметри пошуку.',
+            categoryBranch: 'Перехід в категорію:',
+            newCategoryAdded: 'Додано нову категорію:',
+            categoryRemoved: 'Видалено категорію з ID:',
+            filtersCleared: 'Фільтри очищено',
+            rubricatorReady: 'Рубрикатор готовий до роботи!',
+            region: 'Регіон',
+            businessForm: 'Форма бізнесу'
+        },
+        en: {
+            selectCountry: 'Select country or region from the list',
+            pageInitialized: 'Rubricator initialized',
+            functionalityLoaded: 'Rubricator functionality loaded',
+            sphereLoaded: 'Selected sphere data loaded:',
+            sphereFromUrl: 'Sphere parameter detected in URL:',
+            checkingSphere: 'Checking selected sphere...',
+            sphereInSession: 'Sphere found in sessionStorage:',
+            sphereInUrl: 'Sphere parameter found in URL:',
+            sphereNotSelected: 'Sphere not selected, showing all categories',
+            sphereFilterError: 'Error checking sphere:',
+            sphereDataMissing: 'No sphere data for filtering',
+            applySphereFilter: 'Applying sphere filter:',
+            categoryMatches: 'Category matches sphere',
+            categoriesFiltered: 'Filtered categories from',
+            titleUpdated: 'Title updated for sphere:',
+            clearSphereFilter: 'Clearing sphere filter',
+            categoriesFor: 'Categories for',
+            selectedSphere: 'Selected sphere:',
+            sphereDescription: 'Showing categories relevant to the selected opportunity sphere',
+            unknownSphere: 'Unknown sphere',
+            buildPartnership: 'Build partnership',
+            gameChanger: 'that changes the game',
+            findOpportunities: 'Find collaboration opportunities by spheres of activity and regions',
+            resultsFound: 'Found:',
+            forSphere: 'for sphere',
+            category: 'category',
+            categories2: 'categories',
+            categories5: 'categories',
+            clickCategory: 'Click on category:',
+            nextPage: 'Navigate to next pagination page',
+            lastPage: 'This is the last page',
+            lastPageReached: 'You have reached the last page!',
+            tryChangeFilters: 'Try changing your filters or search parameters.',
+            categoryBranch: 'Navigate to category:',
+            newCategoryAdded: 'New category added:',
+            categoryRemoved: 'Category removed with ID:',
+            filtersCleared: 'Filters cleared',
+            rubricatorReady: 'Rubricator ready to work!',
+            region: 'Region',
+            businessForm: 'Business Form'
+        }
+    };
+    
+    return texts[currentLang][key] || texts['uk'][key];
+}
 
 class RubricatorManager {
     constructor() {
+        this.currentLang = getCurrentLanguage();
+        
         // Данные категорий (можно заменить на API)
         this.allCategories = [
-            { id: 1, name: "Промисловість та переробка", icon: "categories-icon.svg", region: "kyiv", businessForm: "tov", spheres: ["finance", "marketplace"] },
-            { id: 2, name: "Будівництво, матеріали, деревопереробка", icon: "categories-icon-1.svg", region: "lviv", businessForm: "fop", spheres: ["marketplace"] },
-            { id: 3, name: "Агро і харчова промисловість", icon: "categories-icon-2.svg", region: "odesa", businessForm: "at", spheres: ["marketplace"] },
-            { id: 4, name: "Енергетика", icon: "categories-icon-3.svg", region: "kharkiv", businessForm: "tov", spheres: ["finance"] },
-            { id: 5, name: "Логістика і транспорт", icon: "categories-icon-4.svg", region: "dnipro", businessForm: "pp", spheres: ["marketplace"] },
-            { id: 6, name: "Фінанси та бізнес послуги", icon: "categories-icon-5.svg", region: "kyiv", businessForm: "tov", spheres: ["finance", "consulting", "marketplace"] },
-            { id: 7, name: "Оптова та роздрібна торгівля", icon: "categories-icon-6.svg", region: "lviv", businessForm: "fop", spheres: ["marketplace"] },
-            { id: 8, name: "Легка промисловість/мода", icon: "categories-icon-7.svg", region: "odesa", businessForm: "at", spheres: ["marketplace"] },
-            { id: 9, name: "IT та телекомунікації", icon: "categories-icon-8.svg", region: "kyiv", businessForm: "tov", spheres: ["finance", "consulting", "education"] },
-            { id: 10, name: "Здоров'я та краса", icon: "categories-icon-9.svg", region: "kharkiv", businessForm: "fop", spheres: ["consulting", "marketplace"] },
-            { id: 11, name: "Туризм, спорт, розваги", icon: "categories-icon-10.svg", region: "dnipro", businessForm: "pp", spheres: ["marketplace"]  },
-            { id: 12, name: "Освіта, наука, мистецтво", icon: "categories-icon-11.svg", region: "kyiv", businessForm: "tov", spheres: ["consulting", "education"] },
-            { id: 13, name: "Медіа та реклама", icon: "categories-icon-12.svg", region: "lviv", businessForm: "at", spheres: ["education", "consulting"] },
-            { id: 14, name: "Креативна індустрія", icon: "categories-icon-13.svg", region: "odesa", businessForm: "fop", spheres: ["education", "consulting"]  },
-            { id: 15, name: "Інше", icon: "categories-icon-14.svg", region: "kharkiv", businessForm: "tov", spheres: ["finance", "consulting", "education", "marketplace"]  },
+            { 
+                id: 1, 
+                name: this.currentLang === 'en' ? "Industry and Processing" : "Промисловість та переробка", 
+                icon: "categories-icon.svg", 
+                region: "kyiv", 
+                businessForm: "tov", 
+                spheres: ["finance", "marketplace"] 
+            },
+            { 
+                id: 2, 
+                name: this.currentLang === 'en' ? "Construction, Materials, Woodworking" : "Будівництво, матеріали, деревопереробка", 
+                icon: "categories-icon-1.svg", 
+                region: "lviv", 
+                businessForm: "fop", 
+                spheres: ["marketplace"] 
+            },
+            { 
+                id: 3, 
+                name: this.currentLang === 'en' ? "Agriculture and Food Industry" : "Агро і харчова промисловість", 
+                icon: "categories-icon-2.svg", 
+                region: "odesa", 
+                businessForm: "at", 
+                spheres: ["marketplace"] 
+            },
+            { 
+                id: 4, 
+                name: this.currentLang === 'en' ? "Energy" : "Енергетика", 
+                icon: "categories-icon-3.svg", 
+                region: "kharkiv", 
+                businessForm: "tov", 
+                spheres: ["finance"] 
+            },
+            { 
+                id: 5, 
+                name: this.currentLang === 'en' ? "Logistics and Transport" : "Логістика і транспорт", 
+                icon: "categories-icon-4.svg", 
+                region: "dnipro", 
+                businessForm: "pp", 
+                spheres: ["marketplace"] 
+            },
+            { 
+                id: 6, 
+                name: this.currentLang === 'en' ? "Finance and Business Services" : "Фінанси та бізнес послуги", 
+                icon: "categories-icon-5.svg", 
+                region: "kyiv", 
+                businessForm: "tov", 
+                spheres: ["finance", "consulting", "marketplace"] 
+            },
+            { 
+                id: 7, 
+                name: this.currentLang === 'en' ? "Wholesale and Retail Trade" : "Оптова та роздрібна торгівля", 
+                icon: "categories-icon-6.svg", 
+                region: "lviv", 
+                businessForm: "fop", 
+                spheres: ["marketplace"] 
+            },
+            { 
+                id: 8, 
+                name: this.currentLang === 'en' ? "Light Industry/Fashion" : "Легка промисловість/мода", 
+                icon: "categories-icon-7.svg", 
+                region: "odesa", 
+                businessForm: "at", 
+                spheres: ["marketplace"] 
+            },
+            { 
+                id: 9, 
+                name: this.currentLang === 'en' ? "IT and Telecommunications" : "IT та телекомунікації", 
+                icon: "categories-icon-8.svg", 
+                region: "kyiv", 
+                businessForm: "tov", 
+                spheres: ["finance", "consulting", "education"] 
+            },
+            { 
+                id: 10, 
+                name: this.currentLang === 'en' ? "Health and Beauty" : "Здоров'я та краса", 
+                icon: "categories-icon-9.svg", 
+                region: "kharkiv", 
+                businessForm: "fop", 
+                spheres: ["consulting", "marketplace"] 
+            },
+            { 
+                id: 11, 
+                name: this.currentLang === 'en' ? "Tourism, Sports, Entertainment" : "Туризм, спорт, розваги", 
+                icon: "categories-icon-10.svg", 
+                region: "dnipro", 
+                businessForm: "pp", 
+                spheres: ["marketplace"] 
+            },
+            { 
+                id: 12, 
+                name: this.currentLang === 'en' ? "Education, Science, Arts" : "Освіта, наука, мистецтво", 
+                icon: "categories-icon-11.svg", 
+                region: "kyiv", 
+                businessForm: "tov", 
+                spheres: ["consulting", "education"] 
+            },
+            { 
+                id: 13, 
+                name: this.currentLang === 'en' ? "Media and Advertising" : "Медіа та реклама", 
+                icon: "categories-icon-12.svg", 
+                region: "lviv", 
+                businessForm: "at", 
+                spheres: ["education", "consulting"] 
+            },
+            { 
+                id: 14, 
+                name: this.currentLang === 'en' ? "Creative Industry" : "Креативна індустрія", 
+                icon: "categories-icon-13.svg", 
+                region: "odesa", 
+                businessForm: "fop", 
+                spheres: ["education", "consulting"] 
+            },
+            { 
+                id: 15, 
+                name: this.currentLang === 'en' ? "Other" : "Інше", 
+                icon: "categories-icon-14.svg", 
+                region: "kharkiv", 
+                businessForm: "tov", 
+                spheres: ["finance", "consulting", "education", "marketplace"] 
+            },
             // Дополнительные категории для демонстрации пагинации
-            { id: 16, name: "Машинобудування", icon: "categories-icon.svg", region: "dnipro", businessForm: "at" },
-            { id: 17, name: "Хімічна промисловість", icon: "categories-icon-1.svg", region: "kyiv", businessForm: "tov" },
-            { id: 18, name: "Текстильна промисловість", icon: "categories-icon-2.svg", region: "lviv", businessForm: "fop" },
-            { id: 19, name: "Металургія", icon: "categories-icon-3.svg", region: "odesa", businessForm: "pp" },
-            { id: 20, name: "Видобувна промисловість", icon: "categories-icon-4.svg", region: "kharkiv", businessForm: "tov" },
-            { id: 21, name: "Фармацевтика", icon: "categories-icon-5.svg", region: "dnipro", businessForm: "at" },
-            { id: 22, name: "Біотехнології", icon: "categories-icon-6.svg", region: "kyiv", businessForm: "fop" },
-            { id: 23, name: "Нанотехнології", icon: "categories-icon-7.svg", region: "lviv", businessForm: "tov" },
-            { id: 24, name: "Космічні технології", icon: "categories-icon-8.svg", region: "odesa", businessForm: "pp" },
-            { id: 25, name: "Екологія та природоохорона", icon: "categories-icon-9.svg", region: "kharkiv", businessForm: "at" }
+            { 
+                id: 16, 
+                name: this.currentLang === 'en' ? "Mechanical Engineering" : "Машинобудування", 
+                icon: "categories-icon.svg", 
+                region: "dnipro", 
+                businessForm: "at",
+                spheres: ["finance", "marketplace"]
+            },
+            { 
+                id: 17, 
+                name: this.currentLang === 'en' ? "Chemical Industry" : "Хімічна промисловість", 
+                icon: "categories-icon-1.svg", 
+                region: "kyiv", 
+                businessForm: "tov",
+                spheres: ["finance", "marketplace"]
+            },
+            { 
+                id: 18, 
+                name: this.currentLang === 'en' ? "Textile Industry" : "Текстильна промисловість", 
+                icon: "categories-icon-2.svg", 
+                region: "lviv", 
+                businessForm: "fop",
+                spheres: ["marketplace"]
+            },
+            { 
+                id: 19, 
+                name: this.currentLang === 'en' ? "Metallurgy" : "Металургія", 
+                icon: "categories-icon-3.svg", 
+                region: "odesa", 
+                businessForm: "pp",
+                spheres: ["finance", "marketplace"]
+            },
+            { 
+                id: 20, 
+                name: this.currentLang === 'en' ? "Mining Industry" : "Видобувна промисловість", 
+                icon: "categories-icon-4.svg", 
+                region: "kharkiv", 
+                businessForm: "tov",
+                spheres: ["finance"]
+            },
+            { 
+                id: 21, 
+                name: this.currentLang === 'en' ? "Pharmaceuticals" : "Фармацевтика", 
+                icon: "categories-icon-5.svg", 
+                region: "dnipro", 
+                businessForm: "at",
+                spheres: ["consulting", "marketplace"]
+            },
+            { 
+                id: 22, 
+                name: this.currentLang === 'en' ? "Biotechnology" : "Біотехнології", 
+                icon: "categories-icon-6.svg", 
+                region: "kyiv", 
+                businessForm: "fop",
+                spheres: ["consulting", "education"]
+            },
+            { 
+                id: 23, 
+                name: this.currentLang === 'en' ? "Nanotechnology" : "Нанотехнології", 
+                icon: "categories-icon-7.svg", 
+                region: "lviv", 
+                businessForm: "tov",
+                spheres: ["education", "consulting"]
+            },
+            { 
+                id: 24, 
+                name: this.currentLang === 'en' ? "Space Technology" : "Космічні технології", 
+                icon: "categories-icon-8.svg", 
+                region: "odesa", 
+                businessForm: "pp",
+                spheres: ["education"]
+            },
+            { 
+                id: 25, 
+                name: this.currentLang === 'en' ? "Ecology and Nature Conservation" : "Екологія та природоохорона", 
+                icon: "categories-icon-9.svg", 
+                region: "kharkiv", 
+                businessForm: "at",
+                spheres: ["consulting", "education"]
+            }
         ];
 
         this.filteredCategories = [...this.allCategories];
@@ -57,251 +346,259 @@ class RubricatorManager {
         this.updatePageTitle();
     }
 
-        // Метод для загрузки данных о выбранной сфере
-loadSphereSelection() {
-    try {
-        // Проверяем sessionStorage
-        const sphereData = sessionStorage.getItem('sphereSelection');
-        
-        // Проверяем URL параметры
-        const urlParams = new URLSearchParams(window.location.search);
-        const sphereParam = urlParams.get('sphere');
-        
-        if (sphereData) {
-            this.selectedSphere = JSON.parse(sphereData);
-            console.log('🌟 Загружены данные о выбранной сфере:', this.selectedSphere);
+    // Метод для загрузки данных о выбранной сфере
+    loadSphereSelection() {
+        try {
+            // Проверяем sessionStorage
+            const sphereData = sessionStorage.getItem('sphereSelection');
             
-            // Применяем фильтрацию по сфере
-            this.applySphereFilter();
+            // Проверяем URL параметры
+            const urlParams = new URLSearchParams(window.location.search);
+            const sphereParam = urlParams.get('sphere');
             
-        } else if (sphereParam) {
-            console.log('🔗 Обнаружен параметр сферы в URL:', sphereParam);
-            
-            // Создаем базовую информацию о сфере из URL
-            this.selectedSphere = {
-                sphereType: sphereParam,
-                source: 'url-parameter'
-            };
-            
-            this.applySphereFilter();
+            if (sphereData) {
+                this.selectedSphere = JSON.parse(sphereData);
+                console.log('🌟 ' + getLocalizedText('sphereLoaded'), this.selectedSphere);
+                
+                // Применяем фильтрацию по сфере
+                this.applySphereFilter();
+                
+            } else if (sphereParam) {
+                console.log('🔗 ' + getLocalizedText('sphereFromUrl'), sphereParam);
+                
+                // Создаем базовую информацию о сфере из URL
+                this.selectedSphere = {
+                    sphereType: sphereParam,
+                    source: 'url-parameter'
+                };
+                
+                this.applySphereFilter();
+            }
+        } catch (error) {
+            console.error(getLocalizedText('sphereFilterError'), error);
         }
-    } catch (error) {
-        console.error('Ошибка при загрузке данных о сфере:', error);
     }
-}
-checkSphereSelection() {
-    console.log('🔍 Проверяем выбранную сферу...');
-    
-    try {
-        // Проверяем sessionStorage
-        const sphereData = sessionStorage.getItem('sphereSelection');
-        if (sphereData) {
-            this.selectedSphere = JSON.parse(sphereData);
-            console.log('✅ Найдена сфера в sessionStorage:', this.selectedSphere);
-            this.applySphereFilter();
+
+    checkSphereSelection() {
+        console.log('🔍 ' + getLocalizedText('checkingSphere'));
+        
+        try {
+            // Проверяем sessionStorage
+            const sphereData = sessionStorage.getItem('sphereSelection');
+            if (sphereData) {
+                this.selectedSphere = JSON.parse(sphereData);
+                console.log('✅ ' + getLocalizedText('sphereInSession'), this.selectedSphere);
+                this.applySphereFilter();
+                return;
+            }
+            
+            // Проверяем URL параметры
+            const urlParams = new URLSearchParams(window.location.search);
+            const sphereParam = urlParams.get('sphere');
+            if (sphereParam) {
+                console.log('✅ ' + getLocalizedText('sphereInUrl'), sphereParam);
+                this.selectedSphere = { sphereType: sphereParam };
+                this.applySphereFilter();
+                return;
+            }
+            
+            console.log('ℹ️ ' + getLocalizedText('sphereNotSelected'));
+        } catch (error) {
+            console.error('❌ ' + getLocalizedText('sphereFilterError'), error);
+        }
+    }
+
+    applySphereFilter() {
+        if (!this.selectedSphere || !this.selectedSphere.sphereType) {
+            console.log('⚠️ ' + getLocalizedText('sphereDataMissing'));
             return;
         }
         
-        // Проверяем URL параметры
-        const urlParams = new URLSearchParams(window.location.search);
-        const sphereParam = urlParams.get('sphere');
-        if (sphereParam) {
-            console.log('✅ Найден параметр sphere в URL:', sphereParam);
-            this.selectedSphere = { sphereType: sphereParam };
-            this.applySphereFilter();
-            return;
+        const sphereType = this.selectedSphere.sphereType;
+        console.log(`🎯 ${getLocalizedText('applySphereFilter')}: ${sphereType}`);
+        
+        // Фильтруем категории по сфере
+        this.filteredCategories = this.allCategories.filter(category => {
+            const hasSphere = category.spheres && category.spheres.includes(sphereType);
+            if (hasSphere) {
+                console.log(`✅ ${getLocalizedText('categoryMatches')} "${category.name}" ${sphereType}`);
+            }
+            return hasSphere;
+        });
+        
+        console.log(`📊 ${getLocalizedText('categoriesFiltered')} ${this.filteredCategories.length} ${getLocalizedText('categoriesFiltered')} ${this.allCategories.length}`);
+        
+        // Обновляем заголовок
+        this.updatePageTitle();
+    }
+
+    updatePageTitle() {
+        if (!this.selectedSphere) return;
+        
+        const titleElement = document.querySelector('.title-rubricator h1');
+        if (titleElement && this.selectedSphere.sphereTitle) {
+            const categoriesForText = getLocalizedText('categoriesFor');
+            titleElement.innerHTML = `${categoriesForText} <span>"${this.selectedSphere.sphereTitle}"</span>`;
         }
         
-        console.log('ℹ️ Сфера не выбрана, показываем все категории');
-    } catch (error) {
-        console.error('❌ Ошибка при проверке сферы:', error);
+        console.log('📝 ' + getLocalizedText('titleUpdated'), this.selectedSphere.sphereTitle);
     }
-}
 
-applySphereFilter() {
-    if (!this.selectedSphere || !this.selectedSphere.sphereType) {
-        console.log('⚠️ Нет данных о сфере для фильтрации');
-        return;
-    }
-    
-    const sphereType = this.selectedSphere.sphereType;
-    console.log(`🎯 Применяем фильтр по сфере: ${sphereType}`);
-    
-    // Фильтруем категории по сфере
-    this.filteredCategories = this.allCategories.filter(category => {
-        const hasSphere = category.spheres && category.spheres.includes(sphereType);
-        if (hasSphere) {
-            console.log(`✅ Категория "${category.name}" соответствует сфере ${sphereType}`);
-        }
-        return hasSphere;
-    });
-    
-    console.log(`📊 Отфильтровано ${this.filteredCategories.length} категорий из ${this.allCategories.length}`);
-    
-    // Обновляем заголовок
-    this.updatePageTitle();
-}
-
-updatePageTitle() {
-    if (!this.selectedSphere) return;
-    
-    const titleElement = document.querySelector('.title-rubricator h1');
-    if (titleElement && this.selectedSphere.sphereTitle) {
-        titleElement.innerHTML = `Категорії для <span>"${this.selectedSphere.sphereTitle}"</span>`;
-    }
-    
-    console.log('📝 Заголовок обновлен для сферы:', this.selectedSphere.sphereTitle);
-}
-
-// Метод для добавления информационного блока
-addSphereInfoBlock() {
-    if (!this.selectedSphere) return;
-    
-    // Проверяем, не добавлен ли уже блок
-    if (document.querySelector('.sphere-info-block')) return;
-    
-    const titleSection = document.getElementById('title-search-section');
-    if (!titleSection) return;
-    
-    const infoBlock = document.createElement('div');
-    infoBlock.className = 'sphere-info-block';
-    infoBlock.innerHTML = `
-        <div class="sphere-info-content">
-            <div class="sphere-info-icon">🌟</div>
-            <div class="sphere-info-text">
-                <h3>Вибрана сфера: ${this.selectedSphere.sphereTitle || 'Невідома сфера'}</h3>
-                <p>Показано категорії, релевантні для обраної сфери можливостей</p>
+    // Метод для добавления информационного блока
+    addSphereInfoBlock() {
+        if (!this.selectedSphere) return;
+        
+        // Проверяем, не добавлен ли уже блок
+        if (document.querySelector('.sphere-info-block')) return;
+        
+        const titleSection = document.getElementById('title-search-section');
+        if (!titleSection) return;
+        
+        const selectedSphereText = getLocalizedText('selectedSphere');
+        const sphereDescriptionText = getLocalizedText('sphereDescription');
+        const unknownSphereText = getLocalizedText('unknownSphere');
+        
+        const infoBlock = document.createElement('div');
+        infoBlock.className = 'sphere-info-block';
+        infoBlock.innerHTML = `
+            <div class="sphere-info-content">
+                <div class="sphere-info-icon">🌟</div>
+                <div class="sphere-info-text">
+                    <h3>${selectedSphereText} ${this.selectedSphere.sphereTitle || unknownSphereText}</h3>
+                    <p>${sphereDescriptionText}</p>
+                </div>
+                <button class="sphere-info-close" onclick="rubricatorManager.clearSphereFilter()">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
             </div>
-            <button class="sphere-info-close" onclick="rubricatorManager.clearSphereFilter()">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        </div>
-    `;
-    
-    // Добавляем стили
-    if (!document.getElementById('sphere-info-styles')) {
-        const styles = document.createElement('style');
-        styles.id = 'sphere-info-styles';
-        styles.textContent = `
-            .sphere-info-block {
-                margin: 20px auto;
-                max-width: 1180px;
-            }
-            
-            .sphere-info-content {
-                display: flex;
-                align-items: center;
-                gap: 16px;
-                background: linear-gradient(135deg, var(--turquoise) 0%, var(--light-violet) 100%);
-                color: white;
-                padding: 16px 24px;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(73, 211, 211, 0.3);
-            }
-            
-            .sphere-info-icon {
-                font-size: 24px;
-                flex-shrink: 0;
-            }
-            
-            .sphere-info-text {
-                flex-grow: 1;
-            }
-            
-            .sphere-info-text h3 {
-                margin: 0 0 4px 0;
-                font-family: var(--second-family);
-                font-size: 18px;
-                font-weight: 600;
-            }
-            
-            .sphere-info-text p {
-                margin: 0;
-                font-family: var(--font-family);
-                font-size: 14px;
-                opacity: 0.9;
-                text-align: left;
-            }
-            
-            .sphere-info-close {
-                background: rgba(255, 255, 255, 0.2);
-                border: none;
-                border-radius: 50%;
-                width: 32px;
-                height: 32px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: background-color 0.2s ease;
-                color: white;
-            }
-            
-            .sphere-info-close:hover {
-                background: rgba(255, 255, 255, 0.3);
-            }
-            
-            @media (max-width: 768px) {
+        `;
+        
+        // Добавляем стили
+        if (!document.getElementById('sphere-info-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'sphere-info-styles';
+            styles.textContent = `
+                .sphere-info-block {
+                    margin: 20px auto;
+                    max-width: 1180px;
+                }
+                
                 .sphere-info-content {
-                    padding: 12px 16px;
-                    gap: 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    background: linear-gradient(135deg, var(--turquoise) 0%, var(--light-violet) 100%);
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(73, 211, 211, 0.3);
+                }
+                
+                .sphere-info-icon {
+                    font-size: 24px;
+                    flex-shrink: 0;
+                }
+                
+                .sphere-info-text {
+                    flex-grow: 1;
                 }
                 
                 .sphere-info-text h3 {
-                    font-size: 16px;
+                    margin: 0 0 4px 0;
+                    font-family: var(--second-family);
+                    font-size: 18px;
+                    font-weight: 600;
                 }
                 
                 .sphere-info-text p {
-                    font-size: 13px;
+                    margin: 0;
+                    font-family: var(--font-family);
+                    font-size: 14px;
+                    opacity: 0.9;
+                    text-align: left;
                 }
-            }
-        `;
-        document.head.appendChild(styles);
+                
+                .sphere-info-close {
+                    background: rgba(255, 255, 255, 0.2);
+                    border: none;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease;
+                    color: white;
+                }
+                
+                .sphere-info-close:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                }
+                
+                @media (max-width: 768px) {
+                    .sphere-info-content {
+                        padding: 12px 16px;
+                        gap: 12px;
+                    }
+                    
+                    .sphere-info-text h3 {
+                        font-size: 16px;
+                    }
+                    
+                    .sphere-info-text p {
+                        font-size: 13px;
+                    }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+        
+        titleSection.insertAdjacentElement('afterend', infoBlock);
     }
-    
-    titleSection.insertAdjacentElement('afterend', infoBlock);
-}
 
-// Метод для очистки фильтра по сфере
-clearSphereFilter() {
-    console.log('🧹 Очищаем фильтр по сфере');
-    
-    // Очищаем данные о сфере
-    this.selectedSphere = null;
-    this.currentFilters.sphere = '';
-    
-    // Очищаем sessionStorage
-    sessionStorage.removeItem('sphereSelection');
-    
-    // Убираем информационный блок
-    const infoBlock = document.querySelector('.sphere-info-block');
-    if (infoBlock) {
-        infoBlock.remove();
+    // Метод для очистки фильтра по сфере
+    clearSphereFilter() {
+        console.log('🧹 ' + getLocalizedText('clearSphereFilter'));
+        
+        // Очищаем данные о сфере
+        this.selectedSphere = null;
+        this.currentFilters.sphere = '';
+        
+        // Очищаем sessionStorage
+        sessionStorage.removeItem('sphereSelection');
+        
+        // Убираем информационный блок
+        const infoBlock = document.querySelector('.sphere-info-block');
+        if (infoBlock) {
+            infoBlock.remove();
+        }
+        
+        // Восстанавливаем заголовок
+        const titleElement = document.querySelector('.title-rubricator h1');
+        const descriptionElement = document.querySelector('.title-rubricator p');
+        
+        if (titleElement) {
+            const buildPartnership = getLocalizedText('buildPartnership');
+            const gameChanger = getLocalizedText('gameChanger');
+            titleElement.innerHTML = `${buildPartnership} <span>${gameChanger}</span>`;
+        }
+        
+        if (descriptionElement) {
+            descriptionElement.textContent = getLocalizedText('findOpportunities');
+        }
+        
+        // Применяем фильтрацию (покажет все категории)
+        this.applyFilters();
+        
+        // Обновляем URL (убираем параметры сферы)
+        const url = new URL(window.location);
+        url.searchParams.delete('sphere');
+        url.searchParams.delete('source');
+        window.history.replaceState({}, '', url);
     }
-    
-    // Восстанавливаем заголовок
-    const titleElement = document.querySelector('.title-rubricator h1');
-    const descriptionElement = document.querySelector('.title-rubricator p');
-    
-    if (titleElement) {
-        titleElement.innerHTML = 'Побудуй партнерство, <span>яке змінює гру</span>';
-    }
-    
-    if (descriptionElement) {
-        descriptionElement.textContent = 'Знаходь можливості співпраці за сферами діяльності та регіонами';
-    }
-    
-    // Применяем фильтрацию (покажет все категории)
-    this.applyFilters();
-    
-    // Обновляем URL (убираем параметры сферы)
-    const url = new URL(window.location);
-    url.searchParams.delete('sphere');
-    url.searchParams.delete('source');
-    window.history.replaceState({}, '', url);
-}
 
     setupEventListeners() {
         // Поиск
@@ -433,7 +730,7 @@ clearSphereFilter() {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         
-        // Отфильтровываем категорию "Інше" для отдельной обработки
+        // Отфильтровываем категорию "Інше"/"Other" для отдельной обработки
         const otherCategory = this.filteredCategories.find(cat => cat.id === 15);
         const regularCategories = this.filteredCategories.filter(cat => cat.id !== 15);
         
@@ -441,7 +738,7 @@ clearSphereFilter() {
         const maxRegularItems = this.itemsPerPage - 1; // 14 вместо 15
         const regularCategoriesToShow = regularCategories.slice(startIndex, startIndex + maxRegularItems);
         
-        // Всегда добавляем категорию "Інше" в конец, если она есть в отфильтрованных
+        // Всегда добавляем категорию "Інше"/"Other" в конец, если она есть в отфильтрованных
         let categoriesToShow = [...regularCategoriesToShow];
         
         if (otherCategory) {
@@ -481,14 +778,15 @@ clearSphereFilter() {
             });
         });
 
-        // Добавляем обработчики для всего блока категории "Інше"
+        // Добавляем обработчики для всего блока категории "Інше"/"Other"
         container.querySelectorAll('.other-category').forEach(block => {
             block.style.cursor = 'pointer';
             block.addEventListener('click', (e) => {
                 // Проверяем, что клик не по ссылке (она уже обработана выше)
                 if (!e.target.closest('a')) {
                     const categoryId = parseInt(block.getAttribute('data-category-id'));
-                    this.handleCategoryClick(categoryId, 'Інше');
+                    const otherText = this.currentLang === 'en' ? 'Other' : 'Інше';
+                    this.handleCategoryClick(categoryId, otherText);
                 }
             });
         });
@@ -498,7 +796,7 @@ clearSphereFilter() {
         const container = document.getElementById('pagination');
         if (!container) return;
 
-        // Исключаем категорию "Інше" из подсчета пагинации и учитываем, что на каждой странице 14 обычных + 1 "Інше"
+        // Исключаем категорию "Інше"/"Other" из подсчета пагинации и учитываем, что на каждой странице 14 обычных + 1 "Інше"/"Other"
         const regularCategories = this.filteredCategories.filter(cat => cat.id !== 15);
         const itemsPerPageForRegular = this.itemsPerPage - 1; // 14 мест для обычных категорий
         const totalPages = Math.ceil(regularCategories.length / itemsPerPageForRegular);
@@ -598,15 +896,19 @@ clearSphereFilter() {
     }
 
     updateResultsCount() {
-    const countElement = document.getElementById('resultsCount');
-        if  (countElement) {
+        const countElement = document.getElementById('resultsCount');
+        if (countElement) {
             const count = this.filteredCategories.length;
-            const word = this.getPlural(count, 'категорія', 'категорії', 'категорій');
+            const word = this.getPlural(count, 
+                getLocalizedText('category'), 
+                getLocalizedText('categories2'), 
+                getLocalizedText('categories5')
+            );
         
-            let text = `Знайдено: ${count} ${word}`;
+            let text = `${getLocalizedText('resultsFound')} ${count} ${word}`;
         
             if (this.selectedSphere) {
-                text += ` для сфери "${this.selectedSphere.sphereTitle || this.selectedSphere.sphereType}"`;
+                text += ` ${getLocalizedText('forSphere')} "${this.selectedSphere.sphereTitle || this.selectedSphere.sphereType}"`;
             }
         
             countElement.textContent = text;
@@ -631,10 +933,10 @@ clearSphereFilter() {
 
     // Обработка кликов по категориям
     handleCategoryClick(categoryId, categoryName) {
-        console.log(`🎯 Клик по категории: ${categoryName} (ID: ${categoryId})`);
+        console.log(`🎯 ${getLocalizedText('clickCategory')} ${categoryName} (ID: ${categoryId})`);
         
         if (categoryId === 15) {
-            // Специальная обработка для категории "Інше"
+            // Специальная обработка для категории "Інше"/"Other"
             this.navigateToNextPage();
         } else {
             // Обычная обработка для других категорий
@@ -642,36 +944,28 @@ clearSphereFilter() {
         }
     }
 
-    // Переход на следующую страницу пагинации для категории "Інше"
+    // Переход на следующую страницу пагинации для категории "Інше"/"Other"
     navigateToNextPage() {
-        console.log('🚀 Переход на следующую страницу пагинации');
+        console.log('🚀 ' + getLocalizedText('nextPage'));
         
-        // Считаем общее количество страниц (исключая "Інше")
+        // Считаем общее количество страниц (исключая "Інше"/"Other")
         const regularCategories = this.filteredCategories.filter(cat => cat.id !== 15);
-        const totalPages = Math.ceil(regularCategories.length / (this.itemsPerPage - 1)); // -1 потому что место занимает "Інше"
+        const totalPages = Math.ceil(regularCategories.length / (this.itemsPerPage - 1)); // -1 потому что место занимает "Інше"/"Other"
         
         if (this.currentPage < totalPages) {
             // Переходим на следующую страницу
             this.goToPage(this.currentPage + 1);
         } else {
             // Если это последняя страница, можно сделать что-то другое
-            console.log('🏁 Это последняя страница');
+            console.log('🏁 ' + getLocalizedText('lastPage'));
             this.showEndMessage();
         }
     }
 
     // Показать сообщение о том, что это последняя страница
     showEndMessage() {
-        // Определяем текущий язык
-        const isEnglishPage = window.location.pathname.includes('/en/');
-        
-        const message = isEnglishPage 
-            ? 'You have reached the last page!' 
-            : 'Ви досягли останньої сторінки!';
-            
-        const submessage = isEnglishPage 
-            ? 'Try changing your filters or search parameters.' 
-            : 'Спробуйте змінити фільтри або параметри пошуку.';
+        const message = getLocalizedText('lastPageReached');
+        const submessage = getLocalizedText('tryChangeFilters');
 
         // Создаем красивое уведомление
         const notification = document.createElement('div');
@@ -779,50 +1073,47 @@ clearSphereFilter() {
 
     // Обработка для обычных категорий
     navigateToCategory(categoryId, categoryName) {
-    console.log(`📂 Переход в категорию: ${categoryName}`);
-    
-    // Находим категорию для получения иконки
-    const category = this.allCategories.find(cat => cat.id === categoryId);
-    
-    // Определяем текущий язык
-    const isEnglishPage = window.location.pathname.includes('/en/');
-    
-    // Создаем URL для страницы галузі
-    const branchUrl = isEnglishPage ? '/en/branch.html' : '/branch.html';
-    
-    // Создаем параметры для передачи информации о категории
-    const params = new URLSearchParams({
-        category: categoryId,
-        name: categoryName,
-        icon: category ? category.icon : 'categories-icon.svg' // Добавляем иконку
-    });
-    
-    const fullUrl = `${branchUrl}?${params.toString()}`;
-    
-    // Сохраняем информацию о выборе
-    try {
-        const selectionData = {
-            categoryId: categoryId,
-            categoryName: categoryName,
-            categoryIcon: category ? category.icon : 'categories-icon.svg', // Добавляем иконку
-            timestamp: new Date().toISOString(),
-            filters: { ...this.currentFilters },
-            currentPage: this.currentPage,
-            source: 'rubricator'
-        };
-        localStorage.setItem('selectedCategory', JSON.stringify(selectionData));
-    } catch (e) {
-        console.warn('Не удалось сохранить данные в localStorage:', e);
+        console.log(`📂 ${getLocalizedText('categoryBranch')}: ${categoryName}`);
+        
+        // Находим категорию для получения иконки
+        const category = this.allCategories.find(cat => cat.id === categoryId);
+        
+        // Создаем URL для страницы галузі с учетом языка
+        const branchUrl = getLocalizedPath('branch.html');
+        
+        // Создаем параметры для передачи информации о категории
+        const params = new URLSearchParams({
+            category: categoryId,
+            name: categoryName,
+            icon: category ? category.icon : 'categories-icon.svg' // Добавляем иконку
+        });
+        
+        const fullUrl = `${branchUrl}?${params.toString()}`;
+        
+        // Сохраняем информацию о выборе
+        try {
+            const selectionData = {
+                categoryId: categoryId,
+                categoryName: categoryName,
+                categoryIcon: category ? category.icon : 'categories-icon.svg', // Добавляем иконку
+                timestamp: new Date().toISOString(),
+                filters: { ...this.currentFilters },
+                currentPage: this.currentPage,
+                source: 'rubricator'
+            };
+            localStorage.setItem('selectedCategory', JSON.stringify(selectionData));
+        } catch (e) {
+            console.warn('Не удалось сохранить данные в localStorage:', e);
+        }
+        
+        // Показываем индикатор загрузки
+        this.showLoadingIndicator();
+        
+        // Переход
+        setTimeout(() => {
+            window.location.href = fullUrl;
+        }, 300);
     }
-    
-    // Показываем индикатор загрузки
-    this.showLoadingIndicator();
-    
-    // Переход
-    setTimeout(() => {
-        window.location.href = fullUrl;
-    }, 300);
-}
 
     // Создание slug для URL категории
     createCategorySlug(categoryName) {
@@ -859,18 +1150,19 @@ clearSphereFilter() {
             container.classList.remove('loading');
         }
     }
+
     addCategory(category) {
         const newId = Math.max(...this.allCategories.map(c => c.id)) + 1;
         const newCategory = { ...category, id: newId };
         this.allCategories.push(newCategory);
         this.applyFilters();
-        console.log('Добавлена новая категория:', newCategory);
+        console.log(getLocalizedText('newCategoryAdded'), newCategory);
     }
 
     removeCategory(categoryId) {
         this.allCategories = this.allCategories.filter(c => c.id !== categoryId);
         this.applyFilters();
-        console.log('Удалена категория с ID:', categoryId);
+        console.log(getLocalizedText('categoryRemoved'), categoryId);
     }
 
     clearFilters() {
@@ -891,11 +1183,14 @@ clearSphereFilter() {
         const regionBtn = document.getElementById('regionBtn');
         const businessFormBtn = document.getElementById('businessFormBtn');
         
+        const regionText = getLocalizedText('region');
+        const businessFormText = getLocalizedText('businessForm');
+        
         if (regionBtn) {
-            regionBtn.querySelector('.filter-text').textContent = 'Регіон';
+            regionBtn.querySelector('.filter-text').textContent = regionText;
         }
         if (businessFormBtn) {
-            businessFormBtn.querySelector('.filter-text').textContent = 'Форма бізнесу';
+            businessFormBtn.querySelector('.filter-text').textContent = businessFormText;
         }
 
         // Убираем выделение с опций
@@ -903,13 +1198,13 @@ clearSphereFilter() {
             option.classList.remove('selected');
         });
 
-        // Выделяем "Всі" опции
+        // Выделяем "Всі"/"All" опции
         document.querySelectorAll('.filter-option[data-value=""]').forEach(option => {
             option.classList.add('selected');
         });
 
         this.applyFilters();
-        console.log('Фильтры очищены');
+        console.log(getLocalizedText('filtersCleared'));
     }
 
     // Метод для получения текущего состояния
@@ -937,7 +1232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initRubricator() {
-    console.log('🚀 Инициализация рубрикатора...');
+    console.log('🚀 ' + getLocalizedText('pageInitialized'));
     rubricatorManager = new RubricatorManager();
     
     // Добавляем глобальные горячие клавиши
@@ -956,7 +1251,7 @@ function initRubricator() {
         }
     });
     
-    console.log('✅ Рубрикатор готов к работе!');
+    console.log('✅ ' + getLocalizedText('rubricatorReady'));
 }
 
 // Экспорт для использования в других скриптах

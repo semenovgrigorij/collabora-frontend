@@ -12,7 +12,9 @@ class HeaderLoader {
     getCurrentLanguage() {
         const currentPath = window.location.pathname;
         const isEnglishPage = currentPath.includes('/en/');
-        return isEnglishPage ? 'en' : 'uk';
+        const detectedLang = isEnglishPage ? 'en' : 'uk';
+        console.log(`🌐 Определен язык: ${detectedLang} из пути: ${currentPath}`);
+        return detectedLang;
     }
 
     // Получение правильного пути к header
@@ -27,8 +29,10 @@ class HeaderLoader {
     // Получение пути к странице с учетом языка
     getLocalizedPath(pageName) {
         if (this.currentLang === 'en') {
+            // Для английской версии ссылки должны оставаться в папке /en/
             return `./${pageName}`;
         } else {
+            // Для украинской версии ссылки относительно корня
             return `./${pageName}`;
         }
     }
@@ -89,17 +93,47 @@ class HeaderLoader {
         }
     }
 
-    // Загрузка HTML компонента
+    // Загрузка HTML компонента с улучшенной обработкой ошибок
     async loadHeader() {
+        console.log(`📥 Попытка загрузки header: ${this.headerPath}`);
+        
         try {
             const response = await fetch(this.headerPath);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+            }
+            const html = await response.text();
+            
+            if (!html || html.trim() === '') {
+                throw new Error('Пустой ответ от сервера');
+            }
+            
+            console.log(`✅ Header успешно загружен с пути: ${this.headerPath}`);
+            return html;
+        } catch (error) {
+            console.error(`❌ Ошибка загрузки header с пути ${this.headerPath}:`, error);
+            
+            // Пробуем fallback
+            return await this.loadFallbackHeader();
+        }
+    }
+
+    // Загрузка fallback header
+    async loadFallbackHeader() {
+        const fallbackPath = './components/header-cabinet.html'; // украинская версия как fallback
+        console.log(`🔄 Попытка загрузки fallback header: ${fallbackPath}`);
+        
+        try {
+            const response = await fetch(fallbackPath);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const html = await response.text();
+            console.log(`✅ Fallback header загружен успешно`);
             return html;
         } catch (error) {
-            console.error('Error loading header:', error);
+            console.error(`❌ Ошибка загрузки fallback header:`, error);
+            console.log(`🔧 Создаем резервный header`);
             return this.createFallbackHeader();
         }
     }
@@ -192,18 +226,71 @@ class HeaderLoader {
         return this.userData.companyName || this.getLocalizedText('organizationName');
     }
 
-    // Вставка header в DOM
+    // Вставка header в DOM с улучшенной обработкой
     async insertHeader() {
+        console.log('🚀 Начинаем вставку header...');
+        
         const headerContainer = document.getElementById('header-placeholder-cabinet') || 
             document.getElementById('header-placeholder') ||
             document.querySelector('[data-header]') ||
             this.createHeaderContainer();
 
-        const headerHTML = await this.loadHeader();
-        headerContainer.innerHTML = headerHTML;
+        // Устанавливаем видимость placeholder
+        this.ensurePlaceholderVisibility(headerContainer);
 
-        // Инициализируем функциональность после вставки
+        try {
+            const headerHTML = await this.loadHeader();
+            headerContainer.innerHTML = headerHTML;
+
+            // Инициализируем функциональность после вставки
+            this.initializeHeader();
+            
+            console.log('✅ Header успешно вставлен и инициализирован');
+            
+            // Диспатчим событие успешной загрузки
+            this.dispatchHeaderLoadedEvent();
+            
+        } catch (error) {
+            console.error('❌ Критическая ошибка вставки header:', error);
+            this.handleCriticalError(headerContainer);
+        }
+    }
+
+    // Обеспечение видимости placeholder
+    ensurePlaceholderVisibility(container) {
+        container.style.opacity = '1';
+        container.style.visibility = 'visible';
+        container.style.display = 'block';
+        container.classList.add('header-loading');
+        
+        console.log('📦 Header placeholder подготовлен и видимость установлена');
+    }
+
+    // Обработка критической ошибки
+    handleCriticalError(container) {
+        container.innerHTML = this.createFallbackHeader();
+        container.style.opacity = '1';
+        container.style.visibility = 'visible';
+        container.classList.remove('header-loading');
+        container.classList.add('header-error');
+        
+        console.log('🔧 Показан критический fallback header');
+        
         this.initializeHeader();
+    }
+
+    // Диспатч события загрузки
+    dispatchHeaderLoadedEvent() {
+        const event = new CustomEvent('headerLoaded', {
+            detail: {
+                language: this.currentLang,
+                isLoggedIn: this.isLoggedIn,
+                timestamp: Date.now()
+            }
+        });
+        
+        document.dispatchEvent(event);
+        console.log('📡 Событие headerLoaded отправлено');
     }
 
     // Создание контейнера для header если его нет
@@ -211,11 +298,22 @@ class HeaderLoader {
         const container = document.createElement('div');
         container.id = 'header-placeholder-cabinet';
         document.body.insertBefore(container, document.body.firstChild);
+        console.log('📦 Создан новый header container');
         return container;
     }
 
     // Инициализация функциональности header
     initializeHeader() {
+        console.log('🔧 Инициализация функциональности header...');
+        
+        // Убираем класс загрузки
+        const container = document.getElementById('header-placeholder-cabinet') || 
+                         document.getElementById('header-placeholder');
+        if (container) {
+            container.classList.remove('header-loading');
+            container.classList.add('header-loaded');
+        }
+        
         // Показываем/скрываем блоки в зависимости от авторизации
         this.setupVisibility();
         
@@ -228,6 +326,8 @@ class HeaderLoader {
         // Инициализируем остальную функциональность
         this.setupLanguageSelector();
         this.setupMobileMenu();
+        
+        console.log('✅ Функциональность header инициализирована');
     }
 
     // Настройка видимости элементов
@@ -238,6 +338,7 @@ class HeaderLoader {
         if (this.isLoggedIn) {
             if (userBlock) userBlock.style.display = 'flex';
             if (authButtons) authButtons.style.display = 'none';
+            console.log('👤 Показан блок авторизованного пользователя');
         } else {
             if (userBlock) userBlock.style.display = 'none';
             if (authButtons) authButtons.style.display = 'flex';
@@ -265,6 +366,8 @@ class HeaderLoader {
         if (companyElement) {
             companyElement.textContent = this.getCompanyName();
         }
+        
+        console.log('📝 Данные пользователя заполнены');
     }
 
     // Настройка dropdown пользователя
@@ -281,6 +384,8 @@ class HeaderLoader {
         document.addEventListener('click', () => {
             this.closeUserDropdown();
         });
+        
+        console.log('📋 User dropdown настроен');
     }
 
     // Показ/скрытие dropdown
@@ -375,6 +480,31 @@ class HeaderLoader {
         const style = document.createElement('style');
         style.id = styleId;
         style.textContent = `
+            /* Принудительная видимость header placeholder */
+            #header-placeholder,
+            #header-placeholder-cabinet {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+            }
+            
+            .header-loading {
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 200% 100%;
+                animation: loading-shimmer 1.5s infinite;
+                min-height: 60px;
+            }
+            
+            @keyframes loading-shimmer {
+                0% { background-position: -200% 0; }
+                100% { background-position: 200% 0; }
+            }
+            
+            .header-loaded {
+                background: none !important;
+                animation: none !important;
+            }
+            
             .header-user-block .header-user-dropdown {
                 padding: 9px 5px;
                 position: absolute;
@@ -576,6 +706,8 @@ class HeaderLoader {
                 });
             });
         }
+        
+        console.log('🌐 Языковой селектор настроен');
     }
 
     // Анимации для языкового dropdown
@@ -622,6 +754,8 @@ class HeaderLoader {
         if (overlay) {
             overlay.addEventListener('click', () => this.closeMobileMenu());
         }
+        
+        console.log('📱 Мобильное меню настроено');
     }
 
     openMobileMenu() {
@@ -665,6 +799,27 @@ class HeaderLoader {
         this.userData = this.getUserData();
         this.insertHeader();
     }
+
+    // Отладочная информация
+    getDebugInfo() {
+        const container = document.getElementById('header-placeholder-cabinet') || 
+                         document.getElementById('header-placeholder');
+        
+        return {
+            language: this.currentLang,
+            headerPath: this.headerPath,
+            isLoggedIn: this.isLoggedIn,
+            isLoaded: container ? container.classList.contains('header-loaded') : false,
+            containerExists: !!container,
+            containerClasses: container ? Array.from(container.classList) : [],
+            containerStyles: container ? {
+                opacity: container.style.opacity,
+                visibility: container.style.visibility,
+                display: container.style.display
+            } : null,
+            userData: this.userData
+        };
+    }
 }
 
 // Создаем глобальный экземпляр
@@ -672,5 +827,6 @@ window.headerLoader = new HeaderLoader();
 
 // Автоматическая загрузка при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DOM загружен, начинаем инициализацию HeaderLoader...');
     window.headerLoader.insertHeader();
 });
