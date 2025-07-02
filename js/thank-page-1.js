@@ -1,4 +1,4 @@
-// thank-page.js - многоязычная версия для страницы благодарности
+// thank-page.js - скрипт для страницы благодарности
 
 document.addEventListener('DOMContentLoaded', function() {
     // Проверяем, что пользователь действительно зарегистрировался
@@ -11,58 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     startAutoRedirect();
 });
 
-// Определение текущего языка
-function getCurrentLanguage() {
-    const currentPath = window.location.pathname;
-    const isEnglishPage = currentPath.includes('/en/');
-    return isEnglishPage ? 'en' : 'uk';
-}
-
-// Получение пути к странице с учетом языка
-function getLocalizedPath(pageName) {
-    const currentLang = getCurrentLanguage();
-    
-    if (currentLang === 'en') {
-        return `./${pageName}`;
-    } else {
-        return `./${pageName}`;
-    }
-}
-
-// Локализованные тексты
-function getLocalizedText(key) {
-    const currentLang = getCurrentLanguage();
-    
-    const texts = {
-        uk: {
-            thankYou: 'Дякуємо',
-            thankYouWithName: 'Дякуємо, {name}!',
-            userDefault: 'Користувач',
-            profileDescription: 'Ваш профіль "{name}" буде опрацьовано та активовано адміністратором Collabora найближчим часом.',
-            profileDescriptionDefault: 'Команда Collabora розглядає ваш профіль і найближчим часом активує його.',
-            goToCabinet: 'Перейти в кабінет',
-            later: 'Пізніше',
-            autoRedirect: 'Автоматичний перехід в кабінет через {count} сек.',
-            redirectingToCabinet: 'Перенаправляємо в кабінет...',
-            userNotRegistered: 'Користувач не зареєстрований, перенаправляємо на реєстрацію'
-        },
-        en: {
-            thankYou: 'Thank you!',
-            thankYouWithName: 'Thank you, {name}!',
-            userDefault: 'User',
-            profileDescription: 'Your profile "{name}" will be processed and activated by the Collabora administrator shortly.',
-            profileDescriptionDefault: 'The Collabora team is reviewing your profile and will activate it shortly.',
-            goToCabinet: 'Go to Cabinet',
-            later: 'Later',
-            autoRedirect: 'Automatic redirect to cabinet in {count} sec.',
-            redirectingToCabinet: 'Redirecting to cabinet...',
-            userNotRegistered: 'User not registered, redirecting to registration'
-        }
-    };
-    
-    return texts[currentLang][key] || texts['uk'][key];
-}
-
 // Проверка статуса регистрации
 function checkRegistrationStatus() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -70,8 +18,8 @@ function checkRegistrationStatus() {
     
     // Если пользователь не зарегистрирован, перенаправляем на регистрацию
     if (!isLoggedIn || !userData) {
-        console.log(getLocalizedText('userNotRegistered'));
-        window.location.href = getLocalizedPath('registration.html');
+        console.log('User not registered, redirecting to registration');
+        window.location.href = 'registration.html';
         return;
     }
     
@@ -84,22 +32,17 @@ function checkRegistrationStatus() {
 // Персонализация страницы благодарности
 function personalizeThankYouPage(userData) {
     const titleElement = document.querySelector('h1');
-    const userName = userData.name || getLocalizedText('userDefault');
+    const userName = userData.name || 'Користувач';
     
     if (titleElement) {
         // Добавляем имя пользователя в заголовок
-        const firstName = userName.split(' ')[0];
-        titleElement.textContent = getLocalizedText('thankYouWithName').replace('{name}', firstName);
+        titleElement.textContent = `Дякуємо, ${userName.split(' ')[0]}!`;
     }
     
-    // Обновляем описание
+    // Можно добавить дополнительную информацию
     const descriptionElement = document.querySelector('p');
     if (descriptionElement) {
-        if (userData.name) {
-            descriptionElement.textContent = getLocalizedText('profileDescription').replace('{name}', userName);
-        } else {
-            descriptionElement.textContent = getLocalizedText('profileDescriptionDefault');
-        }
+        descriptionElement.textContent = `Ваш профіль "${userName}" буде опрацьовано та активовано адміністратором Collabora найближчим часом.`;
     }
 }
 
@@ -122,7 +65,7 @@ function addCabinetButton() {
     // Кнопка перехода в кабинет
     const cabinetButton = document.createElement('button');
     cabinetButton.className = 'cabinet-btn';
-    cabinetButton.textContent = getLocalizedText('goToCabinet');
+    cabinetButton.textContent = 'Перейти в кабінет';
     cabinetButton.style.cssText = `
         flex: 1;
         background: linear-gradient(135deg, #6A0DAD, #8A2BE2);
@@ -155,7 +98,7 @@ function addCabinetButton() {
     // Кнопка "Позже"
     const laterButton = document.createElement('button');
     laterButton.className = 'later-btn';
-    laterButton.textContent = getLocalizedText('later');
+    laterButton.textContent = 'Пізніше';
     laterButton.style.cssText = `
         flex: 1;
         background: transparent;
@@ -182,13 +125,8 @@ function addCabinetButton() {
     
     // Обработчик клика "Позже"
     laterButton.addEventListener('click', function() {
-        // Перенаправляем на главную страницу с учетом языка
-        const currentLang = getCurrentLanguage();
-        if (currentLang === 'en') {
-            window.location.href = './home.html';
-        } else {
-            window.location.href = './home.html';
-        }
+        // Можно перенаправить на главную страницу или закрыть вкладку
+        window.location.href = 'index.html'; // или другая страница
     });
     
     // Добавляем кнопки в контейнер
@@ -201,8 +139,8 @@ function addCabinetButton() {
 
 // Функция перехода в кабинет
 function goToCabinet() {
-    console.log(getLocalizedText('redirectingToCabinet'));
-    window.location.href = getLocalizedPath('cabinet.html');
+    console.log('Redirecting to cabinet...');
+    window.location.href = 'cabinet.html';
 }
 
 // Автоматический переход в кабинет
@@ -224,7 +162,7 @@ function startAutoRedirect() {
     
     // Функция обновления текста обратного отсчета
     function updateCountdown() {
-        countdownElement.textContent = getLocalizedText('autoRedirect').replace('{count}', countdown);
+        countdownElement.textContent = `Автоматичний перехід в кабінет через ${countdown} сек.`;
     }
     
     updateCountdown();

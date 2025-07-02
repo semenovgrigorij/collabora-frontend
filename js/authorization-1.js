@@ -1,4 +1,4 @@
-// authorization.js - исправленная многоязычная версия
+// authorization.js - обновленная версия
 
 document.addEventListener('DOMContentLoaded', function() {
     // Проверяем, есть ли форма авторизации на странице
@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Базовая валидация
         if (!email || !password) {
-            showError(getLocalizedText('fillAllFields'));
+            showError('Заповніть всі поля');
             return;
         }
         
         if (!isValidEmail(email)) {
-            showError(getLocalizedText('invalidEmail'));
+            showError('Введіть коректний email');
             return;
         }
         
@@ -46,86 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setupPasswordToggle();
 });
 
-// Определение текущего языка (аналогично components.js)
-function getCurrentLanguage() {
-    const currentPath = window.location.pathname;
-    const isEnglishPage = currentPath.includes('/en/');
-    return isEnglishPage ? 'en' : 'uk';
-}
-
-// Получение пути к странице с учетом языка
-function getLocalizedPath(pageName) {
-    const currentLang = getCurrentLanguage();
-    
-    if (currentLang === 'en') {
-        // Для английской версии остаемся в папке en/
-        return `./${pageName}`;
-    } else {
-        // Для украинской версии - корневая папка
-        return `./${pageName}`;
-    }
-}
-
-// Получение пути к ресурсам (иконки, изображения) 
-function getResourcePath(resourcePath) {
-    const currentLang = getCurrentLanguage();
-    
-    if (currentLang === 'en') {
-        // Из папки en/ поднимаемся на уровень выше для доступа к ресурсам
-        return `../${resourcePath}`;
-    } else {
-        // Из корневой папки путь остается относительным
-        return `./${resourcePath}`;
-    }
-}
-
-// Получение правильного пути для ссылок между страницами
-function getPageLinkPath(pageName) {
-    const currentLang = getCurrentLanguage();
-    
-    if (currentLang === 'en') {
-        // Для ссылок внутри английской версии
-        return `./${pageName}`;
-    } else {
-        // Для ссылок в украинской версии
-        return `./${pageName}`;
-    }
-}
-
-// Локализованные тексты
-function getLocalizedText(key) {
-    const currentLang = getCurrentLanguage();
-    
-    const texts = {
-        uk: {
-            fillAllFields: 'Заповніть всі поля',
-            invalidEmail: 'Введіть коректний email',
-            userNotFound: 'Користувача не знайдено. Спочатку зареєструйтеся.',
-            wrongCredentials: 'Неправильний email або пароль',
-            systemError: 'Помилка системи. Спробуйте пізніше.',
-            loginSuccess: 'Вхід успішний! Перенаправляємо...',
-            loggingIn: 'Вхід...'
-        },
-        en: {
-            fillAllFields: 'Fill in all fields',
-            invalidEmail: 'Enter a valid email',
-            userNotFound: 'User not found. Please register first.',
-            wrongCredentials: 'Wrong email or password',
-            systemError: 'System error. Try again later.',
-            loginSuccess: 'Login successful! Redirecting...',
-            loggingIn: 'Logging in...'
-        }
-    };
-    
-    return texts[currentLang][key] || texts['uk'][key];
-}
-
 // Проверка существующей авторизации
 function checkExistingAuth() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
         // Пользователь уже авторизован, перенаправляем в кабинет
-        window.location.href = getLocalizedPath('cabinet.html');
+        window.location.href = 'cabinet.html';
     }
 }
 
@@ -158,7 +84,7 @@ function performLogin(email, password) {
         if (!registeredUserData) {
             return {
                 success: false,
-                message: getLocalizedText('userNotFound')
+                message: 'Користувача не знайдено. Спочатку зареєструйтеся.'
             };
         }
         
@@ -168,7 +94,7 @@ function performLogin(email, password) {
         if (userData.email !== email) {
             return {
                 success: false,
-                message: getLocalizedText('wrongCredentials')
+                message: 'Неправильний email або пароль'
             };
         }
         
@@ -177,7 +103,7 @@ function performLogin(email, password) {
         if (password.length < 6) {
             return {
                 success: false,
-                message: getLocalizedText('wrongCredentials')
+                message: 'Неправильний email або пароль'
             };
         }
         
@@ -190,7 +116,7 @@ function performLogin(email, password) {
     } catch (error) {
         return {
             success: false,
-            message: getLocalizedText('systemError')
+            message: 'Помилка системи. Спробуйте пізніше.'
         };
     }
 }
@@ -206,11 +132,11 @@ function handleSuccessfulLogin(userData) {
     localStorage.setItem('userData', JSON.stringify(userData));
     
     // Показываем сообщение об успехе
-    showAuthSuccessMessage(getLocalizedText('loginSuccess'));
+    showAuthSuccessMessage('Вхід успішний! Перенаправляємо...');
     
     // Перенаправляем в личный кабинет
     setTimeout(() => {
-        window.location.href = getLocalizedPath('cabinet.html');
+        window.location.href = 'cabinet.html';
     }, 1500);
 }
 
@@ -221,7 +147,7 @@ function showLoginLoading(isLoading) {
     
     if (isLoading) {
         submitButton.disabled = true;
-        submitButton.textContent = getLocalizedText('loggingIn');
+        submitButton.textContent = 'Вхід...';
         submitButton.style.opacity = '0.7';
     } else {
         submitButton.disabled = false;
@@ -295,13 +221,12 @@ function setupPasswordToggle() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             
-            // Меняем иконку с учетом языковой версии
-            const iconBasePath = getResourcePath('icons');
+            // Меняем иконку (если есть разные иконки)
             if (type === 'text') {
-                eyeIcon.src = `${iconBasePath}/icon-close-eye.svg`; // если есть такая иконка
+                eyeIcon.src = './icons/icon-close-eye.svg'; // если есть такая иконка
                 eyeIcon.alt = 'hide';
             } else {
-                eyeIcon.src = `${iconBasePath}/icon-open-eye.svg`;
+                eyeIcon.src = './icons/icon-open-eye.svg';
                 eyeIcon.alt = 'show';
             }
         });

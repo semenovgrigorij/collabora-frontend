@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collabora</title>
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/offer.css">
-    <link rel="stylesheet" href="./css/header-cabinet.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/offer.css">
+    <link rel="stylesheet" href="../css/header-cabinet.css">
+    <link rel="preload" href="../components/header-en.html" as="fetch" crossorigin>
+    <link rel="preload" href="../components/footer-en.html" as="fetch" crossorigin>
 </head>
 <body>
     <div class="wrapper">
-        <div id="header-placeholder-cabinet"></div>
+        <div id="header-placeholder"></div>
+        
         <main>
             <div class="main-wrapper">
                 <!-- Хлебные крошки -->
@@ -33,8 +36,8 @@
                                 </div>
                             </div>
                             <button class="complaint-button">
-                                <img class="complaint-button-close" src="./icons/complaint-close.svg" alt="button" width="36">
-                                <img class="complaint-button-open" src="./icons/complaint-open.svg" alt="button" width="36">
+                                <img class="complaint-button-close" src="../icons/complaint-close.svg" alt="button" width="36">
+                                <img class="complaint-button-open" src="../icons/complaint-open.svg" alt="button" width="36">
                             </button>
                             <button class="complaint-button-popup">Поскаржитися</button>
                         </div>
@@ -85,6 +88,8 @@
                 </section>
             </div>
         </main>
+        
+        </main>
         <footer>
             <div class="footer-wrapper">
                 <p>Collabora &#169 2025. Всі права захищено</p>
@@ -92,8 +97,8 @@
         </footer>
     </div>
     
-    <script src="./js/header-cabinet.js"></script>
-    <script src="./js/breadcrumbs.js"></script>
-    <script src="./js/offer.js"></script>
+    <script src="../js/header-cabinet.js"></script>
+    <script src="../js/breadcrumbs.js"></script>
+    <script src="../js/offer.js"></script>
 </body>
 </html>

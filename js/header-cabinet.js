@@ -1,10 +1,81 @@
-// header-loader.js - загрузчик header компонента
+// header-cabinet.js - многоязычная версия загрузчика header компонента
 
 class HeaderLoader {
     constructor() {
-        this.headerPath = './components/header-cabinet.html';
+        this.currentLang = this.getCurrentLanguage();
+        this.headerPath = this.getHeaderPath();
         this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         this.userData = this.getUserData();
+    }
+
+    // Определение текущего языка
+    getCurrentLanguage() {
+        const currentPath = window.location.pathname;
+        const isEnglishPage = currentPath.includes('/en/');
+        return isEnglishPage ? 'en' : 'uk';
+    }
+
+    // Получение правильного пути к header
+    getHeaderPath() {
+        if (this.currentLang === 'en') {
+            return '../components/header-cabinet-en.html';
+        } else {
+            return './components/header-cabinet.html';
+        }
+    }
+
+    // Получение пути к странице с учетом языка
+    getLocalizedPath(pageName) {
+        if (this.currentLang === 'en') {
+            return `./${pageName}`;
+        } else {
+            return `./${pageName}`;
+        }
+    }
+
+    // Получение пути к ресурсам с учетом языка
+    getResourcePath(resourcePath) {
+        if (this.currentLang === 'en') {
+            return `../${resourcePath}`;
+        } else {
+            return `./${resourcePath}`;
+        }
+    }
+
+    // Локализованные тексты
+    getLocalizedText(key) {
+        const texts = {
+            uk: {
+                user: 'Користувач',
+                organizationName: 'Назва організації',
+                myProfile: 'Мій профіль',
+                settings: 'Налаштування',
+                signOut: 'Вийти',
+                logoutConfirm: 'Ви впевнені, що хочете вийти з системи?',
+                login: 'Увійти',
+                register: 'Реєстрація',
+                home: 'Головна',
+                contacts: 'Контакти',
+                howItWorks: 'Як це працює',
+                privacyPolicy: 'Політика конфіденційності'
+            },
+            en: {
+                user: 'User',
+                organizationName: 'Organization Name',
+                myProfile: 'My Profile',
+                settings: 'Settings',
+                signOut: 'Sign Out',
+                logoutConfirm: 'Are you sure you want to sign out?',
+                login: 'Log in',
+                register: 'Sign up',
+                home: 'Home',
+                contacts: 'Contacts',
+                howItWorks: 'How it works',
+                privacyPolicy: 'Privacy Policy'
+            }
+        };
+        
+        return texts[this.currentLang][key] || texts['uk'][key];
     }
 
     // Безопасное получение данных пользователя
@@ -35,16 +106,20 @@ class HeaderLoader {
 
     // Fallback header если не удалось загрузить компонент
     createFallbackHeader() {
+        const logoPath = this.getResourcePath('icons/logo-header-mobile.svg');
+        const homeLink = this.getLocalizedPath('home.html');
+        const contactsLink = this.getLocalizedPath('contacts.html');
+        
         return `
             <header class="header">
                 <div class="header-wrapper">
-                    <a class="header-logo" href="./home.html">
-                        <img src="./icons/logo-header-mobile.svg" alt="Collabora" width="130">
+                    <a class="header-logo" href="${homeLink}">
+                        <img src="${logoPath}" alt="Collabora" width="130">
                     </a>
                     <nav class="header-nav">
                         <ul class="header-list">
-                            <li><a href="./home.html">Головна</a></li>
-                            <li><a href="./contacts.html">Контакти</a></li>
+                            <li><a href="${homeLink}">${this.getLocalizedText('home')}</a></li>
+                            <li><a href="${contactsLink}">${this.getLocalizedText('contacts')}</a></li>
                         </ul>
                     </nav>
                     <div class="header-wrapper-right">
@@ -66,7 +141,7 @@ class HeaderLoader {
                 <div class="header-user-avatar" id="headerUserAvatar">${avatar}</div>
                 <div class="header-user-info">
                     <span class="header-user-name" id="headerUserName">${name}</span>
-                    // <span class="header-user-status" id="headerUserCompany">${company}</span>
+                    <!-- <span class="header-user-status" id="headerUserCompany">${company}</span> -->
                 </div>
             </div>
         `;
@@ -74,10 +149,13 @@ class HeaderLoader {
 
     // Создание кнопок авторизации
     createAuthButtons() {
+        const loginLink = this.getLocalizedPath('authorization.html');
+        const registerLink = this.getLocalizedPath('registration.html');
+        
         return `
             <div class="auth-buttons" id="authButtons">
-                <a href="./authorization.html" class="auth-btn login-btn">Увійти</a>
-                <a href="./registration.html" class="auth-btn register-btn">Реєстрація</a>
+                <a href="${loginLink}" class="auth-btn login-btn">${this.getLocalizedText('login')}</a>
+                <a href="${registerLink}" class="auth-btn register-btn">${this.getLocalizedText('register')}</a>
             </div>
         `;
     }
@@ -85,7 +163,8 @@ class HeaderLoader {
     // Создание контента аватара
     createAvatarContent() {
         if (this.userData.photoBase64) {
-            return `<img src="${this.userData.photoBase64}" alt="Аватар" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            const altText = this.currentLang === 'en' ? 'Avatar' : 'Аватар';
+            return `<img src="${this.userData.photoBase64}" alt="${altText}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
         }
         return this.getFirstLetter();
     }
@@ -96,7 +175,7 @@ class HeaderLoader {
         if (typeof name === 'string' && name.trim()) {
             return name.trim().split(' ')[0];
         }
-        return 'Користувач';
+        return this.getLocalizedText('user');
     }
 
     // Получение первой буквы
@@ -105,16 +184,18 @@ class HeaderLoader {
         if (typeof name === 'string' && name.trim()) {
             return name.trim().charAt(0).toUpperCase();
         }
-        return 'К';
+        return this.getLocalizedText('user').charAt(0).toUpperCase();
     }
 
     // Получение названия организации
     getCompanyName() {
-        return this.userData.companyName || 'Назва організації';
+        return this.userData.companyName || this.getLocalizedText('organizationName');
     }
+
     // Вставка header в DOM
     async insertHeader() {
         const headerContainer = document.getElementById('header-placeholder-cabinet') || 
+            document.getElementById('header-placeholder') ||
             document.querySelector('[data-header]') ||
             this.createHeaderContainer();
 
@@ -160,6 +241,10 @@ class HeaderLoader {
         } else {
             if (userBlock) userBlock.style.display = 'none';
             if (authButtons) authButtons.style.display = 'flex';
+            
+            // Если пользователь не авторизован в кабинете, перенаправляем
+            console.log('❌ Пользователь не авторизован в кабинете');
+            window.location.href = this.getLocalizedPath('authorization.html');
         }
     }
 
@@ -176,8 +261,9 @@ class HeaderLoader {
         if (avatarElement) {
             avatarElement.innerHTML = this.createAvatarContent();
         }
+        
         if (companyElement) {
-            companyElement.innerHTML = this.getCompanyName();
+            companyElement.textContent = this.getCompanyName();
         }
     }
 
@@ -199,32 +285,37 @@ class HeaderLoader {
 
     // Показ/скрытие dropdown
     toggleUserDropdown() {
-
         const existing = document.querySelector('.header-user-dropdown');
         const userBlock = document.getElementById('headerUserBlock');
         const arrow = userBlock?.querySelector('.arrow-cabinet');
 
         if (existing) {
-        this.hideDropdown(existing);
-        // Возвращаем стрелку в исходное положение
-        if (arrow) {
-            arrow.style.transform = 'rotate(0deg)';
+            this.hideDropdown(existing);
+            // Возвращаем стрелку в исходное положение
+            if (arrow) {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+            // Убираем класс активности с блока
+            if (userBlock) {
+                userBlock.classList.remove('dropdown-open');
+            }
+            return;
         }
-        // Убираем класс активности с блока
-        if (userBlock) {
-            userBlock.classList.remove('dropdown-open');
-        }
-        return;
-    }
+
+        const cabinetLink = this.getLocalizedPath('cabinet.html');
+        const editProfileLink = this.getLocalizedPath('edit-profile.html');
 
         const dropdown = document.createElement('div');
         dropdown.className = 'header-user-dropdown';
         dropdown.innerHTML = `
-            <div class="dropdown-item" onclick="window.location.href='cabinet.html'">
-                Мій профіль
+            <div class="dropdown-item" onclick="window.location.href='${cabinetLink}'">
+                ${this.getLocalizedText('myProfile')}
             </div>
-            <div class="dropdown-item" onclick="window.location.href='edit-profile.html'">
-                Налаштування
+            <div class="dropdown-item" onclick="window.location.href='${editProfileLink}'">
+                ${this.getLocalizedText('settings')}
+            </div>
+            <div class="dropdown-item" onclick="window.headerLoader.logout()">
+                ${this.getLocalizedText('signOut')}
             </div>           
         `;
 
@@ -291,7 +382,7 @@ class HeaderLoader {
                 right: 0;
                 box-shadow: 0 0 8px 0 rgba(25, 21, 37, 0.09);
                 background: var(--white);
-                border: 1px solid rwhitegba(0, 0, 0, 0.1);
+                border: 1px solid rgba(0, 0, 0, 0.1);
                 border-radius: 10px;
                 z-index: 1000;
                 min-width: 231px;
@@ -374,7 +465,6 @@ class HeaderLoader {
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-
             .header-user-block.dropdown-open {
                 background: var(--text-dark);
                 transform: translateY(-1px);
@@ -424,7 +514,7 @@ class HeaderLoader {
         document.head.appendChild(style);
     }
 
-        // Закрытие dropdown
+    // Закрытие dropdown
     closeUserDropdown() {
         const dropdown = document.querySelector('.header-user-dropdown');
         const userBlock = document.getElementById('headerUserBlock');
@@ -454,7 +544,6 @@ class HeaderLoader {
         const dropdown = langSelector.querySelector('.lang-dropdown');
 
         if (currentLang && dropdown) {
-
             currentLang.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
@@ -512,7 +601,6 @@ class HeaderLoader {
         }, 150);
     }
 
-
     // Настройка мобильного меню
     setupMobileMenu() {
         const hamburger = document.querySelector('.hamburger-btn');
@@ -560,16 +648,19 @@ class HeaderLoader {
 
     // Выход из системы
     logout() {
-        if (confirm('Ви впевнені, що хочете вийти з системи?')) {
+        const confirmText = this.getLocalizedText('logoutConfirm');
+        if (confirm(confirmText)) {
             localStorage.removeItem('userData');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('loginTime');
-            window.location.href = 'authorization.html';
+            window.location.href = this.getLocalizedPath('authorization.html');
         }
     }
 
     // Обновление header после изменения данных
     refresh() {
+        this.currentLang = this.getCurrentLanguage();
+        this.headerPath = this.getHeaderPath();
         this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         this.userData = this.getUserData();
         this.insertHeader();

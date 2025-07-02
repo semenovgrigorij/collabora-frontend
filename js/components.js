@@ -27,14 +27,33 @@ class ComponentManager {
         
         console.log(`🌐 Определен язык: ${isEnglishPage ? 'EN' : 'UA'}, путь: ${currentPath}`);
         
-        // ИСПРАВЛЕНО: Правильные пути для компонентов
+        const isCabinetPage = currentPath.includes('cabinet.html');
+
         this.components = {
-            header: isEnglishPage ? '../components/header-en.html' : './components/header.html',
+            header: this.getHeaderPath(isEnglishPage, isCabinetPage),
             footer: isEnglishPage ? '../components/footer-en.html' : './components/footer.html'
         };
         this.isInitialized = false;
         this.currentLanguage = isEnglishPage ? 'EN' : 'UA';
     }
+
+    getHeaderPath(isEnglishPage, isCabinetPage) {
+    if (isCabinetPage) {
+        // Для страниц кабинета используем header-cabinet
+        if (isEnglishPage) {
+            return '../components/header-cabinet-en.html';
+        } else {
+            return './components/header-cabinet.html';
+        }
+    } else {
+        // Для обычных страниц используем обычный header
+        if (isEnglishPage) {
+            return '../components/header-en.html';
+        } else {
+            return './components/header.html';
+        }
+    }
+}
 
     // Загрузка одного компонента
     async loadComponent(elementId, componentPath) {

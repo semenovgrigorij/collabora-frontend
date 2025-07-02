@@ -1,89 +1,9 @@
-// cabinet.js - многоязычная версия для страницы кабинета
+// cabinet.js - отдельный скрипт только для страницы кабинета
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Cabinet page loaded'); // Для отладки
     loadUserData();
 });
-
-// Определение текущего языка
-function getCurrentLanguage() {
-    const currentPath = window.location.pathname;
-    const isEnglishPage = currentPath.includes('/en/');
-    return isEnglishPage ? 'en' : 'uk';
-}
-
-// Получение пути к странице с учетом языка
-function getLocalizedPath(pageName) {
-    const currentLang = getCurrentLanguage();
-    
-    if (currentLang === 'en') {
-        return `./${pageName}`;
-    } else {
-        return `./${pageName}`;
-    }
-}
-
-// Локализованные тексты
-function getLocalizedText(key) {
-    const currentLang = getCurrentLanguage();
-    
-    const texts = {
-        uk: {
-            userDataNotFound: 'Дані користувача не знайдено',
-            incorrectUserData: 'Некоректні дані користувача',
-            profileLoadError: 'Помилка завантаження профілю: ',
-            emailNotSpecified: 'Email не вказано',
-            phoneNotSpecified: 'Телефон не вказано',
-            activityDescriptionNotSpecified: 'Опис діяльності не вказано',
-            user: 'Користувач',
-            userTypeNotSpecified: 'Тип користувача не вказано',
-            logoutSuccess: 'Ви успішно вийшли з системи',
-            editProfile: 'Редагувати профіль',
-            signOut: 'Вийти',
-            production: 'Виробнича',
-            trading: 'Торгова',
-            service: 'Сервісна',
-            financial: 'Фінансова',
-            informational: 'Інформаційна',
-            other: 'Інше',
-            consultations: 'Консультації',
-            mentoring: 'Менторство',
-            project: 'Проєктна участь',
-            onlineOffline: 'Онлайн / Офлайн',
-            business: 'Бізнес',
-            organization: 'ГО/ініціативна група/громада/волонтери',
-            expert: 'Експерт'
-        },
-        en: {
-            userDataNotFound: 'User data not found',
-            incorrectUserData: 'Incorrect user data',
-            profileLoadError: 'Profile loading error: ',
-            emailNotSpecified: 'Email not specified',
-            phoneNotSpecified: 'Phone not specified',
-            activityDescriptionNotSpecified: 'Activity description not specified',
-            user: 'User',
-            userTypeNotSpecified: 'User type not specified',
-            logoutSuccess: 'You have successfully logged out',
-            editProfile: 'Edit profile',
-            signOut: 'Sign out',
-            production: 'Production',
-            trading: 'Trading',
-            service: 'Service',
-            financial: 'Financial',
-            informational: 'Informational',
-            other: 'Other',
-            consultations: 'Consultations',
-            mentoring: 'Mentoring',
-            project: 'Project participation',
-            onlineOffline: 'Online / Offline',
-            business: 'Business',
-            organization: 'NGO/initiative group/community/volunteers',
-            expert: 'Expert'
-        }
-    };
-    
-    return texts[currentLang][key] || texts['uk'][key];
-}
 
 // Функция загрузки данных пользователя
 function loadUserData() {
@@ -96,7 +16,7 @@ function loadUserData() {
         
         if (!isLoggedIn || isLoggedIn !== 'true') {
             console.log('User not logged in, redirecting...'); // Для отладки
-            window.location.href = getLocalizedPath('authorization.html');
+            window.location.href = 'authorization.html';
             return;
         }
 
@@ -104,7 +24,7 @@ function loadUserData() {
         const userDataString = localStorage.getItem('userData');
         if (!userDataString) {
             console.log('No user data found'); // Для отладки
-            throw new Error(getLocalizedText('userDataNotFound'));
+            throw new Error('Дані користувача не знайдено');
         }
 
         console.log('Raw user data string:', userDataString); // Для отладки
@@ -113,7 +33,7 @@ function loadUserData() {
         
         // Проверяем корректность данных
         if (!userData || typeof userData !== 'object') {
-            throw new Error(getLocalizedText('incorrectUserData'));
+            throw new Error('Некоректні дані користувача');
         }
         
         // Проверяем обязательные поля
@@ -126,7 +46,7 @@ function loadUserData() {
         
     } catch (error) {
         console.error('Error loading user data:', error); // Для отладки
-        showError(getLocalizedText('profileLoadError') + error.message);
+        showError('Помилка завантаження профілю: ' + error.message);
     }
 }
 
@@ -154,7 +74,7 @@ function displayUserData(user) {
     
     if (headerUserAvatar) {
         if (user.photoBase64) {
-            headerUserAvatar.innerHTML = `<img src="${user.photoBase64}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            headerUserAvatar.innerHTML = `<img src="${user.photoBase64}" alt="Аватар" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
         } else {
             headerUserAvatar.textContent = getFirstLetter(userName);
         }
@@ -168,8 +88,8 @@ function displayUserData(user) {
     const userAvatarElement = document.getElementById('userAvatar');
     
     if (userNameElement) userNameElement.textContent = userName;
-    if (userEmailElement) userEmailElement.textContent = user.email || getLocalizedText('emailNotSpecified');
-    if (userPhoneElement) userPhoneElement.textContent = user.phone || getLocalizedText('phoneNotSpecified');
+    if (userEmailElement) userEmailElement.textContent = user.email || 'Email не вказано';
+    if (userPhoneElement) userPhoneElement.textContent = user.phone || 'Телефон не вказано';
     if (userSkillsElement) {
     
         console.log('Debugging skills data:');
@@ -186,14 +106,14 @@ function displayUserData(user) {
             // Fallback - если нет короткого описания, показываем тип пользователя
             const userTypeText = getUserTypeText(user['user-type'] || user.userType);
             console.log('Setting skills from user type:', userTypeText);
-            userSkillsElement.textContent = userTypeText || getLocalizedText('activityDescriptionNotSpecified');
+            userSkillsElement.textContent = userTypeText || 'Опис діяльності не вказано';
         }
     }
     
     // Обрабатываем главный аватар пользователя
     if (userAvatarElement) {
         if (user.photoBase64) {
-            userAvatarElement.innerHTML = `<img src="${user.photoBase64}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            userAvatarElement.innerHTML = `<img src="${user.photoBase64}" alt="Аватар" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
         } else {
             // Если изображения нет, показываем инициалы
             userAvatarElement.textContent = userName.charAt(0).toUpperCase();
@@ -201,35 +121,34 @@ function displayUserData(user) {
     }
 
     // НОВЫЙ КОД для business-description:
-    const businessDescriptionElement = document.querySelector('.business-description');
-    if (businessDescriptionElement) {
-        
-        // Отладка: проверяем данные
-        console.log('Debugging business description data:');
-        console.log('user.services:', user.services);
-        
-        // Получаем описание продуктов/услуг из формы регистрации
-        const servicesDescription = user.services || user['services'] || '';
-        
-        if (servicesDescription.trim()) {
-            console.log('Setting business description from services:', servicesDescription);
-            
-            // Создаем HTML контент для блока описания бизнеса
-            businessDescriptionElement.innerHTML = `
-                <div class="business-description-content">
-                    <p>${servicesDescription}</p>
-                </div>
-            `;
-            
-            // Показываем блок
-            businessDescriptionElement.style.display = 'block';
-        } else {
-            // Если нет описания услуг, скрываем блок
-            console.log('No services description found, hiding business description block');
-            businessDescriptionElement.style.display = 'none';
-        }
-    }
+const businessDescriptionElement = document.querySelector('.business-description');
+if (businessDescriptionElement) {
     
+    // Отладка: проверяем данные
+    console.log('Debugging business description data:');
+    console.log('user.services:', user.services);
+    
+    // Получаем описание продуктов/услуг из формы регистрации
+    const servicesDescription = user.services || user['services'] || '';
+    
+    if (servicesDescription.trim()) {
+        console.log('Setting business description from services:', servicesDescription);
+        
+        // Создаем HTML контент для блока описания бизнеса
+        businessDescriptionElement.innerHTML = `
+            <div class="business-description-content">
+                <p>${servicesDescription}</p>
+            </div>
+        `;
+        
+        // Показываем блок
+        businessDescriptionElement.style.display = 'block';
+    } else {
+        // Если нет описания услуг, скрываем блок
+        console.log('No services description found, hiding business description block');
+        businessDescriptionElement.style.display = 'none';
+    }
+}
     // Заполняем личную информацию
     const displayNameElement = document.getElementById('displayName');
     const displayEmailElement = document.getElementById('displayEmail');
@@ -286,9 +205,7 @@ function displayUserData(user) {
     const displayCreatedAtElement = document.getElementById('displayCreatedAt');
     if (displayCreatedAtElement && user.registrationDate) {
         const date = new Date(user.registrationDate);
-        const currentLang = getCurrentLanguage();
-        const locale = currentLang === 'en' ? 'en-US' : 'uk-UA';
-        displayCreatedAtElement.textContent = date.toLocaleDateString(locale);
+        displayCreatedAtElement.textContent = date.toLocaleDateString('uk-UA');
     }
 
     const displayExpectationElement = document.getElementById('displayExpectation');
@@ -305,36 +222,36 @@ function displayUserData(user) {
 // Вспомогательные функции для перевода значений
 function getSpecializationText(value) {
     const specializations = {
-        'production': getLocalizedText('production'),
-        'trading': getLocalizedText('trading'),
-        'service': getLocalizedText('service'),
-        'financial': getLocalizedText('financial'),
-        'informational': getLocalizedText('informational'),
-        'other': getLocalizedText('other')
+        'production': 'Виробнича',
+        'trading': 'Торгова',
+        'service': 'Сервісна',
+        'financial': 'Фінансова',
+        'informational': 'Інформаційна',
+        'other': 'Інше'
     };
     return specializations[value] || value || '-';
 }
 
 function getCooperationText(value) {
     const cooperations = {
-        'consultations': getLocalizedText('consultations'),
-        'mentoring': getLocalizedText('mentoring'),
-        'project': getLocalizedText('project'),
-        'online-offline': getLocalizedText('onlineOffline')
+        'consultations': 'Консультації',
+        'mentoring': 'Менторство',
+        'project': 'Проєктна участь',
+        'online-offline': 'Онлайн / Офлайн'
     };
     return cooperations[value] || value;
 }
 
 // Безопасная функция для получения имени пользователя
 function getSafeName(user) {
-    if (!user) return getLocalizedText('user');
+    if (!user) return 'Користувач';
     
     // Проверяем разные возможные поля
     const name = user.name || user.userName || user.fullName || '';
     
     return typeof name === 'string' && name.trim() 
         ? name.trim() 
-        : getLocalizedText('user');
+        : 'Користувач';
 }
 
 // Безопасная функция для получения первой буквы
@@ -373,16 +290,16 @@ function logout() {
     localStorage.removeItem('loginTime');
     
     // Показываем уведомление
-    alert(getLocalizedText('logoutSuccess'));
+    alert('Ви успішно вийшли з системи');
     
-    // Перенаправляем на страницу авторизации с учетом языка
-    window.location.href = getLocalizedPath('authorization.html');
+    // Перенаправляем на страницу авторизации
+    window.location.href = 'authorization.html';
 }
 
 // Функция редактирования профиля
 function editProfile() {
     console.log('Redirecting to edit profile...'); // Для отладки
-    window.location.href = getLocalizedPath('edit-profile.html');
+    window.location.href = 'edit-profile.html';
 }
 
 // Добавляем обработчик клика на блок пользователя в header
@@ -395,10 +312,10 @@ function setupHeaderUserBlock() {
             dropdown.className = 'header-user-dropdown';
             dropdown.innerHTML = `
                 <div class="dropdown-item" onclick="editProfile()">
-                    <span>📝</span> ${getLocalizedText('editProfile')}
+                    <span>📝</span> Редагувати профіль
                 </div>
                 <div class="dropdown-item" onclick="logout()">
-                    <span>🚪</span> ${getLocalizedText('signOut')}
+                    <span>🚪</span> Вийти
                 </div>
             `;
             
@@ -469,12 +386,12 @@ function setupHeaderUserBlock() {
 // Вспомогательная функция для перевода типа пользователя
 function getUserTypeText(userType) {
     const userTypes = {
-        'business': getLocalizedText('business'),
-        'organization': getLocalizedText('organization'),
-        'expert': getLocalizedText('expert'),
-        'other': getLocalizedText('other')
+        'business': 'Бізнес',
+        'organization': 'ГО/ініціативна група/громада/волонтери',
+        'expert': 'Експерт',
+        'other': 'Інше'
     };
-    return userTypes[userType] || userType || getLocalizedText('userTypeNotSpecified');
+    return userTypes[userType] || userType || 'Тип користувача не вказано';
 }
 
 // Делаем функции доступными глобально
@@ -485,8 +402,8 @@ window.editProfile = editProfile;
 window.clearCorruptedData = function() {
     console.log('Clearing all localStorage data...');
     localStorage.clear();
-    alert('Data cleared. Redirecting to registration...');
-    window.location.href = getLocalizedPath('registration.html');
+    alert('Данные очищены. Перенаправляем на страницу регистрации...');
+    window.location.href = 'registration.html';
 };
 
 // Функция для проверки данных localStorage (для отладки)
