@@ -38,22 +38,22 @@ class ComponentManager {
     }
 
     getHeaderPath(isEnglishPage, isCabinetPage) {
-    if (isCabinetPage) {
-        // Для страниц кабинета используем header-cabinet
-        if (isEnglishPage) {
-            return '../components/header-cabinet-en.html';
+        if (isCabinetPage) {
+            // Для страниц кабинета используем header-cabinet
+            if (isEnglishPage) {
+                return '../components/header-cabinet-en.html';
+            } else {
+                return './components/header-cabinet.html';
+            }
         } else {
-            return './components/header-cabinet.html';
-        }
-    } else {
-        // Для обычных страниц используем обычный header
-        if (isEnglishPage) {
-            return '../components/header-en.html';
-        } else {
-            return './components/header.html';
+            // Для обычных страниц используем обычный header
+            if (isEnglishPage) {
+                return '../components/header-en.html';
+            } else {
+                return './components/header.html';
+            }
         }
     }
-}
 
     // Загрузка одного компонента
     async loadComponent(elementId, componentPath) {
@@ -241,11 +241,14 @@ class ComponentManager {
 
     // ИСПРАВЛЕНО: Определение соответствующей страницы на другом языке
     getCorrespondingPageUrl(currentPath, targetLang) {
+        // Определяем базовый путь для проекта
+        const basePath = this.getBasePath();
+        
         // Получаем имя текущей страницы
         let currentPage = currentPath.split('/').pop() || 'home.html';
         const isCurrentlyEnglish = currentPath.includes('/en/');
         
-        console.log(`🔍 Текущий путь: ${currentPath}, страница: ${currentPage}, английский: ${isCurrentlyEnglish}`);
+        console.log(`🔍 Базовый путь: ${basePath}, текущий путь: ${currentPath}, страница: ${currentPage}, английский: ${isCurrentlyEnglish}`);
         
         // Если текущая страница пустая (корневой путь), используем home.html
         if (!currentPage || currentPage === '') {
@@ -280,29 +283,53 @@ class ComponentManager {
         
         let targetUrl;
         
-        // ИСПРАВЛЕНО: Правильные пути для GitHub Pages
-        const basePath = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? '' 
-            : '/collabora-frontend';
-        
         if (targetLang === 'EN') {
             // Переход на английскую версию
             targetUrl = `${basePath}/en/${targetPage}`;
         } else if (targetLang === 'UA') {
             // Переход на украинскую версию
-            if (targetPage === 'home.html') {
-                // Главная страница - переходим в корень проекта
-                targetUrl = `${basePath}/home.html`;
-            } else {
-                // Остальные страницы
-                targetUrl = `${basePath}/${targetPage}`;
-            }
+            targetUrl = `${basePath}/${targetPage}`;
         } else {
             targetUrl = currentPath; // Возвращаем текущий путь, если что-то пошло не так
         }
         
         console.log(`🎯 Целевой URL для ${targetLang}: ${targetUrl}`);
         return targetUrl;
+    }
+
+    // Определение базового пути для проекта
+    getBasePath() {
+        const hostname = window.location.hostname;
+        const pathname = window.location.pathname;
+        
+        // Локальная разработка
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return '';
+        }
+        
+        // GitHub Pages - определяем репозиторий из текущего пути
+        if (hostname.includes('github.io')) {
+            // Извлекаем имя репозитория из пути
+            const pathParts = pathname.split('/').filter(part => part);
+            if (pathParts.length > 0) {
+                // Первая часть пути - это имя репозитория
+                const repoName = pathParts[0];
+                // Проверяем, что это не языковая папка
+                if (repoName !== 'en') {
+                    return `/${repoName}`;
+                }
+            }
+            // Fallback - попробуем определить из заголовка страницы или мета-тегов
+            const metaRepo = document.querySelector('meta[name="repository"]');
+            if (metaRepo) {
+                return `/${metaRepo.content}`;
+            }
+            // Если не удалось определить, используем пустую строку
+            return '';
+        }
+        
+        // Другие хостинги
+        return '';
     }
 
     // Инициализация мобильного меню
