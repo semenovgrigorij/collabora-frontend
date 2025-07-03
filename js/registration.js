@@ -150,7 +150,7 @@ function validateField(field) {
 
     // Проверяем, требуется ли поле для текущего типа пользователя
     if (!isFieldRequiredForUserType(field)) {
-        group.classList.remove('error');
+        if (group) group.classList.remove('error');
         return true;
     }
 
@@ -161,23 +161,28 @@ function validateField(field) {
     } else if (field.type === 'file') {
         isValid = field.files && field.files.length > 0;
     } else if (field.type === 'radio') {
-        const radioGroup = field.closest('.input-grup').querySelectorAll(`input[name="${field.name}"]`);
+        const radioGroup = document.querySelectorAll(`input[name="${field.name}"]`);
         isValid = Array.from(radioGroup).some(radio => radio.checked);
     } else if (field.type === 'checkbox') {
         // Для групп чекбоксов проверяем, что хотя бы один выбран
-        const checkboxGroup = field.closest('.input-grup').querySelectorAll(`input[name="${field.name}"]`);
+        const checkboxGroup = document.querySelectorAll(`input[name="${field.name}"]`);
         isValid = Array.from(checkboxGroup).some(checkbox => checkbox.checked);
     } else if (field.tagName === 'SELECT') {
         if (field.multiple) {
-            isValid = Array.from(field.selectedOptions).length > 0;
+            isValid = Array.from(field.selectedOptions).some(option => option.value !== '');
         } else {
             isValid = field.value !== '';
         }
+    } else if (field.tagName === 'TEXTAREA') {
+        isValid = field.value.trim() !== '';
     } else {
         isValid = field.value.trim() !== '';
     }
 
-    group.classList.toggle('error', !isValid);
+    if (group) {
+        group.classList.toggle('error', !isValid);
+    }
+    
     return isValid;
 }
 
@@ -709,7 +714,11 @@ console.log('📋 Количество полей:', inputs.length);
 let countryMultiSelect = null;
 if (document.getElementById('custom-country-select')) {
     countryMultiSelect = new CustomMultiSelect('custom-country-select');
+    // Добавляем в глобальную область видимости
+    window.countryMultiSelect = countryMultiSelect;
     console.log('🌍 CustomMultiSelect инициализирован');
+} else {
+    console.warn('⚠️ Элемент custom-country-select не найден');
 }
 
 // Добавляем обработчики валидации для всех полей
