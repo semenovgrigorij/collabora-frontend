@@ -767,25 +767,76 @@ if (form) {
             userData.country_region = countryMultiSelect.getSelectedValues();
         }
         
-        // Проверяем валидность формы
+        // ИСПРАВЛЕННАЯ валидация формы
         let isFormValid = true;
-        const requiredFields = this.querySelectorAll('input[required], select[required], textarea[required]');
+        const invalidFields = [];
         
-        requiredFields.forEach(field => {
-            if (isFieldRequiredForUserType(field)) {
-                if (!validateField(field)) {
-                    isFormValid = false;
-                }
+        // Получаем уникальные группы полей для валидации
+        const fieldGroups = new Map();
+        
+        // Группируем поля по имени для радиокнопок и чекбоксов
+        const allFields = this.querySelectorAll('input[required], select[required], textarea[required]');
+        allFields.forEach(field => {
+            const fieldName = field.name || field.id;
+            if (!fieldGroups.has(fieldName)) {
+                fieldGroups.set(fieldName, []);
+            }
+            fieldGroups.get(fieldName).push(field);
+        });
+        
+        // Валидируем каждую группу полей
+        fieldGroups.forEach((fields, fieldName) => {
+            const firstField = fields[0];
+            
+            // Проверяем, требуется ли поле для текущего типа пользователя
+            if (!isFieldRequiredForUserType(firstField)) {
+                return; // Пропускаем необязательные поля
+            }
+            
+            let isGroupValid = false;
+            
+            if (firstField.type === 'radio') {
+                // Для радиокнопок проверяем, что хотя бы одна выбрана
+                isGroupValid = fields.some(field => field.checked);
+            } else if (firstField.type === 'checkbox') {
+                // Для чекбоксов проверяем, что хотя бы один выбран
+                isGroupValid = fields.some(field => field.checked);
+            } else {
+                // Для остальных полей валидируем первое поле
+                isGroupValid = validateField(firstField);
+            }
+            
+            if (!isGroupValid) {
+                isFormValid = false;
+                invalidFields.push(fieldName);
+                
+                // Добавляем класс ошибки для группы
+                fields.forEach(field => {
+                    const group = field.closest('.input-grup');
+                    if (group) group.classList.add('error');
+                });
             }
         });
         
-        // Проверяем мультиселект стран
-        if (countryMultiSelect && !countryMultiSelect.validateField()) {
-            isFormValid = false;
+        // Проверяем мультиселект стран отдельно
+        if (countryMultiSelect) {
+            const selectedCountries = countryMultiSelect.getSelectedValues();
+            if (selectedCountries.length === 0) {
+                isFormValid = false;
+                invalidFields.push('country_region');
+                countryMultiSelect.validateField(); // Покажет ошибку
+            }
         }
+        
+        console.log('🔍 Результат валидации:', {
+            isValid: isFormValid,
+            invalidFields: invalidFields,
+            selectedCountries: countryMultiSelect?.getSelectedValues() || []
+        });
         
         if (!isFormValid) {
             alert(getLocalizedText('formHasErrors'));
+            console.log('❌ Форма не прошла валидацию. Невалидные поля:', invalidFields);
             return;
         }
         
@@ -799,9 +850,7 @@ if (form) {
         }
     });
     
-    console.log('✅ Обработчик отправки формы добавлен');
-} else {
-    console.warn('⚠️ Форма registration-form не найдена');
+    console.log('✅ Обработчик отправки формы добавлен (ИСПРАВЛЕННАЯ ВЕРСИЯ)');
 }
 
 // ========================================
