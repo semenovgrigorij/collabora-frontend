@@ -37,7 +37,7 @@
                                         <span class="filter-text">Business Type</span>
                                         <svg class="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
                                             <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" 
-                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                                stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </button>
                                     <div class="filter-dropdown-content" id="businessTypeDropdown">
@@ -99,12 +99,13 @@
                                         <div class="filter-option" data-value="similar">Similar businesses</div>
                                     </div>
                                 </div>
-                                
+                            </div>
+                            <div class="search-branch-footer">
                                 <button class="clear-filters-btn" id="clearFiltersBtn">
                                     Clear filters
                                 </button>
+                                <div class="results-count" id="branchResultsCount">Found: 25 businesses</div>
                             </div>
-                            <div class="results-count" id="branchResultsCount">Found: 25 businesses</div>
                         </div>
                     </div>
                 </section>
@@ -123,11 +124,26 @@
                         <p>Try changing your filter parameters</p>
                     </div>
                 </section>
+                <section id="blog-section">
+                    <div class="blog-wrapper">
+                        <div class="blog-title">
+                            <h4>Події, ініціативи та новини</h4>
+                        </div>
+                        <div class="blog-container">
+                            <!-- Посты будут генерироваться JavaScript -->
+                        </div>
+                        <div class="blog-pagination" id="blogPagination">
+                        <!-- Пагинация будет генерироваться JavaScript -->
+                        </div>
+                    </div>
+                    
+                </section>
             </div>
         </main>
         <div id="footer-placeholder"></div>
     </div>
     <script src="../js/components.js"></script>
-    <script src="../js/branch-en.js"></script>
+    <script src="../js/branch.js"></script>
+    <script src="../js/blog.js"></script>
 </body>
 </html>

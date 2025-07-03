@@ -7,15 +7,24 @@ function getCurrentLanguage() {
     return isEnglishPage ? 'en' : 'uk';
 }
 
+// Получение корректного пути к ресурсам с учетом языка
+function getResourcePath(resourcePath) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        // Для английской версии возвращаемся на уровень выше
+        return `../${resourcePath}`;
+    } else {
+        // Для украинской версии путь остается как есть
+        return `./${resourcePath}`;
+    }
+}
+
 // Получение пути к странице с учетом языка
 function getLocalizedPath(pageName) {
     const currentLang = getCurrentLanguage();
     
-    if (currentLang === 'en') {
-        return `./en/${pageName}`;
-    } else {
-        return `./${pageName}`;
-    }
+    return `./${pageName}`;
 }
 
 // Локализованные тексты
@@ -754,19 +763,19 @@ class RubricatorManager {
         if (noResults) noResults.style.display = 'none';
 
         container.innerHTML = categoriesToShow.map(category => `
-            <div class="categories-block ${category.id === 15 ? 'other-category' : ''}" data-category-id="${category.id}">
-                <div class="categories-block-top">
-                    <img src="./icons/${category.icon}" alt="categories icon" width="108">
-                    <a href="#" data-category="${category.name}" data-category-id="${category.id}">
-                        <img class="arrow-card" src="./icons/arrow-title.svg" alt="arrow" width="14">
-                        <img class="arrow-card-hover" src="./icons/arrow-title-hover.svg" alt="arrow" width="14">
-                    </a>   
-                </div>
-                <div class="categories-block-bottom">
-                    <h3>${category.name}</h3>
-                </div>
+        <div class="categories-block ${category.id === 15 ? 'other-category' : ''}" data-category-id="${category.id}">
+            <div class="categories-block-top">
+                <img src="${getResourcePath('icons/' + category.icon)}" alt="categories icon" width="108">
+                <a href="#" data-category="${category.name}" data-category-id="${category.id}">
+                    <img class="arrow-card" src="${getResourcePath('icons/arrow-title.svg')}" alt="arrow" width="14">
+                    <img class="arrow-card-hover" src="${getResourcePath('icons/arrow-title-hover.svg')}" alt="arrow" width="14">
+                </a>   
             </div>
-        `).join('');
+            <div class="categories-block-bottom">
+                <h3>${category.name}</h3>
+            </div>
+        </div>
+    `).join('');
 
         // Добавляем обработчики событий для ссылок и блоков
         container.querySelectorAll('a[data-category]').forEach(link => {
@@ -1079,13 +1088,13 @@ class RubricatorManager {
         const category = this.allCategories.find(cat => cat.id === categoryId);
         
         // Создаем URL для страницы галузі с учетом языка
-        const branchUrl = getLocalizedPath('branch.html');
+        const branchUrl = './branch.html';
         
         // Создаем параметры для передачи информации о категории
         const params = new URLSearchParams({
             category: categoryId,
             name: categoryName,
-            icon: category ? category.icon : 'categories-icon.svg' // Добавляем иконку
+            icon: category ? category.icon : 'categories-icon.svg' 
         });
         
         const fullUrl = `${branchUrl}?${params.toString()}`;
@@ -1095,7 +1104,7 @@ class RubricatorManager {
             const selectionData = {
                 categoryId: categoryId,
                 categoryName: categoryName,
-                categoryIcon: category ? category.icon : 'categories-icon.svg', // Добавляем иконку
+                categoryIcon: category ? getResourcePath('icons/' + category.icon) : getResourcePath('icons/categories-icon.svg'), // Добавляем иконку
                 timestamp: new Date().toISOString(),
                 filters: { ...this.currentFilters },
                 currentPage: this.currentPage,

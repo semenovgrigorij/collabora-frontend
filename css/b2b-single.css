@@ -34,11 +34,12 @@ color: var(--text-dark);
     align-items: center;
     max-width: 1420px;
     width: 100%;
+    gap: 11px;
 }
-.home,
-.b2b-link,
-.b2b-single-link,
-.bread-crumbs-b2b .breadcrumb-category {
+.home a,
+.b2b-link a,
+.b2b-single-link a,
+.bread-crumbs-b2b .breadcrumb-category a {
     font-family: var(--font-family);
     font-weight: 400;
     font-size: 16px;
@@ -46,9 +47,9 @@ color: var(--text-dark);
     color: var(--violet);
     transition: color 0.3s ease;
 }
-.bread-crumbs-b2b .home:hover,
-.bread-crumbs-b2b .b2b-link:hover,
-.bread-crumbs-b2b .breadcrumb-category:hover {
+.bread-crumbs-b2b .home a:hover,
+.bread-crumbs-b2b .b2b-link a:hover,
+.bread-crumbs-b2b .breadcrumb-category a:hover {
     color: var(--light-violet);
 }
 .next {

@@ -1,143 +1,259 @@
-// js/blog.js - Система пагинации для блога
+// js/blog.js - Система пагинации для блога с поддержкой обеих языков
 
 class BlogManager {
     constructor() {
-        // Данные блог-постов (можно заменить на API)
-        this.allPosts = [
+        // Определяем текущий язык
+        this.currentLang = this.detectLanguage();
+        console.log('🌐 Detected language for blog:', this.currentLang);
+        
+        // Локализованные данные блог-постов
+        this.allPosts = this.initializePosts();
+
+        this.filteredPosts = [...this.allPosts];
+        this.currentPage = 1;
+        this.itemsPerPage = 3; // Показываем 3 поста на странице
+
+        this.init();
+    }
+
+    // Определение текущего языка
+    detectLanguage() {
+        const path = window.location.pathname;
+        const isEnglish = path.includes('/en/');
+        return isEnglish ? 'en' : 'uk';
+    }
+
+    // Получение пути с учетом языка
+    getLocalizedPath(path) {
+        if (path.startsWith('./')) {
+            const relativePath = path.substring(2);
+            if (this.currentLang === 'en') {
+                return `../${relativePath}`; // для английской версии
+            } else {
+                return `./${relativePath}`; // для украинской версии
+            }
+        }
+        return path;
+    }
+
+    // Инициализация постов с учетом языка
+    initializePosts() {
+        const posts = [
             {
                 id: 1,
-                title: "Ми навчаємо власників мікро-, малого та середнього бізнесу з 2016 року",
-                image: "./img/blog-img-1.png",
+                title: this.currentLang === 'en' 
+                    ? "We have been teaching micro, small and medium business owners since 2016"
+                    : "Ми навчаємо власників мікро-, малого та середнього бізнесу з 2016 року",
+                image: this.getLocalizedPath("./img/blog-img-1.png"),
                 date: "30.04.2025",
                 category: "business"
             },
             {
                 id: 2,
-                title: "Тренінг для власників ресторанів фаст-фудів від МакДональдс",
-                image: "./img/blog-img-2.png",
+                title: this.currentLang === 'en'
+                    ? "Training for fast food restaurant owners from McDonald's"
+                    : "Тренінг для власників ресторанів фаст-фудів від МакДональдс",
+                image: this.getLocalizedPath("./img/blog-img-2.png"),
                 date: "30.04.2025",
                 category: "training"
             },
             {
                 id: 3,
-                title: "Як розвивати великий бізнес в умовах війни - тренінг від МЕТРО",
-                image: "./img/blog-img-3.png",
+                title: this.currentLang === 'en'
+                    ? "How to develop big business in wartime - training from METRO"
+                    : "Як розвивати великий бізнес в умовах війни - тренінг від МЕТРО",
+                image: this.getLocalizedPath("./img/blog-img-3.png"),
                 date: "30.04.2025",
                 category: "training"
             },
-            // Дополнительные посты для демонстрации пагинации
             {
                 id: 4,
-                title: "Цифрова трансформація малого бізнесу: 5 кроків до успіху",
-                image: "./img/blog-img-4.jpg",
+                title: this.currentLang === 'en'
+                    ? "Digital transformation of small business: 5 steps to success"
+                    : "Цифрова трансформація малого бізнесу: 5 кроків до успіху",
+                image: this.getLocalizedPath("./img/blog-img-4.jpg"),
                 date: "29.04.2025",
                 category: "digital"
             },
             {
                 id: 5,
-                title: "Як отримати державну підтримку для стартапу в 2025 році",
-                image: "./img/blog-img-5.jpg",
+                title: this.currentLang === 'en'
+                    ? "How to get government support for a startup in 2025"
+                    : "Як отримати державну підтримку для стартапу в 2025 році",
+                image: this.getLocalizedPath("./img/blog-img-5.jpg"),
                 date: "28.04.2025",
                 category: "startup"
             },
             {
                 id: 6,
-                title: "Секрети ефективного маркетингу для малого бізнесу",
-                image: "./img/blog-img-6.jpg",
+                title: this.currentLang === 'en'
+                    ? "Secrets of effective marketing for small business"
+                    : "Секрети ефективного маркетингу для малого бізнесу",
+                image: this.getLocalizedPath("./img/blog-img-6.jpg"),
                 date: "27.04.2025",
                 category: "marketing"
             },
             {
                 id: 7,
-                title: "Фінансове планування для власників бізнесу: практичні поради",
-                image: "./img/blog-img-7.jpg",
+                title: this.currentLang === 'en'
+                    ? "Financial planning for business owners: practical tips"
+                    : "Фінансове планування для власників бізнесу: практичні поради",
+                image: this.getLocalizedPath("./img/blog-img-7.jpg"),
                 date: "26.04.2025",
                 category: "finance"
             },
             {
                 id: 8,
-                title: "Як збільшити продажі через соціальні мережі",
-                image: "./img/blog-img-8.jpg",
+                title: this.currentLang === 'en'
+                    ? "How to increase sales through social media"
+                    : "Як збільшити продажі через соціальні мережі",
+                image: this.getLocalizedPath("./img/blog-img-8.jpg"),
                 date: "25.04.2025",
                 category: "marketing"
             },
             {
                 id: 9,
-                title: "Правові аспекти ведення бізнесу в Україні",
-                image: "./img/blog-img-9.jpg",
+                title: this.currentLang === 'en'
+                    ? "Legal aspects of doing business in Ukraine"
+                    : "Правові аспекти ведення бізнесу в Україні",
+                image: this.getLocalizedPath("./img/blog-img-9.jpg"),
                 date: "24.04.2025",
                 category: "legal"
             },
             {
                 id: 10,
-                title: "Інноваційні рішення для автоматизації бізнес-процесів",
-                image: "./img/blog-img-10.jpg",
+                title: this.currentLang === 'en'
+                    ? "Innovative solutions for business process automation"
+                    : "Інноваційні рішення для автоматизації бізнес-процесів",
+                image: this.getLocalizedPath("./img/blog-img-10.jpg"),
                 date: "23.04.2025",
                 category: "innovation"
             },
             {
                 id: 11,
-                title: "Як створити успішну команду: досвід топ-менеджерів",
-                image: "./img/blog-img-11.jpg",
+                title: this.currentLang === 'en'
+                    ? "How to build a successful team: experience of top managers"
+                    : "Як створити успішну команду: досвід топ-менеджерів",
+                image: this.getLocalizedPath("./img/blog-img-11.jpg"),
                 date: "22.04.2025",
                 category: "management"
             },
             {
                 id: 12,
-                title: "Екологічний бізнес: тренди та можливості 2025 року",
-                image: "./img/blog-img-12.jpg",
+                title: this.currentLang === 'en'
+                    ? "Green business: trends and opportunities for 2025"
+                    : "Екологічний бізнес: тренди та можливості 2025 року",
+                image: this.getLocalizedPath("./img/blog-img-12.jpg"),
                 date: "21.04.2025",
                 category: "ecology"
             },
             {
                 id: 13,
-                title: "Тренінг для власників ресторанів фаст-фудів від МакДональдс",
-                image: "./img/blog-img-2.png",
+                title: this.currentLang === 'en'
+                    ? "Training for fast food restaurant owners from McDonald's"
+                    : "Тренінг для власників ресторанів фаст-фудів від МакДональдс",
+                image: this.getLocalizedPath("./img/blog-img-2.png"),
                 date: "30.04.2025",
                 category: "training"
             },
             {
                 id: 14,
-                title: "Фінансове планування для власників бізнесу: практичні поради",
-                image: "./img/blog-img-1.png",
+                title: this.currentLang === 'en'
+                    ? "Financial planning for business owners: practical tips"
+                    : "Фінансове планування для власників бізнесу: практичні поради",
+                image: this.getLocalizedPath("./img/blog-img-1.png"),
                 date: "26.04.2025",
                 category: "finance"
             },
             {
                 id: 15,
-                title: "Як збільшити продажі через соціальні мережі",
-                image: "./img/blog-img-5.jpg",
+                title: this.currentLang === 'en'
+                    ? "How to increase sales through social media"
+                    : "Як збільшити продажі через соціальні мережі",
+                image: this.getLocalizedPath("./img/blog-img-5.jpg"),
                 date: "25.04.2025",
                 category: "marketing"
             },
             {
                 id: 16,
-                title: "Правові аспекти ведення бізнесу в Україні",
-                image: "./img/blog-img-8.jpg",
+                title: this.currentLang === 'en'
+                    ? "Legal aspects of doing business in Ukraine"
+                    : "Правові аспекти ведення бізнесу в Україні",
+                image: this.getLocalizedPath("./img/blog-img-8.jpg"),
                 date: "24.04.2025",
                 category: "legal"
-            },
+            }
         ];
 
-        this.filteredPosts = [...this.allPosts];
-        this.currentPage = 1;
-        this.itemsPerPage = 3; // Показываем 3 поста на странице (как в оригинале)
-
-        this.init();
+        console.log(`📰 Инициализировано ${posts.length} постов для языка: ${this.currentLang}`);
+        return posts;
     }
 
-    createPlaceholderImage() {
-        // SVG placeholder в формате data URL
-        return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIyIiBoZWlnaHQ9IjI4MCIgdmlld0JveD0iMCAwIDQyMiAyODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MjIiIGhlaWdodD0iMjgwIiBmaWxsPSIjRjVGNUY1Ii8+CjxyZWN0IHg9IjE3MSIgeT0iMTEwIiB3aWR0aD0iODAiIGhlaWdodD0iNjAiIGZpbGw9IiNEREREREQiLz4KPHN2ZyB4PSIxOTEiIHk9IjEyNSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjMwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiM5OTk5OTkiPgo8cGF0aCBkPSJNMjEgMTlWNWMwLTEuMS0uOS0yLTItMkg1Yy0xLjEgMC0yIC45LTIgMnYxNGMwIDEuMS45IDIgMiAyaDE0YzEuMSAwIDItLjkgMi0yek01IDVoMTR2MTQuMzJsLTMuMDUtMy4wNWMtLjc4LS43OC0yLjA1LS43OC0yLjgzIDBMMTAgMTkuNzVsLTIuMTItMi4xMmMtLjc4LS43OC0yLjA1LS43OC0yLjgzIDBMNSAxNy42M1Y1eiIvPgo8L3N2Zz4KPHRleHQgeD0iMjExIiB5PSIyMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Зображення</dGV4dD4KPC9zdmc+';
+    // Локализованные тексты
+    getLocalizedText(key) {
+        const texts = {
+            en: {
+                blogTitle: "Events, initiatives and news",
+                noPostsMessage: "No posts to display",
+                blogImageAlt: "Blog image",
+                postContent: "Here will be the full text of the post...",
+                date: "Date:"
+            },
+            uk: {
+                blogTitle: "Події, ініціативи та новини",
+                noPostsMessage: "Немає постів для відображення",
+                blogImageAlt: "Зображення блогу",
+                postContent: "Тут буде повний текст поста...",
+                date: "Дата:"
+            }
+        };
+
+        return texts[this.currentLang][key] || texts['uk'][key] || key;
     }
+
     init() {
         console.log('🚀 Инициализация BlogManager');
         console.log(`📊 Всего постов: ${this.allPosts.length}`);
+        console.log(`🌐 Текущий язык: ${this.currentLang}`);
         
+        // Обновляем заголовок секции блога
+        this.updateBlogTitle();
+        
+        // Всегда показываем секцию блога
+        this.ensureBlogSectionVisible();
+        
+        // Рендерим контент
         this.renderPosts();
         this.renderPagination();
         
         console.log('✅ BlogManager готов к работе');
+    }
+
+    // Обновление заголовка секции блога
+    updateBlogTitle() {
+        const blogTitle = document.querySelector('.blog-title h4');
+        if (blogTitle) {
+            blogTitle.textContent = this.getLocalizedText('blogTitle');
+            console.log('📝 Заголовок блога обновлен:', blogTitle.textContent);
+        }
+    }
+
+    // Убеждаемся, что секция блога видна
+    ensureBlogSectionVisible() {
+        const blogSection = document.getElementById('blog-section');
+        
+        if (blogSection) {
+            // Принудительно показываем секцию для обеих языков
+            blogSection.style.display = 'block';
+            blogSection.style.visibility = 'visible';
+            blogSection.style.opacity = '1';
+            blogSection.removeAttribute('hidden');
+            blogSection.classList.remove('hidden-en');
+            
+            console.log(`✅ Секция блога принудительно показана для языка: ${this.currentLang}`);
+        } else {
+            console.warn('⚠️ Секция блога не найдена в DOM');
+        }
     }
 
     renderPosts() {
@@ -156,7 +272,7 @@ class BlogManager {
         console.log(`📄 Рендер постов: страница ${this.currentPage}, показываем ${postsToShow.length} из ${this.filteredPosts.length}`);
 
         if (postsToShow.length === 0) {
-            container.innerHTML = '<div class="no-posts">Немає постів для відображення</div>';
+            container.innerHTML = `<div class="no-posts">${this.getLocalizedText('noPostsMessage')}</div>`;
             return;
         }
 
@@ -176,8 +292,14 @@ class BlogManager {
         postDiv.className = 'blog-block';
         postDiv.setAttribute('data-post-id', post.id);
 
+        // Создаем fallback изображение с учетом языка
+        const fallbackImage = this.getLocalizedPath('./img/blog-placeholder.png');
+
         postDiv.innerHTML = `
-            <img src="${post.image}" alt="Зображення блогу" width="422" onerror="this.src='./img/blog-placeholder.png'">
+            <img src="${post.image}" 
+                 alt="${this.getLocalizedText('blogImageAlt')}" 
+                 width="422" 
+                 onerror="this.src='${fallbackImage}'">
             <h5>${post.title}</h5>
             <p>${post.date}</p>
         `;
@@ -211,9 +333,8 @@ class BlogManager {
 
         let paginationHTML = '';
 
-        // Логика пагинации: 1, 2, 3, 4 ... последний
+        // Логика пагинации
         if (totalPages <= 5) {
-            // Если страниц 5 или меньше, показываем все
             for (let page = 1; page <= totalPages; page++) {
                 paginationHTML += `
                     <div class="blog-pagination-block ${page === this.currentPage ? 'active' : ''}" 
@@ -223,37 +344,30 @@ class BlogManager {
                 `;
             }
         } else {
-            // Если страниц больше 5
             if (this.currentPage <= 4) {
-                // Показываем 1, 2, 3, 4 ... последний
                 for (let page = 1; page <= 4; page++) {
                     paginationHTML += `
                         <div class="blog-pagination-block ${page === this.currentPage ? 'active' : ''}" 
-                             data-page="${page}">
+                            data-page="${page}">
                             ${page}
                         </div>
                     `;
                 }
                 
-                // Многоточие
                 paginationHTML += `<div class="blog-pagination-block dots">...</div>`;
                 
-                // Последняя страница
                 paginationHTML += `
                     <div class="blog-pagination-block" data-page="${totalPages}">
                         ${totalPages}
                     </div>
                 `;
             } else if (this.currentPage >= totalPages - 3) {
-                // Показываем 1 ... последние 4 страницы
                 paginationHTML += `
                     <div class="blog-pagination-block" data-page="1">1</div>
                 `;
                 
-                // Многоточие
                 paginationHTML += `<div class="blog-pagination-block dots">...</div>`;
                 
-                // Последние 4 страницы
                 for (let page = totalPages - 3; page <= totalPages; page++) {
                     paginationHTML += `
                         <div class="blog-pagination-block ${page === this.currentPage ? 'active' : ''}" 
@@ -263,25 +377,20 @@ class BlogManager {
                     `;
                 }
             } else {
-                // Показываем 1 ... текущая ... последний
                 paginationHTML += `
                     <div class="blog-pagination-block" data-page="1">1</div>
                 `;
                 
-                // Многоточие перед текущей
                 paginationHTML += `<div class="blog-pagination-block dots">...</div>`;
                 
-                // Текущая страница
                 paginationHTML += `
                     <div class="blog-pagination-block active" data-page="${this.currentPage}">
                         ${this.currentPage}
                     </div>
                 `;
                 
-                // Многоточие после текущей
                 paginationHTML += `<div class="blog-pagination-block dots">...</div>`;
                 
-                // Последняя страница
                 paginationHTML += `
                     <div class="blog-pagination-block" data-page="${totalPages}">
                         ${totalPages}
@@ -339,21 +448,13 @@ class BlogManager {
 
     handlePostClick(post) {
         console.log(`📰 Клик по посту: ${post.title}`);
-        
-        // Здесь можно добавить логику перехода к полному посту
-        // Например, открыть модальное окно или перейти на отдельную страницу
-        
-        // Пример: переход на страницу поста
-        // window.location.href = `/blog/post.html?id=${post.id}`;
-        
-        // Или показать модальное окно с подробностями
         this.showPostModal(post);
     }
 
     showPostModal(post) {
-        // Простое модальное окно для демонстрации
         const modal = document.createElement('div');
         modal.className = 'blog-modal';
+        
         modal.innerHTML = `
             <div class="blog-modal-content">
                 <div class="blog-modal-header">
@@ -361,9 +462,9 @@ class BlogManager {
                     <button class="blog-modal-close">&times;</button>
                 </div>
                 <div class="blog-modal-body">
-                    <img src="${post.image}" alt="Зображення поста">
-                    <p><strong>Дата:</strong> ${post.date}</p>
-                    <p>Тут буде повний текст поста...</p>
+                    <img src="${post.image}" alt="${this.getLocalizedText('blogImageAlt')}">
+                    <p><strong>${this.getLocalizedText('date')}</strong> ${post.date}</p>
+                    <p>${this.getLocalizedText('postContent')}</p>
                 </div>
             </div>
         `;
@@ -437,7 +538,7 @@ class BlogManager {
         });
     }
 
-    // Методы для фильтрации (если понадобятся)
+    // Методы для фильтрации
     filterByCategory(category) {
         if (!category) {
             this.filteredPosts = [...this.allPosts];
@@ -457,7 +558,9 @@ class BlogManager {
             totalPages: Math.ceil(this.filteredPosts.length / this.itemsPerPage),
             totalPosts: this.allPosts.length,
             filteredPosts: this.filteredPosts.length,
-            itemsPerPage: this.itemsPerPage
+            itemsPerPage: this.itemsPerPage,
+            language: this.currentLang,
+            shouldShow: true // Теперь всегда показываем
         };
     }
 }
@@ -466,9 +569,20 @@ class BlogManager {
 let blogManager;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Ждем загрузки компонентов
+    if (document.body.classList.contains('components-ready')) {
+        initBlog();
+    } else {
+        document.addEventListener('componentsLoaded', initBlog);
+    }
+});
+
+function initBlog() {
     // Проверяем существование блога на странице
     const blogContainer = document.querySelector('.blog-container');
-    if (blogContainer) {
+    const blogSection = document.getElementById('blog-section');
+    
+    if (blogContainer || blogSection) {
         console.log('🚀 Инициализация блога...');
         blogManager = new BlogManager();
         
@@ -476,8 +590,48 @@ document.addEventListener('DOMContentLoaded', () => {
         window.blogManager = blogManager;
         
         console.log('✅ Блог готов к работе!');
+    } else {
+        console.log('ℹ️ Секция блога не найдена на этой странице');
     }
-});
+}
+
+// Отладочная функция для блога
+function debugBlogSection() {
+    console.log('🔍 ОТЛАДКА СЕКЦИИ БЛОГА:');
+    
+    const blogSection = document.getElementById('blog-section');
+    const blogContainer = document.querySelector('.blog-container');
+    const currentLang = window.location.pathname.includes('/en/') ? 'en' : 'uk';
+    
+    console.log('📊 Состояние блога:');
+    console.log('- Текущий язык:', currentLang);
+    console.log('- Секция блога найдена:', !!blogSection);
+    console.log('- Контейнер блога найден:', !!blogContainer);
+    console.log('- Стиль display секции:', blogSection ? getComputedStyle(blogSection).display : 'секция не найдена');
+    console.log('- BlogManager инициализирован:', !!window.blogManager);
+    
+    if (window.blogManager) {
+        console.log('- Состояние BlogManager:', window.blogManager.getState());
+    }
+    
+    if (blogSection) {
+        // Принудительно показываем для обеих языков
+        blogSection.style.display = 'block';
+        blogSection.style.visibility = 'visible';
+        blogSection.removeAttribute('hidden');
+        console.log('✅ Секция блога принудительно показана');
+    }
+    
+    return {
+        found: !!blogSection,
+        language: currentLang,
+        display: blogSection ? getComputedStyle(blogSection).display : null,
+        blogManagerReady: !!window.blogManager
+    };
+}
+
+// Добавляем функции в глобальную область для отладки
+window.debugBlogSection = debugBlogSection;
 
 // Экспорт для использования в других скриптах
 window.BlogManager = BlogManager;

@@ -45,14 +45,13 @@ p {
     text-align: left;
 }
 
-.title-branch-wrapper {
+.title-branch {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 21px;
     text-align: center;
 }
-
 
 /* Фильтры на странице branch */
 .search-branch-wrapper {

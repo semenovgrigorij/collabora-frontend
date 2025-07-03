@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collabora</title>
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/b2b-single.css">
-    <link rel="stylesheet" href="./css/header-cabinet.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/b2b-single.css">
+    <link rel="stylesheet" href="../css/header-cabinet.css">
+    <link rel="preload" href="../components/header-en.html" as="fetch" crossorigin>
+    <link rel="preload" href="../components/footer-en.html" as="fetch" crossorigin>
 </head>
 <body>
     <div class="wrapper">
@@ -27,7 +29,7 @@
                     <div class="single-header-wrapper">
                         <div class="single-header-right">
                             <div class="single-header-image">
-                                <img id="singleImage" src="./icons/b2b-img-1.svg" alt="Industry Logo" width="120">
+                                <img id="singleImage" src="../icons/b2b-img-1.svg" alt="Industry Logo" width="120">
                             </div>
                             <div class="single-header-content">
                                 <p id="singleUpdate">Останнє оновлення 25 хв. тому</p>
@@ -61,8 +63,8 @@
         </footer>
     </div>
     
-    <script src="./js/header-cabinet.js"></script>
-    <script src="./js/breadcrumbs.js"></script>
-    <script src="./js/b2b-single.js"></script>
+    <script src="../js/header-cabinet.js"></script>
+    <script src="../js/breadcrumbs.js"></script>
+    <script src="../js/b2b-single.js"></script>
 </body>
 </html>

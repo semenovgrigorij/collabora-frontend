@@ -3,8 +3,11 @@
 // Определение текущего языка
 function getCurrentLanguage() {
     const currentPath = window.location.pathname;
-    const isEnglishPage = currentPath.includes('/en/');
-    return isEnglishPage ? 'en' : 'uk';
+    const langMatch = currentPath.match(/\/(en|uk)\//);
+    const detectedLang = langMatch ? langMatch[1] : 'uk';
+    
+    console.log(`🌐 B2B Single: Определен язык ${detectedLang} из пути: ${currentPath}`);
+    return detectedLang;
 }
 
 // Получение пути к странице с учетом языка
@@ -12,9 +15,24 @@ function getLocalizedPath(pageName) {
     const currentLang = getCurrentLanguage();
     
     if (currentLang === 'en') {
-        return `./en/${pageName}`;
-    } else {
+        // Для английской версии остаемся в папке /en/
         return `./${pageName}`;
+    } else {
+        // Для украинской версии остаемся в корне
+        return `./${pageName}`;
+    }
+}
+
+// Получение пути к ресурсам с учетом языка
+function getResourcePath(resourcePath) {
+    const currentLang = getCurrentLanguage();
+    
+    if (currentLang === 'en') {
+        // Для английской версии идем на уровень выше
+        return `../${resourcePath}`;
+    } else {
+        // Для украинской версии остаемся в корне
+        return `./${resourcePath}`;
     }
 }
 
@@ -36,7 +54,20 @@ function getLocalizedText(key) {
             initialRequest: 'Начальный запрос для:',
             lastUpdate: 'Останнє оновлення',
             participants: 'Учасників:',
-            b2bPlatform: 'Майданчик B2B'
+            b2bPlatform: 'Майданчик B2B',
+            published: 'Опубліковано',
+            lookingForPartner: 'Шукаю партнера',
+            offeringServices: 'Пропоную послуги',
+            packaging: 'Пакування',
+            metalworking: 'Металообробка',
+            woodworking: 'Деревообробка',
+            lvivRegion: 'Львівська область',
+            kharkivRegion: 'Харківська область',
+            kiev: 'Київ',
+            lviv: 'Львів',
+            kharkiv: 'Харків',
+            odesa: 'Одеса',
+            dnipro: 'Дніпро'
         },
         en: {
             pageInitialized: 'B2B single page initialized',
@@ -51,7 +82,20 @@ function getLocalizedText(key) {
             initialRequest: 'Initial request for:',
             lastUpdate: 'Last update',
             participants: 'Participants:',
-            b2bPlatform: 'B2B Platform'
+            b2bPlatform: 'B2B Platform',
+            published: 'Published',
+            lookingForPartner: 'Looking for partner',
+            offeringServices: 'Offering services',
+            packaging: 'Packaging',
+            metalworking: 'Metalworking',
+            woodworking: 'Woodworking',
+            lvivRegion: 'Lviv region',
+            kharkivRegion: 'Kharkiv region',
+            kiev: 'Kyiv',
+            lviv: 'Lviv',
+            kharkiv: 'Kharkiv',
+            odesa: 'Odesa',
+            dnipro: 'Dnipro'
         }
     };
     
@@ -73,12 +117,34 @@ class B2BSinglePage {
         console.log(getLocalizedText('pageInitialized'));
     }
 
+    // Обновление путей к ресурсам в элементе с учетом языка
+    updateItemResourcePaths(item) {
+        if (!item) return item;
+
+        const updatedItem = { ...item };
+
+        // Обновляем путь к основному изображению
+        if (updatedItem.image) {
+            const fileName = updatedItem.image.split('/').pop();
+            updatedItem.image = getResourcePath(`icons/${fileName}`);
+        }
+
+        console.log(`🔄 Пути к ресурсам обновлены для элемента: ${updatedItem.title}`);
+        console.log(`🖼️ Новый путь к изображению: ${updatedItem.image}`);
+
+        return updatedItem;
+    }
+
     // Загрузка данных элемента
     loadItemData() {
         // Пытаемся получить данные из sessionStorage
         const storedData = sessionStorage.getItem('currentB2BItem');
         if (storedData) {
-            this.currentItem = JSON.parse(storedData);
+            const rawItem = JSON.parse(storedData);
+            
+            // Обновляем пути к ресурсам с учетом текущего языка
+            this.currentItem = this.updateItemResourcePaths(rawItem);
+            
             return;
         }
 
@@ -102,13 +168,14 @@ class B2BSinglePage {
 
     // Мок-данные (в продакшене будет API запрос)
     getMockItemById(id) {
-        const mockData = {
+        // Базовые данные без путей к изображениям
+        const mockDataBase = {
             1: {
                 id: 1,
                 title: this.currentLang === 'en' ? "Industry and Processing" : "Промисловість та переробка",
                 lastUpdate: this.currentLang === 'en' ? "25 min. ago" : "25 хв. тому",
                 participants: "4.1 тис",
-                image: "./icons/b2b-img-1.svg",
+                imageFileName: "b2b-img-1.svg", // Только имя файла
                 businessType: ["production"],
                 scale: ["large"],
                 region: ["kyiv", "kharkiv"],
@@ -123,7 +190,7 @@ class B2BSinglePage {
                 title: this.currentLang === 'en' ? "Construction, Materials, Woodworking" : "Будівництво, матеріали, деревопереробка",
                 lastUpdate: this.currentLang === 'en' ? "1 hour ago" : "1 год. тому",
                 participants: "3.2 тис",
-                image: "./icons/b2b-img-2.svg",
+                imageFileName: "b2b-img-2.svg",
                 businessType: ["production", "trade"],
                 scale: ["medium", "large"],
                 region: ["kyiv", "lviv"],
@@ -138,7 +205,7 @@ class B2BSinglePage {
                 title: this.currentLang === 'en' ? "Agriculture and Food Industry" : "Агро і харчова промисловість",
                 lastUpdate: this.currentLang === 'en' ? "2 hours ago" : "2 год. тому",
                 participants: "2.8 тис",
-                image: "./icons/b2b-img-3.svg",
+                imageFileName: "b2b-img-3.svg",
                 businessType: ["production"],
                 scale: ["small", "medium"],
                 region: ["kyiv", "odesa", "dnipro"],
@@ -153,7 +220,7 @@ class B2BSinglePage {
                 title: this.currentLang === 'en' ? "Energy" : "Енергетика",
                 lastUpdate: this.currentLang === 'en' ? "3 hours ago" : "3 год. тому",
                 participants: "1.9 тис",
-                image: "./icons/b2b-img-4.svg",
+                imageFileName: "b2b-img-4.svg",
                 businessType: ["technology", "services"],
                 scale: ["large"],
                 region: ["kyiv", "kharkiv", "dnipro"],
@@ -168,7 +235,7 @@ class B2BSinglePage {
                 title: this.currentLang === 'en' ? "IT and Telecommunications" : "IT та телекомунікації",
                 lastUpdate: this.currentLang === 'en' ? "4 hours ago" : "4 год. тому",
                 participants: "5.5 тис",
-                image: "./icons/b2b-img-5.svg",
+                imageFileName: "b2b-img-5.svg",
                 businessType: ["technology", "services"],
                 scale: ["small", "medium"],
                 region: ["kyiv", "lviv", "kharkiv"],
@@ -180,7 +247,18 @@ class B2BSinglePage {
             }
         };
 
-        return mockData[id] || null;
+        const baseData = mockDataBase[id];
+        if (!baseData) return null;
+
+        // Добавляем правильный путь к изображению с учетом текущего языка
+        const itemData = {
+            ...baseData,
+            image: getResourcePath(`icons/${baseData.imageFileName}`)
+        };
+
+        console.log(`🖼️ Создан элемент ID ${id} с изображением: ${itemData.image}`);
+        
+        return itemData;
     }
 
     // Настройка кнопок действий
@@ -208,16 +286,29 @@ class B2BSinglePage {
         // Обновляем заголовок страницы
         document.title = `${this.currentItem.title} - Collabora`;
 
-        // Обновляем хлебные крошки
-        const currentPageTitle = document.getElementById('currentPageTitle');
-        if (currentPageTitle) {
-            currentPageTitle.textContent = this.currentItem.title;
-        }
+        // Обновляем хлебные крошки через BreadcrumbsManager
+        this.updateBreadcrumbs();
 
         // Обновляем основной контент
         this.updateMainContent();
         this.renderOffers();
         this.setupOfferClickHandlers();
+    }
+
+    // Обновление хлебных крошек
+    updateBreadcrumbs() {
+        setTimeout(() => {
+            if (window.breadcrumbsManager) {
+                const b2bUrl = getLocalizedPath('b2b.html');
+                
+                window.breadcrumbsManager.buildBreadcrumbs([
+                    { title: getLocalizedText('b2bPlatform'), href: b2bUrl },
+                    { title: this.currentItem.title, href: null }
+                ]);
+                
+                console.log('🍞 Хлебные крошки обновлены для b2b-single.html');
+            }
+        }, 100);
     }
 
     // Обновление основного контента
@@ -232,6 +323,27 @@ class B2BSinglePage {
         if (elements.singleImage) {
             elements.singleImage.src = this.currentItem.image;
             elements.singleImage.alt = `${this.currentItem.title} Logo`;
+            
+            // Добавляем обработчик ошибки загрузки
+            elements.singleImage.onerror = () => {
+                console.error(`❌ Ошибка загрузки изображения: ${this.currentItem.image}`);
+                console.log(`🔍 Текущий язык: ${this.currentLang}`);
+                console.log(`🔍 Ожидаемый путь: ${this.currentItem.image}`);
+                
+                // Создаем простое SVG изображение как fallback
+                const fallbackSvg = 'data:image/svg+xml;base64,' + btoa(`
+                    <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" fill="#e0e0e0" stroke="#ccc" stroke-width="2"/>
+                        <text x="50" y="40" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">IMG</text>
+                        <text x="50" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">404</text>
+                    </svg>
+                `);
+                
+                elements.singleImage.src = fallbackSvg;
+                console.log('🔧 Установлено fallback изображение');
+            };
+            
+            console.log(`🖼️ Устанавливаем изображение: ${this.currentItem.image}`);
         }
 
         if (elements.singleTitle) {
@@ -274,13 +386,13 @@ class B2BSinglePage {
                     author: {
                         name: this.currentLang === 'en' ? "Dmytro" : "Дмитро",
                         company: this.currentLang === 'en' ? "Agropack-Service LLC" : "ТОВ «Агропак-Сервіс»",
-                        avatar: "./icons/single-logo.svg",
+                        avatar: getResourcePath("icons/single-logo.svg"),
                         isVerified: true
                     },
-                    region: this.currentLang === 'en' ? "Lviv region" : "Львівська область",
+                    region: getLocalizedText('lvivRegion'),
                     publishDate: "18.05.2025",
-                    category: this.currentLang === 'en' ? "Looking for partner" : "Шукаю партнера",
-                    industry: this.currentLang === 'en' ? "Packaging" : "Пакування"
+                    category: getLocalizedText('lookingForPartner'),
+                    industry: getLocalizedText('packaging')
                 },
                 {
                     id: 2,
@@ -293,13 +405,13 @@ class B2BSinglePage {
                     author: {
                         name: this.currentLang === 'en' ? "Oleksandr" : "Олександр",
                         company: this.currentLang === 'en' ? "Metalprom" : "Металпром",
-                        avatar: "./icons/single-logo.svg",
+                        avatar: getResourcePath("icons/single-logo.svg"),
                         isVerified: true
                     },
-                    region: this.currentLang === 'en' ? "Kharkiv region" : "Харківська область",
+                    region: getLocalizedText('kharkivRegion'),
                     publishDate: "17.05.2025",
-                    category: this.currentLang === 'en' ? "Offering services" : "Пропоную послуги",
-                    industry: this.currentLang === 'en' ? "Metalworking" : "Металообробка"
+                    category: getLocalizedText('offeringServices'),
+                    industry: getLocalizedText('metalworking')
                 }
             ],
             2: [ // Будівництво, матеріали, деревопереробка / Construction, Materials, Woodworking
@@ -314,13 +426,13 @@ class B2BSinglePage {
                     author: {
                         name: this.currentLang === 'en' ? "Mykhailo" : "Михайло",
                         company: this.currentLang === 'en' ? "Wooden House" : "Деревяний дім",
-                        avatar: "./icons/single-logo.svg",
+                        avatar: getResourcePath("icons/single-logo.svg"),
                         isVerified: true
                     },
-                    region: this.currentLang === 'en' ? "Lviv region" : "Львівська область",
+                    region: getLocalizedText('lvivRegion'),
                     publishDate: "18.05.2025",
-                    category: this.currentLang === 'en' ? "Offering services" : "Пропоную послуги",
-                    industry: this.currentLang === 'en' ? "Woodworking" : "Деревообробка"
+                    category: getLocalizedText('offeringServices'),
+                    industry: getLocalizedText('woodworking')
                 }
             ]
         };
@@ -331,28 +443,35 @@ class B2BSinglePage {
 
     // Создание HTML для предложения
     createOfferHTML(offer) {
-        const publishedText = this.currentLang === 'en' ? 'Published' : 'Опубліковано';
+        const publishedText = getLocalizedText('published');
+        const verifiedIcon = getResourcePath("icons/single-verified.svg");
+        const markerIcon = getResourcePath("icons/single-marker.svg");
+        const arrowIcon = getResourcePath("icons/arrow-title.svg");
+        const arrowHoverIcon = getResourcePath("icons/arrow-title-hover.svg");
+        
+        // Исправляем путь к аватару - используем уже обработанный путь из offer.author.avatar
+        const avatarPath = offer.author.avatar;
         
         return `
             <div class="single-content-block" data-offer-id="${offer.id}" style="cursor: pointer;">
                 <div class="single-content-block-top">
                     <div class="single-content-block-title">
-                        <img src="${offer.author.avatar}" alt="Logo" width="45">
+                        <img src="${avatarPath}" alt="Logo" width="45" onerror="console.error('Ошибка загрузки аватара:', this.src)">
                         <div class="name-varifed-company">
                             <div class="name-varifed">
                                 <h2>${offer.author.name}</h2>
-                                ${offer.author.isVerified ? '<img src="./icons/single-verified.svg" alt="verified icon" width="108">' : ''}
+                                ${offer.author.isVerified ? `<img src="${verifiedIcon}" alt="verified icon" width="108" onerror="console.error('Ошибка загрузки иконки verified:', this.src)">` : ''}
                             </div>
                             <p class="name-company">${offer.author.company}</p>
                         </div>
                     </div>
                     <a href="#" class="single-content-block-arrow" onclick="event.stopPropagation();">
-                        <img class="arrow-card" src="./icons/arrow-title.svg" alt="arrow" width="14">
-                        <img class="arrow-card-hover" src="./icons/arrow-title-hover.svg" alt="arrow" width="14">
+                        <img class="arrow-card" src="${arrowIcon}" alt="arrow" width="14" onerror="console.error('Ошибка загрузки стрелки:', this.src)">
+                        <img class="arrow-card-hover" src="${arrowHoverIcon}" alt="arrow" width="14" onerror="console.error('Ошибка загрузки стрелки hover:', this.src)">
                     </a>
                 </div>
                 <div class="single-content-block-middle">
-                    <img src="./icons/single-marker.svg" alt="Marker" width="20">
+                    <img src="${markerIcon}" alt="Marker" width="20" onerror="console.error('Ошибка загрузки маркера:', this.src)">
                     <p>${offer.region}</p>
                     <p>${publishedText} ${offer.publishDate}</p>
                 </div>
@@ -519,9 +638,33 @@ Each product is handmade by experienced craftsmen. We guarantee high quality, du
         window.location.href = getLocalizedPath('add-request.html');
     }
 
+    // Отладочная информация
+    getDebugInfo() {
+        return {
+            currentItem: this.currentItem,
+            language: this.currentLang,
+            resourcePaths: {
+                sampleImage: getResourcePath("icons/b2b-img-1.svg"),
+                sampleIcon: getResourcePath("icons/single-logo.svg")
+            },
+            localizedPaths: {
+                b2bPage: getLocalizedPath('b2b.html'),
+                addRequestPage: getLocalizedPath('add-request.html'),
+                offerPage: getLocalizedPath('offer.html')
+            },
+            breadcrumbsManager: !!window.breadcrumbsManager
+        };
+    }
+
     // Публичные методы
     getCurrentItem() {
         return this.currentItem;
+    }
+
+    // Переключение языка (для случаев динамической смены языка)
+    setLanguage(lang) {
+        this.currentLang = lang;
+        this.renderPageContent();
     }
 }
 
