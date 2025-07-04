@@ -747,7 +747,7 @@ class RubricatorManager {
         const maxRegularItems = this.itemsPerPage - 1; // 14 вместо 15
         const regularCategoriesToShow = regularCategories.slice(startIndex, startIndex + maxRegularItems);
         
-        // Всегда добавляем категорию "Інше"/"Other" в конец, если она есть в отфильтрованных
+        // Всегда добавляем категорию "Інше"/"Other" в конец, если она есть в отфільтрованных
         let categoriesToShow = [...regularCategoriesToShow];
         
         if (otherCategory) {
@@ -763,10 +763,12 @@ class RubricatorManager {
         if (noResults) noResults.style.display = 'none';
 
         container.innerHTML = categoriesToShow.map(category => `
-        <div class="categories-block ${category.id === 15 ? 'other-category' : ''}" data-category-id="${category.id}">
+        <div class="categories-block ${category.id === 15 ? 'other-category' : ''}" 
+             data-category-id="${category.id}" 
+             data-category-name="${category.name}">
             <div class="categories-block-top">
                 <img src="${getResourcePath('icons/' + category.icon)}" alt="categories icon" width="108">
-                <a href="#" data-category="${category.name}" data-category-id="${category.id}">
+                <a href="#">
                     <img class="arrow-card" src="${getResourcePath('icons/arrow-title.svg')}" alt="arrow" width="14">
                     <img class="arrow-card-hover" src="${getResourcePath('icons/arrow-title-hover.svg')}" alt="arrow" width="14">
                 </a>   
@@ -777,25 +779,34 @@ class RubricatorManager {
         </div>
     `).join('');
 
-        // Добавляем обработчики событий для ссылок и блоков
-        container.querySelectorAll('a[data-category]').forEach(link => {
-            link.addEventListener('click', (e) => {
+        // ИСПРАВЛЕННЫЕ ОБРАБОТЧИКИ СОБЫТИЙ
+        container.querySelectorAll('.categories-block').forEach((block, index) => {
+            
+            // ИСПРАВЛЕНИЕ 1: Убираем анимацию загрузки после её завершения
+            setTimeout(() => {
+                block.classList.add('animation-complete');
+            }, 600 + (index * 100)); // Ждём завершения fadeInUp
+            
+            // Делаем блоки фокусируемыми
+            block.setAttribute('tabindex', '0');
+            block.setAttribute('role', 'button');
+            block.setAttribute('aria-label', `Категория: ${block.getAttribute('data-category-name')}`);
+            
+            // ОСНОВНОЙ ОБРАБОТЧИК КЛИКОВ ПО БЛОКУ
+            block.addEventListener('click', (e) => {
                 e.preventDefault();
-                const categoryId = parseInt(link.getAttribute('data-category-id'));
-                const categoryName = link.getAttribute('data-category');
+                const categoryId = parseInt(block.getAttribute('data-category-id'));
+                const categoryName = block.getAttribute('data-category-name');
                 this.handleCategoryClick(categoryId, categoryName);
             });
-        });
-
-        // Добавляем обработчики для всего блока категории "Інше"/"Other"
-        container.querySelectorAll('.other-category').forEach(block => {
-            block.style.cursor = 'pointer';
-            block.addEventListener('click', (e) => {
-                // Проверяем, что клик не по ссылке (она уже обработана выше)
-                if (!e.target.closest('a')) {
+            
+            // Обработчик для клавиатурной навигации
+            block.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
                     const categoryId = parseInt(block.getAttribute('data-category-id'));
-                    const otherText = this.currentLang === 'en' ? 'Other' : 'Інше';
-                    this.handleCategoryClick(categoryId, otherText);
+                    const categoryName = block.getAttribute('data-category-name');
+                    this.handleCategoryClick(categoryId, categoryName);
                 }
             });
         });

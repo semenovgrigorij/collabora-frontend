@@ -130,7 +130,6 @@ p {
     justify-content: space-between;
 }
 
-
 .filter-arrow {
     transition: transform 0.3s ease;
 }
@@ -252,6 +251,8 @@ p {
     grid-gap: 20px;
     min-height: 400px;
 }
+
+/* ОСНОВНЫЕ СТИЛИ ДЛЯ БЛОКА КАТЕГОРИИ */
 .categories-block {
     display: flex;
     flex-direction: column;
@@ -260,18 +261,96 @@ p {
     border-radius: 10px;
     padding: 14px 14px 24px 14px;
     background: var(--white);
+    cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Убираем конфликтующие анимации загрузки из основного селектора */
 }
+
+/* АНИМАЦИЯ ЗАГРУЗКИ (отдельно) */
+.categories-block:not(.animation-complete) {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* СОСТОЯНИЕ ПОСЛЕ ЗАВЕРШЕНИЯ АНИМАЦИИ ЗАГРУЗКИ */
+.categories-block.animation-complete {
+    opacity: 1;
+    transform: translateY(0);
+    animation: none;
+}
+
+/* HOVER ЭФФЕКТЫ ДЛЯ ОБЫЧНЫХ БЛОКОВ */
 .categories-block:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
-/* Специальные стили для категории "Інше" */
+
+/* АКТИВНОЕ СОСТОЯНИЕ ПРИ КЛИКЕ */
+.categories-block:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* ИЗМЕНЕНИЕ ЦВЕТА ЗАГОЛОВКА ПРИ HOVER */
+.categories-block:hover h3 {
+    color: var(--violet);
+    transition: color 0.3s ease;
+}
+
+/* СТИЛИ ДЛЯ СТРЕЛКИ */
+.categories-block-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.categories-block-top a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--light-violet);
+    padding: clamp(6px, 6vw, 17.5px);
+    background-color: transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    pointer-events: none; /* Отключаем клики на ссылке */
+}
+
+.arrow-card {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: inline-block;
+    transition: opacity 0.3s ease;
+}
+
+.arrow-card-hover {
+    display: none;
+    transition: opacity 0.3s ease;
+}
+
+/* ЭФФЕКТЫ СТРЕЛКИ ПРИ HOVER НА БЛОК */
+.categories-block:hover .categories-block-top a {
+    background-color: var(--light-violet);
+    border-color: var(--light-violet);
+}
+
+.categories-block:hover .arrow-card {
+    display: none;
+}
+
+.categories-block:hover .arrow-card-hover {
+    display: inline-block;
+}
+
+/* СТИЛИ ДЛЯ КАТЕГОРИИ "ІНШЕ" */
 .categories-block.other-category {
     border: 2px solid var(--turquoise);
     background: linear-gradient(135deg, var(--white) 0%, rgba(73, 211, 211, 0.05) 100%);
     position: relative;
     overflow: hidden;
+    user-select: none;
 }
 
 .categories-block.other-category::before {
@@ -298,6 +377,10 @@ p {
     border-color: var(--light-violet);
 }
 
+.categories-block.other-category:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
 .categories-block.other-category h3 {
     color: var(--dark-turquoise);
     font-weight: 800;
@@ -312,64 +395,61 @@ p {
     filter: brightness(0) saturate(100%) invert(13%) sepia(89%) saturate(847%) hue-rotate(161deg) brightness(94%) contrast(94%);
 }
 
-/* Индикатор клика для всего блока "Інше" */
-.categories-block.other-category {
-    cursor: pointer;
-    user-select: none;
-}
-
-.categories-block.other-category:active {
-    transform: translateY(-2px) scale(0.98);
-}
-.categories-block-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
-}
-.categories-block-top a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: 1px solid var(--light-violet);
-    padding: clamp(6px, 6vw, 17.5px);
-    background-color: transparent;
-    transition: background-color 0.3s ease;
-}
-.arrow-card {
-    max-width: 100%;
-    height: auto;
-    object-fit: cover;
-    display: inline-block;
-}
-.arrow-card-hover {
-    display: none;
-}
-.categories-block-top a:hover {
-  background-color: var(--light-violet);
-  border: 1px solid var(--light-violet);
-}
-.categories-block-top a:hover .arrow-card {
-  display: none;
-}
-.categories-block-top a:hover .arrow-card-hover {
-  display: inline-block;
-}
+/* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
 .categories-block-bottom {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 13px;
-}
-.categories-block-bottom p {
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 140%;
-  color: var(--dark-gray);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 13px;
 }
 
-/* Отсутствие результатов */
+.categories-block-bottom p {
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 140%;
+    color: var(--dark-gray);
+}
+
+/* FOCUS СТИЛИ ДЛЯ ACCESSIBILITY */
+.categories-block:focus {
+    outline: 2px solid var(--turquoise);
+    outline-offset: 2px;
+}
+
+.categories-block[tabindex="0"]:focus {
+    outline: 2px solid var(--violet);
+    outline-offset: 3px;
+}
+
+/* АНИМАЦИИ ЗАГРУЗКИ ДЛЯ РАЗНЫХ БЛОКОВ */
+.categories-block:nth-child(1) { animation-delay: 0.1s; }
+.categories-block:nth-child(2) { animation-delay: 0.2s; }
+.categories-block:nth-child(3) { animation-delay: 0.3s; }
+.categories-block:nth-child(4) { animation-delay: 0.4s; }
+.categories-block:nth-child(5) { animation-delay: 0.5s; }
+.categories-block:nth-child(6) { animation-delay: 0.6s; }
+.categories-block:nth-child(7) { animation-delay: 0.7s; }
+.categories-block:nth-child(8) { animation-delay: 0.8s; }
+.categories-block:nth-child(9) { animation-delay: 0.9s; }
+.categories-block:nth-child(10) { animation-delay: 1.0s; }
+.categories-block:nth-child(11) { animation-delay: 1.1s; }
+.categories-block:nth-child(12) { animation-delay: 1.2s; }
+.categories-block:nth-child(13) { animation-delay: 1.3s; }
+.categories-block:nth-child(14) { animation-delay: 1.4s; }
+.categories-block:nth-child(15) { animation-delay: 1.5s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ОТСУТСТВИЕ РЕЗУЛЬТАТОВ */
 .no-results {
     text-align: center;
     padding: 60px 20px;
@@ -386,7 +466,32 @@ p {
     font-size: 16px;
 }
 
-/* Адаптивность */
+/* ИНДИКАЦИЯ ЗАГРУЗКИ */
+.categories-containers.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.categories-containers.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--light-gray);
+    border-top: 3px solid var(--turquoise);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* АДАПТИВНОСТЬ */
 @media (max-width: 1024px) {
     .categories-containers {
         grid-template-columns: repeat(2, 1fr);
@@ -408,7 +513,6 @@ p {
 }
 
 @media (max-width: 769px) {
-    
     .categories-header {
         flex-direction: column;
         align-items: flex-start;
@@ -462,10 +566,7 @@ p {
     }
 }
 
-@media (max-width: 361px) {
-    
-}
-/* Улучшения для мобильных устройств */
+/* УЛУЧШЕНИЯ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
 @media (max-width: 640px) {
     .search-field {
         font-size: 16px; /* Предотвращает зум на iOS */
@@ -493,63 +594,7 @@ p {
     }
 }
 
-/* Анимации для лучшего UX */
-.categories-block {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.6s ease forwards;
-}
-
-.categories-block:nth-child(1) { animation-delay: 0.1s; }
-.categories-block:nth-child(2) { animation-delay: 0.2s; }
-.categories-block:nth-child(3) { animation-delay: 0.3s; }
-.categories-block:nth-child(4) { animation-delay: 0.4s; }
-.categories-block:nth-child(5) { animation-delay: 0.5s; }
-.categories-block:nth-child(6) { animation-delay: 0.6s; }
-.categories-block:nth-child(7) { animation-delay: 0.7s; }
-.categories-block:nth-child(8) { animation-delay: 0.8s; }
-.categories-block:nth-child(9) { animation-delay: 0.9s; }
-.categories-block:nth-child(10) { animation-delay: 1.0s; }
-.categories-block:nth-child(11) { animation-delay: 1.1s; }
-.categories-block:nth-child(12) { animation-delay: 1.2s; }
-.categories-block:nth-child(13) { animation-delay: 1.3s; }
-.categories-block:nth-child(14) { animation-delay: 1.4s; }
-.categories-block:nth-child(15) { animation-delay: 1.5s; }
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Улучшенная индикация загрузки */
-.categories-containers.loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.categories-containers.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--light-gray);
-    border-top: 3px solid var(--turquoise);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-
-/* Темная тема (опционально) */
+/* ТЕМНАЯ ТЕМА */
 @media (prefers-color-scheme: dark) {
     .categories-block {
         background: #2a2a2a;
@@ -575,7 +620,7 @@ p {
     }
 }
 
-/* Улучшения для print */
+/* УЛУЧШЕНИЯ ДЛЯ ПЕЧАТИ */
 @media print {
     .search-rubricator,
     .categories-header-paginations {
