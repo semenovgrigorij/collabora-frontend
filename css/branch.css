@@ -45,7 +45,7 @@ p {
     text-align: left;
 }
 
-.title-branch {
+.title-branch-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
