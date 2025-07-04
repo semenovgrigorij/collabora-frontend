@@ -45,7 +45,8 @@ p {
     text-align: left;
 }
 
-.title-branch-wrapper {
+.title-branch-wrapper,
+.title-branch {
     display: flex;
     flex-direction: column;
     align-items: center;
