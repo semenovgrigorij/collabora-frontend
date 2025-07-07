@@ -227,7 +227,7 @@ body.components-ready footer {
   margin-right: 30px;
 }
 .header-item:last-child {
-   margin-right: 0;
+  margin-right: 0;
 }
 .header-link {
   font-family: var(--font-family);
